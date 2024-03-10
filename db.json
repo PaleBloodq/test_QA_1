@@ -300,5 +300,7 @@
       "psPlusDiscount": "0",
       "cashback": "25 ₽"
     }
-  ]
+  ],
+  "sliderGames": ["10", "9", "7"],
+  "newGames": ["10", "7", "1"]
 }
