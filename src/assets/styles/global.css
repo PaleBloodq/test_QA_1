@@ -6,3 +6,18 @@
 * {
   font-family: "Onest";
 }
+
+@layer components {
+  .border-light {
+    @apply border border-[#E7E7E8] rounded-lg bg-[#F6F7FA];
+  }
+  .border-dark {
+    @apply border border-[#FFFFFF0D] rounded-lg bg-[#FFFFFF0D];
+  }
+  .text-header {
+    @apply font-medium text-2xl text-[#171717];
+  }
+  .red-gradient {
+    @apply bg-gradient-to-r from-[#C35530] to-[#B13430];
+  }
+}
