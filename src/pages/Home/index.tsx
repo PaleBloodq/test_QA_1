@@ -1,11 +1,10 @@
 import Container from "../../components/common/Container";
+import Navigation from "../../components/common/Navigation";
 
 export default function Home() {
     return (
         <Container>
-            <div className="red-gradient rounded-lg">
-                <h1 className="text-header text-black">Home</h1>
-            </div>
+            <Navigation />
         </Container>
     )
 }

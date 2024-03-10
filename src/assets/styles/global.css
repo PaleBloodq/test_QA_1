@@ -5,14 +5,15 @@
 
 * {
   font-family: "Onest";
+  box-sizing: border-box;
 }
 
 @layer components {
   .border-light {
-    @apply border border-[#E7E7E8] rounded-lg bg-[#F6F7FA];
+    @apply border border-[#E7E7E8] rounded-xl bg-[#F6F7FA];
   }
   .border-dark {
-    @apply border border-[#FFFFFF0D] rounded-lg bg-[#FFFFFF0D];
+    @apply border border-[#26292d] rounded-xl bg-[#26292d];
   }
   .text-header {
     @apply font-medium text-2xl text-[#171717];
