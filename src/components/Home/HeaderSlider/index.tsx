@@ -37,14 +37,14 @@ export default function HeaderSlider() {
                     className="headerSwiper"
                     ref={swiperRef}
                 >
-                    {data.map((item: Game) => {
+                    {data.map((item: Game, index: number) => {
                         return (
-                            <SwiperSlide key={item.id}>
+                            <SwiperSlide key={`header-${index}`}>
                                 <div className='flex w-full h-full relative'>
                                     <img className='rounded-xl' src={item.img} alt="" />
-                                    <div className='absolute bottom-[50px] z-10 flex w-full justify-center'>
+                                    <div className='absolute bottom-[50px] z-10 flex w-full justify-center items-center'>
                                         <h1 className='text-white font-bold text-2xl'>{item.publications[0].price}</h1>
-                                        <Tag>{item.tags[0]}</Tag>
+                                        <Tag>{item.tags?.[0]}</Tag>
                                     </div>
                                 </div>
                             </SwiperSlide>

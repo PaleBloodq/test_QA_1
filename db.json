@@ -500,5 +500,27 @@
       "cashback": "25 ₽",
       "tags": ["-60%"]
     }
-  ]
+  ],
+  "subscribes": {
+    "psPlus": [
+      {
+        "name": "PS Plus Deluxe",
+        "price": [
+          {
+            "period": "1 месяц",
+            "value": "1745 ₽"
+          },
+          {
+            "period": "3 месяца",
+            "value": "3000 ₽"
+          },
+          {
+            "period": "12 месяцев",
+            "value": "14400 ₽"
+          }
+        ]
+      }
+    ],
+    "eaPlay": []
+  }
 }

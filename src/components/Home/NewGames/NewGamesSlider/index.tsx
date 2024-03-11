@@ -21,7 +21,7 @@ export default function NewGamesSlider() {
                     modules={[Pagination]}
                     className="newGamesSlider"
                 >
-                    {data.map((game: Game) => <div key={game.id} className='h-full'><SwiperSlide >
+                    {data.map((game: Game, index: number) => <div key={index} className='h-full'><SwiperSlide >
                         <div className='w-full h-full flex flex-col items-start justify-between'>
                             <img className='rounded-xl max-h-[200px] mb-[18px]' src={game.img} alt="game image" />
                             <h1 className='text-title text-start'>{game.name}</h1>
