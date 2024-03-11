@@ -3,7 +3,7 @@ import Home from './pages/Home';
 
 export default function App() {
   return (
-    <div className='w-screen h-screen bg-white dark:bg-[#1a1e22]'>
+    <div className='w-screen h-full bg-white dark:bg-[#1a1e22]'>
       <Routes>
         <Route path='/' element={<Home />} />
       </Routes>

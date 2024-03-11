@@ -504,6 +504,44 @@
   "subscribes": {
     "psPlus": [
       {
+        "name": "PS Plus Essential",
+        "price": [
+          {
+            "period": "1 месяц",
+            "value": "995 ₽"
+          },
+          {
+            "period": "3 месяца",
+            "value": "2400 ₽"
+          },
+          {
+            "period": "12 месяцев",
+            "value": "10200 ₽"
+          }
+        ],
+        "description": "Премиальная подписка для PlayStation. Включает всё, что есть в PS Plus Essential и Extra, а ещё откроет каталог классических хитов Sony и эксклюзивные демо-версии.",
+        "platform": "PS"
+      },
+      {
+        "name": "PS Plus Extra",
+        "price": [
+          {
+            "period": "1 месяц",
+            "value": "1405 ₽"
+          },
+          {
+            "period": "3 месяца",
+            "value": "2800 ₽"
+          },
+          {
+            "period": "12 месяцев",
+            "value": "11400 ₽"
+          }
+        ],
+        "description": "Премиальная подписка для PlayStation. Включает всё, что есть в PS Plus Essential и Extra, а ещё откроет каталог классических хитов Sony и эксклюзивные демо-версии.",
+        "platform": "PS"
+      },
+      {
         "name": "PS Plus Deluxe",
         "price": [
           {
@@ -518,9 +556,11 @@
             "period": "12 месяцев",
             "value": "14400 ₽"
           }
-        ]
+        ],
+        "description": "Премиальная подписка для PlayStation. Включает всё, что есть в PS Plus Essential и Extra, а ещё откроет каталог классических хитов Sony и эксклюзивные демо-версии.",
+        "platform": "PS"
       }
     ],
-    "eaPlay": []
+    "eaPlay": [""]
   }
 }
