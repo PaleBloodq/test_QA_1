@@ -12,13 +12,16 @@
   .custom-border {
     @apply border border-[#E7E7E8] dark:border-[#26292d] rounded-xl bg-[#F6F7FA] dark:bg-[#26292d];
   }
-  .text-header {
-    @apply font-medium text-2xl text-[#171717];
-  }
   .red-gradient {
     @apply bg-gradient-to-r from-[#C35530] to-[#B13430];
   }
-  .text-header {
-    @apply text-[24px] text-black font-medium dark:text-white;
+  .text-title {
+    @apply text-2xl text-black font-medium dark:text-white;
+  }
+  .text-title {
+    @apply text-base font-medium text-black dark:text-white;
+  }
+  .text-subtitle {
+    @apply text-[14px] text-[#606D7B] dark:text-[#FFFFFF99];
   }
 }
