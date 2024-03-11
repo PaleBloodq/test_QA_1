@@ -5,6 +5,7 @@ import './newGamesSlider.css';
 import { Pagination } from 'swiper/modules';
 import { useGetSliderNewGamesQuery } from '../../../../services/sliderApi';
 import { Game } from '../../../../assets/types/gameType';
+import Tag from '../../../common/Tag';
 
 export default function NewGamesSlider() {
 
@@ -25,7 +26,10 @@ export default function NewGamesSlider() {
                             <img className='rounded-xl max-h-[200px] mb-[18px]' src={game.img} alt="game image" />
                             <h1 className='text-title text-start'>{game.name}</h1>
                             {game.publications && <h2 className='text-subtitle'>{game.publications[0].title}</h2>}
-                            <h3 className='price-small'>{game.publications[0].price}</h3>
+                            <div className='flex gap-1'>
+                                <h3 className='price-small'>{game.publications[0].price}</h3>
+                                {game.discount?.active && <Tag>-{game.discount.percent}%</Tag>}
+                            </div>
                         </div>
                     </SwiperSlide></div>)}
                 </Swiper>

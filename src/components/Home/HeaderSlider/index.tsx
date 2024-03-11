@@ -8,6 +8,7 @@ import 'swiper/css/pagination';
 
 import './headerSlider.css';
 import { Game } from '../../../assets/types/gameType';
+import Tag from '../../common/Tag';
 
 export default function HeaderSlider() {
     const { data = [], isLoading } = useGetSliderGamesQuery({})
@@ -43,7 +44,7 @@ export default function HeaderSlider() {
                                     <img className='rounded-xl' src={item.img} alt="" />
                                     <div className='absolute bottom-[50px] z-10 flex w-full justify-center'>
                                         <h1 className='text-white font-bold text-2xl'>{item.publications[0].price}</h1>
-                                        <h2 className='ml-4 text-[14px] px-[6px] bg-discount rounded-xl font-extrabold text-[#2C0C11] flex items-center justify-center'>{item.tags[0]}</h2>
+                                        <Tag>{item.tags[0]}</Tag>
                                     </div>
                                 </div>
                             </SwiperSlide>
