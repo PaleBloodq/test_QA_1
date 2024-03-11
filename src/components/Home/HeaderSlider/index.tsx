@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useGetSliderGamesQuery } from "../../../services/sliderApi"
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore from "swiper"
 
 // Import Swiper styles
 import 'swiper/css';
