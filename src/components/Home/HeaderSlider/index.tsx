@@ -7,6 +7,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import './headerSlider.css';
+import { Game } from '../../../assets/types/gameType';
 
 export default function HeaderSlider() {
     const { data = [], isLoading } = useGetSliderGamesQuery({})
@@ -35,7 +36,7 @@ export default function HeaderSlider() {
                     className="headerSwiper"
                     ref={swiperRef}
                 >
-                    {data.map((item) => {
+                    {data.map((item: Game) => {
                         return (
                             <SwiperSlide key={item.id}>
                                 <div className='flex w-full h-full relative'>
