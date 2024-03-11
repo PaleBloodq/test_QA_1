@@ -7,7 +7,10 @@ export const sliderApi = createApi({
     getSliderGames: builder.query({
       query: () => `sliderGames`,
     }),
+    getSliderNewGames: builder.query({
+      query: () => `newGames`,
+    }),
   }),
 });
 
-export const { useGetSliderGamesQuery } = sliderApi;
+export const { useGetSliderGamesQuery, useGetSliderNewGamesQuery } = sliderApi;

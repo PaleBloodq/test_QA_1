@@ -15,7 +15,7 @@
   .red-gradient {
     @apply bg-gradient-to-r from-[#C35530] to-[#B13430];
   }
-  .text-title {
+  .text-header {
     @apply text-2xl text-black font-medium dark:text-white;
   }
   .text-title {
@@ -23,5 +23,8 @@
   }
   .text-subtitle {
     @apply text-[14px] text-[#606D7B] dark:text-[#FFFFFF99];
+  }
+  .price-small {
+    @apply text-[18px] text-black dark:text-white font-medium;
   }
 }
