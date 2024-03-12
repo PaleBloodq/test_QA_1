@@ -7,8 +7,9 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import './headerSlider.css';
-import { Game } from '../../../assets/types/gameType';
 import Tag from '../../common/Tag';
+import { gameType } from '../../../types/gameType';
+import { Link } from 'react-router-dom';
 
 export default function HeaderSlider() {
     const { data = [], isLoading } = useGetSliderGamesQuery({})
@@ -37,21 +38,21 @@ export default function HeaderSlider() {
                     className="headerSwiper"
                     ref={swiperRef}
                 >
-                    {data.map((item: Game, index: number) => {
+                    {data.map((item: gameType, index: number) => {
                         return (
-                            <SwiperSlide key={`header-${index}`}>
-                                <div className='flex w-full h-full relative'>
+                            <SwiperSlide key={`header-${index}`} >
+                                <Link className='flex w-full h-full relative' to={'/game/' + item.id} >
                                     <img className='rounded-xl' src={item.img} alt="" />
                                     <div className='absolute bottom-[50px] z-10 flex w-full justify-center items-center'>
                                         <h1 className='text-white font-bold text-2xl'>{item.publications[0].price}</h1>
-                                        <Tag>{item.tags?.[0]}</Tag>
+                                        <Tag type='discount'>{item.tags?.[0]}</Tag>
                                     </div>
-                                </div>
+                                </Link>
                             </SwiperSlide>
                         )
                     })}
                 </Swiper>
             }
-        </div>
+        </div >
     )
 }

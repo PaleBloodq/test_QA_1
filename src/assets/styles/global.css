@@ -24,7 +24,13 @@
   .text-subtitle {
     @apply text-[14px] text-[#606D7B] dark:text-[#FFFFFF99];
   }
+  .text-subtitle-info {
+    @apply text-[14px] text-black dark:text-white;
+  }
   .price-small {
     @apply text-[18px] text-black dark:text-white font-medium;
+  }
+  .price-big {
+    @apply text-[32px] text-black dark:text-white font-medium;
   }
 }

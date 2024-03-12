@@ -1,4 +1,4 @@
-export type Game = {
+export type gameType = {
   id: string;
   name: string;
   img: string;
