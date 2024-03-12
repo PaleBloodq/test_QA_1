@@ -3,14 +3,15 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import './newGamesSlider.css';
 import { Pagination } from 'swiper/modules';
-import { useGetSliderNewGamesQuery } from '../../../../services/sliderApi';
-import { Game } from '../../../../assets/types/gameType';
-import Tag from '../../../common/Tag';
+import { Game } from '../../../assets/types/gameType';
+import Tag from '../Tag';
 
-export default function NewGamesSlider() {
+type GamesSliderProps = {
+    data: Game[],
+    isLoading: boolean,
+}
 
-    const { data = [], isLoading } = useGetSliderNewGamesQuery({})
-
+export default function GamesSlider({ data, isLoading }: GamesSliderProps) {
     return (
         <>
             {!isLoading &&

@@ -5,8 +5,6 @@ export default function EAPlay() {
 
     const { data = [], isLoading } = useGetSubscribesQuery({})
 
-    console.log(data.eaPlay)
-
     return (
         <div>
             <h1 className="text-header mb-[22px]">Подписки EA Play</h1>
