@@ -564,6 +564,17 @@
         "previewImg": "https://i.postimg.cc/x8Z3c5qw/image.png"
       }
     ],
-    "eaPlay": [""]
+    "eaPlay": [
+      {
+        "period": "1 месяц",
+        "price": "340 ₽",
+        "previewImg": "https://i.postimg.cc/XYS0tX5n/1.png"
+      },
+      {
+        "period": "1 месяцев",
+        "price": "1625 ₽",
+        "previewImg": "https://i.postimg.cc/R0vxV8G8/image.png"
+      }
+    ]
   }
 }

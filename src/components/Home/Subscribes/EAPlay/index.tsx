@@ -1,34 +1,21 @@
-import { useState } from "react";
+import { eaSubscriptionType } from "../../../../assets/types/eaSubscriptionType"
 import { useGetSubscribesQuery } from "../../../../services/subscribesApi"
-import SubscriptionPeriodSelector from "../../../common/SubscriptionPeriodSelect"
-import { SubscriptionType } from "../../../../assets/types/psSubscriptionType";
 
-export default function PSPlus() {
+export default function EAPlay() {
 
     const { data = [], isLoading } = useGetSubscribesQuery({})
 
-    const [selectedPeriod, setSelectedPeriod] = useState('1 месяц');
-
-    const getFilteredSubscriptions = (subscriptions: SubscriptionType[], period: string) => {
-        return subscriptions.map(subscription => ({
-            ...subscription,
-            price: subscription.price.find(p => p.period === period)?.value
-        }));
-    };
+    console.log(data.eaPlay)
 
     return (
         <div>
-            <h1 className="text-header mb-[22px]">Подписки PS Plus</h1>
-            <SubscriptionPeriodSelector
-                selectedPeriod={selectedPeriod}
-                onPeriodChange={setSelectedPeriod}
-            />
+            <h1 className="text-header mb-[22px]">Подписки EA Play</h1>
             <div className="flex flex-col gap-2">
-                {!isLoading && getFilteredSubscriptions(data.psPlus, selectedPeriod).map(subscription => (
-                    <div className="flex w-full px-2 py-2 custom-border justify-between items-center" key={subscription.name}>
+                {!isLoading && (data.eaPlay).map((subscription: eaSubscriptionType, index: number) => (
+                    <div className="flex w-full px-2 py-2 custom-border justify-between items-center" key={index} >
                         <img src={subscription.previewImg} alt="preview" />
                         <div className="flex flex-col gap-2 items-start">
-                            <h1 className="text-subtitle">{subscription.name}</h1>
+                            <h1 className="text-subtitle">{subscription.period}</h1>
                             <h2 className="price-small">{subscription.price}</h2>
                         </div>
                         <div className="self-start">
