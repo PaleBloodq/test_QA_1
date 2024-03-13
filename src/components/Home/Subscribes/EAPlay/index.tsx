@@ -1,20 +1,22 @@
-import { eaSubscriptionType } from "../../../../assets/types/eaSubscriptionType"
-import { useGetSubscribesQuery } from "../../../../services/subscribesApi"
+import { useGetEaSubscribesQuery } from "../../../../services/subscribesApi"
+import { subscriptionType } from "../../../../types/subscriptionType"
 
 export default function EAPlay() {
 
-    const { data = [], isLoading } = useGetSubscribesQuery({})
+    const { data = [], isLoading } = useGetEaSubscribesQuery({})
+
+    console.log(data)
 
     return (
         <div>
             <h1 className="text-header mb-[22px]">Подписки EA Play</h1>
             <div className="flex flex-col gap-2">
-                {!isLoading && (data.eaPlay).map((subscription: eaSubscriptionType, index: number) => (
-                    <div className="flex w-full px-2 py-2 custom-border justify-between items-center" key={index} >
+                {!isLoading && (data).map((subscription: subscriptionType) => (
+                    <div className="flex w-full px-2 py-2 custom-border justify-between items-center" key={subscription.id} >
                         <img src={subscription.previewImg} alt="preview" />
                         <div className="flex flex-col gap-2 items-start">
-                            <h1 className="text-subtitle">{subscription.period}</h1>
-                            <h2 className="price-small">{subscription.price}</h2>
+                            <h1 className="text-subtitle">{subscription.title}</h1>
+                            <h2 className="price-small">{subscription.durationVariations[0].price} ₽</h2>
                         </div>
                         <div className="self-start">
                             <svg className="fill-[#606D7B] dark:fill-[#606D7B]" width="23" height="23" viewBox="0 0 23 23" xmlns=" http://www.w3.org/2000/svg">

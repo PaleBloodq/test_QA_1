@@ -15,11 +15,11 @@ export default function PSPlus() {
                 {!isLoading && data.map((subscription: subscriptionType) => {
                     const priceForSelectedDuration = subscription.durationVariations.find(variation => variation.duration === selectedDuration)?.price;
                     return (
-                        <div className="flex w-full px-2 py-2 custom-border justify-between items-center" key={subscription.name}>
+                        <div className="flex w-full px-2 py-2 custom-border justify-between items-center" key={subscription.id}>
                             <img src={subscription.previewImg} alt="preview" />
                             <div className="flex flex-col gap-2 items-start">
                                 <h1 className="text-subtitle">{subscription.title}</h1>
-                                <h2 className="price-small">{priceForSelectedDuration}</h2>
+                                <h2 className="price-small">{priceForSelectedDuration} ₽</h2>
                             </div>
                             <div className="self-start">
                                 <svg className="fill-[#606D7B] dark:fill-[#606D7B]" width="23" height="23" viewBox="0 0 23 23" xmlns=" http://www.w3.org/2000/svg">

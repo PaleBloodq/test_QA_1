@@ -286,5 +286,51 @@
       "psPlusDiscount": 50,
       "cashback": 25
     }
+  ],
+  "eaPlay": [
+    {
+      "id": "8131213",
+      "type": "subscription",
+      "title": "EA Play 1 месяц",
+      "photoUrls": ["https://i.postimg.cc/XYS0tX5n/1.png"],
+      "previewImg": "https://i.postimg.cc/XYS0tX5n/1.png",
+      "platforms": ["Xbox"],
+      "languages": ["Полность на русском", "Английский"],
+      "releaseDate": "2024-03-13",
+      "durationVariations": [
+        {
+          "duration": 1,
+          "price": 340
+        }
+      ],
+      "discount": {
+        "percent": 10,
+        "deadline": "18.03.2024"
+      },
+      "psPlusDiscount": 0,
+      "cashback": 25
+    },
+    {
+      "id": "8131213",
+      "type": "subscription",
+      "title": "EA Play 12 месяцев",
+      "photoUrls": ["https://i.postimg.cc/R0vxV8G8/image.png"],
+      "previewImg": "https://i.postimg.cc/R0vxV8G8/image.png",
+      "platforms": ["Xbox"],
+      "languages": ["Полность на русском", "Английский"],
+      "releaseDate": "2024-03-13",
+      "durationVariations": [
+        {
+          "duration": 12,
+          "price": 1625
+        }
+      ],
+      "discount": {
+        "percent": 10,
+        "deadline": "18.03.2024"
+      },
+      "psPlusDiscount": 0,
+      "cashback": 25
+    }
   ]
 }
