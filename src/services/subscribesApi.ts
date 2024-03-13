@@ -8,10 +8,10 @@ export const subscribesApi = createApi({
       query: () => `subscribes`,
     }),
     getPsSubscribes: builder.query({
-      query: () => `subscribes/psPlus`,
+      query: () => `psPlus`,
     }),
     getEaSubscribes: builder.query({
-      query: () => `subscribes/eaPlay`,
+      query: () => `eaPlay`,
     }),
   }),
 });

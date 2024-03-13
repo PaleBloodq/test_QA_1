@@ -25,12 +25,12 @@ export default function GamesSlider({ data, isLoading }: GamesSliderProps) {
                 >
                     {data.map((game: gameType, index: number) => <div key={index} className='h-full'><SwiperSlide >
                         <Link to={'/game/' + game.id} className='w-full h-full flex flex-col items-start justify-between'>
-                            <img className='rounded-xl max-h-[200px] mb-[18px]' src={game.img} alt="game image" />
-                            <h1 className='text-title text-start'>{game.name}</h1>
+                            <img className='rounded-xl max-h-[200px] mb-[18px]' src={game.previewImg} alt="game image" />
+                            <h1 className='text-title text-start'>{game.title}</h1>
                             {game.publications && <h2 className='text-subtitle'>{game.publications[0].title}</h2>}
                             <div className='flex gap-1'>
                                 <h3 className='price-small'>{game.publications[0].price}</h3>
-                                {game.discount?.active && <Tag type='discount'>-{game.discount.percent}%</Tag>}
+                                {game.discount?.percent !== 0 && <Tag type="discount">-{game.discount?.percent}%</Tag>}
                             </div>
                         </Link>
                     </SwiperSlide></div>)}

@@ -1,14 +1,17 @@
 {
-  "games": [
+  "offers": [
     {
       "id": "1",
-      "name": "SKULL and BONES",
-      "img": "https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "type": "game",
+      "title": "SKULL and BONES",
+      "photoUrls": ["https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"],
+      "previewImg": "https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg",
+      "platforms": "PS4",
+      "languages": "Полностью на русском",
+      "releaseDate": "2023-03-13",
       "publications": [
         {
+          "id": "222",
           "title": "Standart",
           "price": "1530 ₽",
           "includes": [
@@ -23,240 +26,24 @@
         }
       ],
       "discount": {
-        "active": true,
-        "percent": "90",
+        "percent": 0,
         "deadline": "14.03.2024"
       },
       "psPlusDiscount": "50",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
-    },
-    {
-      "id": "2",
-      "name": "Battlefield V",
-      "img": "https://i.postimg.cc/8PvP0Mch/1af34a63a2529ab4cf8e42d04c0497d7.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
-      "publications": [
-        {
-          "title": "Standart",
-          "price": "1530 ₽",
-          "includes": [
-            "Игра SKULL and BONES",
-            "Все элитные бойцы",
-            "8 обликов солдат (2-й год войны)"
-          ]
-        },
-        {
-          "title": "Definitive",
-          "price": "2750 ₽"
-        }
-      ],
-      "discount": {
-        "active": true,
-        "percent": "90",
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
-    },
-    {
-      "id": "3",
-      "name": "The Outlast Trials",
-      "img": "https://i.postimg.cc/50GbP2M7/333684.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
-      "publications": [
-        {
-          "title": "Standart",
-          "price": "1530 ₽",
-          "includes": [
-            "Игра SKULL and BONES",
-            "Все элитные бойцы",
-            "8 обликов солдат (2-й год войны)"
-          ]
-        },
-        {
-          "title": "Definitive",
-          "price": "2750 ₽"
-        }
-      ],
-      "discount": {
-        "active": true,
-        "percent": "90",
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
-    },
-    {
-      "id": "4",
-      "name": "Resident Evil Village",
-      "img": "https://i.postimg.cc/Btfs07b2/350641.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
-      "publications": [
-        {
-          "title": "Standart",
-          "price": "1530 ₽",
-          "includes": [
-            "Игра SKULL and BONES",
-            "Все элитные бойцы",
-            "8 обликов солдат (2-й год войны)"
-          ]
-        },
-        {
-          "title": "Definitive",
-          "price": "2750 ₽"
-        }
-      ],
-      "discount": {
-        "active": true,
-        "percent": "90",
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
-    },
-    {
-      "id": "5",
-      "name": "EA Sports FC24",
-      "img": "https://i.postimg.cc/TPdd1s99/54mxthdxuhda7zozhp4ohtv14493quh0.webp",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
-      "publications": [
-        {
-          "title": "Standart",
-          "price": "1530 ₽",
-          "includes": [
-            "Игра SKULL and BONES",
-            "Все элитные бойцы",
-            "8 обликов солдат (2-й год войны)"
-          ]
-        },
-        {
-          "title": "Definitive",
-          "price": "2750 ₽"
-        }
-      ],
-      "discount": {
-        "active": true,
-        "percent": "90",
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
-    },
-    {
-      "id": "6",
-      "name": "Helldivers",
-      "img": "https://i.postimg.cc/g0gYZKtP/boxart.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
-      "publications": [
-        {
-          "title": "Standart",
-          "price": "1530 ₽",
-          "includes": [
-            "Игра SKULL and BONES",
-            "Все элитные бойцы",
-            "8 обликов солдат (2-й год войны)"
-          ]
-        },
-        {
-          "title": "Definitive",
-          "price": "2750 ₽"
-        }
-      ],
-      "discount": {
-        "active": true,
-        "percent": "90",
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
-    },
-    {
-      "id": "7",
-      "name": "Pacific Drive",
-      "img": "https://i.postimg.cc/P5krsJv0/co6590.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
-      "publications": [
-        {
-          "title": "Standart",
-          "price": "1530 ₽",
-          "includes": [
-            "Игра SKULL and BONES",
-            "Все элитные бойцы",
-            "8 обликов солдат (2-й год войны)"
-          ]
-        },
-        {
-          "title": "Definitive",
-          "price": "2750 ₽"
-        }
-      ],
-      "discount": {
-        "active": true,
-        "percent": "90",
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
-    },
-    {
-      "id": "8",
-      "name": "GTA V",
-      "img": "https://i.postimg.cc/dQkyJ7D0/p1-3235031-bfcf47b0.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
-      "publications": [
-        {
-          "title": "Standart",
-          "price": "1530 ₽",
-          "includes": [
-            "Игра SKULL and BONES",
-            "Все элитные бойцы",
-            "8 обликов солдат (2-й год войны)"
-          ]
-        },
-        {
-          "title": "Definitive",
-          "price": "2750 ₽"
-        }
-      ],
-      "discount": {
-        "active": true,
-        "percent": "90",
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
+      "cashback": 25
     },
     {
       "id": "9",
-      "name": "Resident Evil 4",
-      "img": "https://i.postimg.cc/3Nv7zQ8K/p1-3657681-f3347e4a.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "type": "game",
+      "title": "Resident Evil 4",
+      "photoUrls": ["https://i.postimg.cc/3Nv7zQ8K/p1-3657681-f3347e4a.jpg"],
+      "previewImg": "https://i.postimg.cc/3Nv7zQ8K/p1-3657681-f3347e4a.jpg",
+      "platforms": "PS4",
+      "languages": "Полностью на русском",
+      "releaseDate": "2024-03-13",
       "publications": [
         {
+          "id": "222",
           "title": "Standart",
           "price": "1530 ₽",
           "includes": [
@@ -271,118 +58,24 @@
         }
       ],
       "discount": {
-        "active": true,
-        "percent": "90",
+        "percent": 90,
         "deadline": "14.03.2024"
       },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
-    },
-    {
-      "id": "10",
-      "name": "Brothers a Tale of Two Sons",
-      "img": "https://i.postimg.cc/qRgpXCW6/qlxn-Sv-JLKr-JZg-MASFWT4-XQ.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
-      "publications": [
-        {
-          "title": "Standart",
-          "price": "1530 ₽",
-          "includes": [
-            "Игра SKULL and BONES",
-            "Все элитные бойцы",
-            "8 обликов солдат (2-й год войны)"
-          ]
-        },
-        {
-          "title": "Definitive",
-          "price": "2750 ₽"
-        }
-      ],
-      "discount": {
-        "active": true,
-        "percent": "90",
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
-    }
-  ],
-  "sliderGames": [
-    {
-      "id": "1",
-      "name": "SKULL and BONES",
-      "img": "https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
-      "publications": [
-        {
-          "title": "Standart",
-          "price": "1530 ₽",
-          "includes": [
-            "Игра SKULL and BONES",
-            "Все элитные бойцы",
-            "8 обликов солдат (2-й год войны)"
-          ]
-        },
-        {
-          "title": "Definitive",
-          "price": "2750 ₽"
-        }
-      ],
-      "discount": {
-        "active": true,
-        "percent": "90",
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "50",
-      "cashback": "25 ₽",
-      "tags": ["Новинка"]
-    },
-    {
-      "id": "9",
-      "name": "Resident Evil 4",
-      "img": "https://i.postimg.cc/3Nv7zQ8K/p1-3657681-f3347e4a.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
-      "publications": [
-        {
-          "title": "Standart",
-          "price": "1530 ₽",
-          "includes": [
-            "Игра SKULL and BONES",
-            "Все элитные бойцы",
-            "8 обликов солдат (2-й год войны)"
-          ]
-        },
-        {
-          "title": "Definitive",
-          "price": "2750 ₽"
-        }
-      ],
-      "discount": {
-        "active": true,
-        "percent": "90",
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
+      "psPlusDiscount": 0,
+      "cashback": 25
     },
     {
       "id": "7",
-      "name": "Pacific Drive",
-      "img": "https://i.postimg.cc/P5krsJv0/co6590.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "type": "game",
+      "title": "Pacific Drive",
+      "photoUrls": ["https://i.postimg.cc/P5krsJv0/co6590.jpg"],
+      "previewImg": "https://i.postimg.cc/P5krsJv0/co6590.jpg",
+      "platforms": "PS4",
+      "languages": "Полностью на русском",
+      "releaseDate": "2023-03-13",
       "publications": [
         {
+          "id": "222",
           "title": "Standart",
           "price": "1530 ₽",
           "includes": [
@@ -397,25 +90,26 @@
         }
       ],
       "discount": {
-        "active": true,
-        "percent": "90",
+        "percent": 90,
         "deadline": "14.03.2024"
       },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["Новинка"]
+      "psPlusDiscount": 0,
+      "cashback": 25
     }
   ],
-  "newGames": [
+  "new": [
     {
       "id": "10",
-      "name": "Brothers a Tale of Two Sons",
-      "img": "https://i.postimg.cc/qRgpXCW6/qlxn-Sv-JLKr-JZg-MASFWT4-XQ.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "typee": "game",
+      "title": "Brothers a Tale of Two Sons",
+      "photoUrls": ["https://i.postimg.cc/qRgpXCW6/qlxn-Sv-JLKr-JZg-MASFWT4-XQ.jpg"],
+      "previewImg": "https://i.postimg.cc/qRgpXCW6/qlxn-Sv-JLKr-JZg-MASFWT4-XQ.jpg",
+      "platforms": "PS4",
+      "languages": "Полностью на русском",
+      "releaseDate": "2024-03-13",
       "publications": [
         {
+          "id": "222",
           "title": "Standart",
           "price": "1530 ₽",
           "includes": [
@@ -430,23 +124,24 @@
         }
       ],
       "discount": {
-        "active": true,
-        "percent": "90",
+        "percent": 90,
         "deadline": "14.03.2024"
       },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
+      "psPlusDiscount": 0,
+      "cashback": 25
     },
     {
       "id": "7",
-      "name": "Pacific Drive",
-      "img": "https://i.postimg.cc/P5krsJv0/co6590.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "type": "game",
+      "title": "Pacific Drive",
+      "photoUrls": ["https://i.postimg.cc/P5krsJv0/co6590.jpg"],
+      "previewImg": "https://i.postimg.cc/P5krsJv0/co6590.jpg",
+      "platforms": "PS4",
+      "languages": "Полностью на русском",
+      "releaseDate": "2024-03-13",
       "publications": [
         {
+          "id": "222",
           "title": "Standart",
           "price": "1530 ₽",
           "includes": [
@@ -461,23 +156,24 @@
         }
       ],
       "discount": {
-        "active": true,
-        "percent": "90",
+        "percent": 90,
         "deadline": "14.03.2024"
       },
-      "psPlusDiscount": "0",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
+      "psPlusDiscount": 0,
+      "cashback": 25
     },
     {
       "id": "1",
-      "name": "SKULL and BONES",
-      "img": "https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg",
-      "platform": "PS4",
-      "language": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "type": "game",
+      "title": "SKULL and BONES",
+      "photoUrls": ["https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"],
+      "previewImg": "https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg",
+      "platforms": "PS4",
+      "languages": "Полностью на русском",
+      "releaseDate": "2024-03-13",
       "publications": [
         {
+          "id": "222",
           "title": "Standart",
           "price": "1530 ₽",
           "includes": [
@@ -492,89 +188,103 @@
         }
       ],
       "discount": {
-        "active": true,
-        "percent": "90",
+        "percent": 90,
         "deadline": "14.03.2024"
       },
       "psPlusDiscount": "50",
-      "cashback": "25 ₽",
-      "tags": ["-60%"]
+      "cashback": 25
     }
   ],
-  "subscribes": {
-    "psPlus": [
-      {
-        "name": "PS Plus Essential",
-        "price": [
-          {
-            "period": "1 месяц",
-            "value": "995 ₽"
-          },
-          {
-            "period": "3 месяца",
-            "value": "2400 ₽"
-          },
-          {
-            "period": "12 месяцев",
-            "value": "10200 ₽"
-          }
-        ],
-        "description": "Премиальная подписка для PlayStation. Включает всё, что есть в PS Plus Essential и Extra, а ещё откроет каталог классических хитов Sony и эксклюзивные демо-версии.",
-        "platform": "PS",
-        "previewImg": "https://i.postimg.cc/qMtGWP54/2.png"
+  "psPlus": [
+    {
+      "id": "81263",
+      "type": "subscription",
+      "title": "PS Plus Essential",
+      "photoUrls": ["https://i.postimg.cc/qMtGWP54/2.png"],
+      "previewImg": "https://i.postimg.cc/qMtGWP54/2.png",
+      "platforms": ["PS4", "PS5"],
+      "languages": ["Полность на русском", "Английский"],
+      "releaseDate": "2024-03-13",
+      "durationVariations": [
+        {
+          "duration": 1,
+          "price": 995
+        },
+        {
+          "duration": 3,
+          "price": 2400
+        },
+        {
+          "duration": 12,
+          "price": 10200
+        }
+      ],
+      "discount": {
+        "percent": 10,
+        "deadline": "18.03.2024"
       },
-      {
-        "name": "PS Plus Extra",
-        "price": [
-          {
-            "period": "1 месяц",
-            "value": "1405 ₽"
-          },
-          {
-            "period": "3 месяца",
-            "value": "2800 ₽"
-          },
-          {
-            "period": "12 месяцев",
-            "value": "11400 ₽"
-          }
-        ],
-        "description": "Премиальная подписка для PlayStation. Включает всё, что есть в PS Plus Essential и Extra, а ещё откроет каталог классических хитов Sony и эксклюзивные демо-версии.",
-        "platform": "PS",
-        "previewImg": "https://i.postimg.cc/pVcZGWks/1.png"
+      "psPlusDiscount": 50,
+      "cashback": 25
+    },
+    {
+      "id": "81264",
+      "type": "subscription",
+      "title": "PS Plus Extra",
+      "photoUrls": ["https://i.postimg.cc/pVcZGWks/1.png"],
+      "previewImg": "https://i.postimg.cc/pVcZGWks/1.png",
+      "platforms": ["PS4", "PS5"],
+      "languages": ["Полность на русском", "Английский"],
+      "releaseDate": "2024-03-13",
+      "durationVariations": [
+        {
+          "duration": 1,
+          "price": 1405
+        },
+        {
+          "duration": 3,
+          "price": 2800
+        },
+        {
+          "duration": 12,
+          "price": 11400
+        }
+      ],
+      "discount": {
+        "percent": 10,
+        "deadline": "18.03.2024"
       },
-      {
-        "name": "PS Plus Deluxe",
-        "price": [
-          {
-            "period": "1 месяц",
-            "value": "1745 ₽"
-          },
-          {
-            "period": "3 месяца",
-            "value": "3000 ₽"
-          },
-          {
-            "period": "12 месяцев",
-            "value": "14400 ₽"
-          }
-        ],
-        "description": "Премиальная подписка для PlayStation. Включает всё, что есть в PS Plus Essential и Extra, а ещё откроет каталог классических хитов Sony и эксклюзивные демо-версии.",
-        "platform": "PS",
-        "previewImg": "https://i.postimg.cc/x8Z3c5qw/image.png"
-      }
-    ],
-    "eaPlay": [
-      {
-        "period": "1 месяц",
-        "price": "340 ₽",
-        "previewImg": "https://i.postimg.cc/XYS0tX5n/1.png"
+      "psPlusDiscount": 50,
+      "cashback": 25
+    },
+    {
+      "id": "81265",
+      "type": "subscription",
+      "title": "PS Plus Deluxe",
+      "photoUrls": ["https://i.postimg.cc/x8Z3c5qw/image.png"],
+      "previewImg": "https://i.postimg.cc/x8Z3c5qw/image.png",
+      "platforms": ["PS4", "PS5"],
+      "languages": ["Полность на русском", "Английский"],
+      "releaseDate": "2024-03-13",
+      "durationVariations": [
+        {
+          "duration": 1,
+          "price": 1745
+        },
+        {
+          "duration": 3,
+          "price": 3000
+        },
+        {
+          "duration": 12,
+          "price": 14400
+        }
+      ],
+      "discount": {
+        "percent": 10,
+        "deadline": "18.03.2024"
       },
-      {
-        "period": "1 месяцев",
-        "price": "1625 ₽",
-        "previewImg": "https://i.postimg.cc/R0vxV8G8/image.png"
-      }
-    ]
-  }
+      "psPlusDiscount": 50,
+      "cashback": 25
+    }
+  ]
 }

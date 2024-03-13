@@ -5,10 +5,10 @@ export const sliderApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
   endpoints: (builder) => ({
     getSliderGames: builder.query({
-      query: () => `sliderGames`,
+      query: () => `offers`,
     }),
     getSliderNewGames: builder.query({
-      query: () => `newGames`,
+      query: () => `new`,
     }),
   }),
 });

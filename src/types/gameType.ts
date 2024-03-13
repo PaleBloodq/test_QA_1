@@ -1,25 +1,26 @@
 export type gameType = {
   id: string;
-  name: string;
-  img: string;
-  platform: string;
-  language: string;
+  type: string;
+  title: string;
+  photoUrls: string[];
+  previewImg: string;
+  platforms: string[];
+  languages: string[];
   releaseDate: string;
   publications: Publication[];
   discount?: Discount;
-  psPlusDiscount?: string;
-  cashback?: string;
-  tags?: string[];
+  psPlusDiscount?: number;
+  cashback?: number;
 };
 
 type Publication = {
+  id: string;
   title: string;
-  price: string;
+  price: number;
   includes?: string[]; // Опциональное поле, поскольку не все публикации его имеют
 };
 
 type Discount = {
-  active: boolean;
-  percent: string;
+  percent: number;
   deadline: string;
 };
