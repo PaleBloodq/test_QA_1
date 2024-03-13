@@ -15,22 +15,20 @@ export default function Game() {
 
     const { data, isLoading }: GamePageType = useGetProductQuery(gameId)
 
-    console.log(data)
-
     return (
         <Container>
             <div className="flex flex-col items-center">
                 {!isLoading && data !== undefined ? (
                     <div className="flex flex-col items-start">
-                        <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={data.img} alt="game image" />
-                        <h1 className="text-header mb-6">{data.name}</h1>
+                        <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={data.photoUrls[0]} alt="game image" />
+                        <h1 className="text-header mb-6">{data.title}</h1>
                         <div className="flex items-center">
                             <h1 className="price-big">275 ₽</h1>
                             <div className="flex">
                                 {data.discount?.percent !== undefined && (
                                     <Tag type="discount">-{data.discount?.percent}%</Tag>
                                 )}
-                                {data.cashback !== '' && <Tag type="cashback">Кэшбэк: {data.cashback}</Tag>}
+                                {data.cashback !== 0 && <Tag type="cashback">Кэшбэк: {data.cashback}</Tag>}
                             </div>
                         </div>
                         {

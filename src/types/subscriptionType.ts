@@ -7,7 +7,7 @@ export type subscriptionType = {
   platforms: string[];
   languages: string[];
   releaseDate: string;
-  durationVariations: { duration: number; price: number };
+  durationVariations: [{ duration: number; price: number }];
   discount: {
     percent: number;
     deadline: string;
