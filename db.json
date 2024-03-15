@@ -4,14 +4,14 @@
       "id": "1",
       "title": "SKULL and BONES",
       "photoUrls": ["https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"],
-      "platformss": ["PS4"],
+      "platformss": ["PS4", "PS5"],
       "languagess": ["Полностью на русском"],
       "releaseDate": "22.10.2020",
       "publications": [
         {
           "id": "222",
           "title": "Standart",
-          "price": 1530,
+          "price": [{ "platform": "PS4", "price": 1530 }, { "PS5": 1730 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -19,12 +19,16 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
-        "percent": 90,
+        "percent": 0,
         "deadline": "14.03.2024"
       },
       "psPlusDiscount": 50,
@@ -41,7 +45,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -49,8 +53,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -71,7 +79,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -79,8 +87,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -101,7 +113,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -109,8 +121,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -131,7 +147,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -139,8 +155,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -161,7 +181,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -169,8 +189,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -191,7 +215,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -199,8 +223,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -221,7 +249,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -229,8 +257,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -251,7 +283,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -259,8 +291,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -281,7 +317,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -289,8 +325,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -316,7 +356,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -324,8 +364,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -348,7 +392,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -356,8 +400,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -380,7 +428,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -388,8 +436,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -414,7 +466,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -422,8 +474,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -446,7 +502,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -454,8 +510,12 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
@@ -478,7 +538,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": "1530 ₽",
+          "price": { "platform": "PS4", "price": 1530 },
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -486,12 +546,16 @@
           ]
         },
         {
+          "id": "22",
           "title": "Definitive",
-          "price": "2750 ₽"
+          "price": [
+            { "platform": "PS4", "price": 2750 },
+            { "platform": "PS5", "price": 500 }
+          ]
         }
       ],
       "discount": {
-        "percent": 90,
+        "percent": 0,
         "deadline": "14.03.2024"
       },
       "psPlusDiscount": "50",
@@ -503,7 +567,7 @@
       "id": "81263",
       "type": "subscription",
       "title": "PS Plus Essential",
-      "photoUrls": ["https://i.postimg.cc/qMtGWP54/2.png"],
+      "photoUrls": ["https://i.postimg.cc/fRC9h7hT/image-25.png"],
       "previewImg": "https://i.postimg.cc/qMtGWP54/2.png",
       "platforms": ["PS4", "PS5"],
       "languages": ["Полность на русском", "Английский"],
@@ -533,7 +597,7 @@
       "id": "81264",
       "type": "subscription",
       "title": "PS Plus Extra",
-      "photoUrls": ["https://i.postimg.cc/pVcZGWks/1.png"],
+      "photoUrls": ["https://i.postimg.cc/fRC9h7hT/image-25.png"],
       "previewImg": "https://i.postimg.cc/pVcZGWks/1.png",
       "platforms": ["PS4", "PS5"],
       "languages": ["Полность на русском", "Английский"],
@@ -563,7 +627,7 @@
       "id": "81265",
       "type": "subscription",
       "title": "PS Plus Deluxe",
-      "photoUrls": ["https://i.postimg.cc/x8Z3c5qw/image.png"],
+      "photoUrls": ["https://i.postimg.cc/fRC9h7hT/image-25.png"],
       "previewImg": "https://i.postimg.cc/x8Z3c5qw/image.png",
       "platforms": ["PS4", "PS5"],
       "languages": ["Полность на русском", "Английский"],
@@ -614,7 +678,7 @@
       "cashback": 25
     },
     {
-      "id": "8131213",
+      "id": "453",
       "type": "subscription",
       "title": "EA Play 12 месяцев",
       "photoUrls": ["https://i.postimg.cc/R0vxV8G8/image.png"],

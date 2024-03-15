@@ -6,6 +6,7 @@ import { Pagination } from 'swiper/modules';
 import Tag from '../Tag';
 import { gameType } from '../../../types/gameType';
 import { Link } from 'react-router-dom';
+import { getDiscount } from '../../../hooks/getDiscount';
 
 type GamesSliderProps = {
     data: gameType[],
@@ -29,7 +30,7 @@ export default function GamesSlider({ data, isLoading }: GamesSliderProps) {
                             <h1 className='text-title text-start'>{game.title}</h1>
                             {game.publications && <h2 className='text-subtitle'>{game.publications[0].title}</h2>}
                             <div className='flex gap-1'>
-                                <h3 className='price-small'>{game.publications[0].price}</h3>
+                                <h3 className='price-small'>{game.discount && game.discount.percent > 0 ? (getDiscount(game.publications[0].price.price, game.discount?.percent)) : (game.publications[0].price.price)} ₽</h3>
                                 {game.discount?.percent !== 0 && <Tag type="discount">-{game.discount?.percent}%</Tag>}
                             </div>
                         </Link>

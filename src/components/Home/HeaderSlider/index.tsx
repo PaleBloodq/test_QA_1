@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useGetSliderGamesQuery } from "../../../services/sliderApi"
 import { differenceInMonths, parseISO } from 'date-fns';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { getDiscount } from '../../../hooks/getDiscount';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -39,17 +40,17 @@ export default function HeaderSlider() {
                     className="headerSwiper"
                     ref={swiperRef}
                 >
-                    {data.map((item: gameType, index: number) => {
-                        const releaseDate = parseISO(item.releaseDate);
+                    {data.map((game: gameType, index: number) => {
+                        const releaseDate = parseISO(game.releaseDate);
                         const isNew = differenceInMonths(new Date(), releaseDate) < 2;
 
                         return (
                             <SwiperSlide key={`header-${index}`}>
-                                <Link className="flex w-full h-full relative" to={"/game/" + item.id}>
-                                    <img className="rounded-xl" src={item.previewImg} alt="" />
-                                    <div className="absolute bottom-[50px] z-10 flex w-full justify-center items-center">
-                                        <h1 className="text-white font-bold text-2xl">{item.publications[0].price}</h1>
-                                        {item.discount?.percent !== 0 && <Tag type="discount">-{item.discount?.percent}%</Tag>}
+                                <Link className="flex w-full h-full relative" to={"/game/" + game.id}>
+                                    <img className="rounded-xl" src={game.previewImg} alt="" />
+                                    <div className="absolute bottom-[50px] z-10 flex w-full justify-center games-center">
+                                        <h1 className="text-white font-bold text-2xl">{game.discount && game.discount.percent > 0 ? (getDiscount(game.publications[0].price.price, game.discount?.percent)) : (game.publications[0].price.price)} ₽</h1>
+                                        {game.discount?.percent !== 0 && <Tag type="discount">-{game.discount?.percent}%</Tag>}
                                         {isNew && <Tag type="new">Новинка</Tag>}
                                     </div>
                                 </Link>

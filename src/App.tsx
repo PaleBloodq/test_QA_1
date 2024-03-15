@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Game from './pages/Game';
+import Subscription from './pages/Subscription';
 
 export default function App() {
   return (
@@ -8,6 +9,7 @@ export default function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/game/:gameId' element={<Game />} />
+        <Route path='/subscription/:platform/:id' element={<Subscription />} />
       </Routes>
     </div>
   )

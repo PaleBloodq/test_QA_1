@@ -25,7 +25,7 @@ export default function Game() {
                         <div className="flex items-center">
                             <h1 className="price-big">275 ₽</h1>
                             <div className="flex">
-                                {data.discount?.percent !== undefined && (
+                                {data.discount?.percent !== 0 && (
                                     <Tag type="discount">-{data.discount?.percent}%</Tag>
                                 )}
                                 {data.cashback !== 0 && <Tag type="cashback">Кэшбэк: {data.cashback}</Tag>}

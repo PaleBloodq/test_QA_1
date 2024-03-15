@@ -16,11 +16,16 @@ export type gameType = {
 type Publication = {
   id: string;
   title: string;
-  price: number;
+  price: Price;
   includes?: string[]; // Опциональное поле, поскольку не все публикации его имеют
 };
 
 type Discount = {
   percent: number;
   deadline: string;
+};
+
+type Price = {
+  platform: string;
+  price: number;
 };
