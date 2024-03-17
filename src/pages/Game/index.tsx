@@ -4,11 +4,10 @@ import { gameType } from "../../types/gameType"
 import Container from "../../components/common/Container"
 import Tag from "../../components/common/Tag"
 import SelectPublication from "../../components/common/SelectPublictaion"
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useEffect } from "react"
+import { useDispatch } from "react-redux"
 import { setSelectedPublication } from "../../features/Game/publicationSlice"
 // import { getDiscount } from "../../hooks/getDiscount"
-import { selectedPublicationSelector } from "../../features/Game/publicationSelectors"
 
 export default function Game() {
 
@@ -22,7 +21,6 @@ export default function Game() {
     const { gameId } = useParams()
 
     const { data, isLoading }: GamePageType = useGetProductQuery(gameId)
-    const selectedPublication = useSelector(selectedPublicationSelector)
 
     useEffect(() => {
         if (data?.publications) {
@@ -56,7 +54,7 @@ export default function Game() {
                                 </div>
                             )
                         }
-                        <SelectPublication publications={data.publications} selectedPublication={selectedPublication} setSelectedPublication={setSelectedPublication} />
+                        <SelectPublication publications={data.publications} />
                     </div>
                 ) : (<h1>Страница не найдена</h1>)
                 }
