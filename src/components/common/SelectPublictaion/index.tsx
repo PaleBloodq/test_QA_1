@@ -1,31 +1,34 @@
 import { useState } from "react"
 import { Price, Publication } from "../../../types/publicationType"
 import SelectPlatform from "./SelectPlatform"
+import { useDispatch, useSelector } from "react-redux"
+import { selectedPublicationSelector } from "../../../features/Game/publicationSelectors"
+import { setSelectedPublication } from "../../../features/Game/publicationSlice"
 
 type SelectPublicationType = {
     publications: Publication[],
-    selected: string,
-    setSelected: (arg: string) => void
 }
 
-export default function SelectPublication({ publications, selected, setSelected }: SelectPublicationType) {
+export default function SelectPublication({ publications }: SelectPublicationType) {
+    const dispatch = useDispatch()
+
+    const selectedPublication = useSelector(selectedPublicationSelector)
 
     const [selectedPlatform, setSelectedPlatform] = useState(publications[0]?.price[0]?.platform || "null")
 
-    console.log(selected)
 
 
     return (
         <>
             <h2 className="text-title text-[18px] mb-[18px]">Издания</h2>
-            <SelectPlatform publications={publications} setSelectedPlatform={setSelectedPlatform} selected={selected} selectedPlatform={selectedPlatform} />
+            <SelectPlatform publications={publications} setSelectedPlatform={setSelectedPlatform} selectedPublication={selectedPublication} selectedPlatform={selectedPlatform} />
             <div className="w-full gap-3 flex justify-between">
                 {publications.map((publication) => {
                     return (
                         <button
-                            onClick={() => setSelected(publication.id)}
+                            onClick={() => dispatch(setSelectedPublication(publication.id))}
                             key={publication.id}
-                            className={`w-full h-20 flex flex-col justify-center items-center ${publication.id == selected ? 'custom-border__red' : 'custom-border'}`}
+                            className={`w-full h-20 flex flex-col justify-center items-center ${publication.id == selectedPublication ? 'custom-border__red' : 'custom-border'}`}
                             disabled={publication?.price?.find((price: Price) => price.platform === selectedPlatform)?.price === undefined}
                         >
                             <h1 className="text-subtitle">{publication.title}</h1>

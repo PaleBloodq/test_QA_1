@@ -3,6 +3,7 @@ import { productsApi } from "../services/productsApi";
 import { sliderApi } from "../services/sliderApi";
 import searchSlice from "../features/Search/searchSlice";
 import { subscribesApi } from "../services/subscribesApi";
+import publicationSlice from "../features/Game/publicationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     [sliderApi.reducerPath]: sliderApi.reducer,
     [subscribesApi.reducerPath]: subscribesApi.reducer,
     search: searchSlice,
+    publication: publicationSlice,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(
