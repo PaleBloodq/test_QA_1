@@ -5,8 +5,12 @@ import Container from "../../components/common/Container"
 import Tag from "../../components/common/Tag"
 import SelectPublication from "../../components/common/SelectPublictaion"
 import { useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setSelectedPublication } from "../../features/Game/publicationSlice"
+import { currentPriceSelector } from "../../features/Game/currentPriceSelectors"
+import { setCurrentPrice } from "../../features/Game/currentPriceSlice"
+import { getDiscount } from "../../hooks/getDiscount"
+import { selectedPlatformSelector, selectedPublicationSelector } from "../../features/Game/publicationSelectors"
 // import { getDiscount } from "../../hooks/getDiscount"
 
 export default function Game() {
@@ -21,12 +25,23 @@ export default function Game() {
     const { gameId } = useParams()
 
     const { data, isLoading }: GamePageType = useGetProductQuery(gameId)
+    const selectedPublication = useSelector(selectedPublicationSelector)
+    const selectedPlatform = useSelector(selectedPlatformSelector)
 
     useEffect(() => {
         if (data?.publications) {
             dispatch(setSelectedPublication(data.publications[0].id))
         }
     }, [data])
+
+    const currentPrice = useSelector(currentPriceSelector)
+
+    useEffect(() => {
+        dispatch(setCurrentPrice(data?.publications
+            .find((publication) => publication.id === selectedPublication).price
+            .find((price) => price.platform === selectedPlatform).price))
+    }, [selectedPublication, selectedPlatform])
+
 
 
 
@@ -38,7 +53,13 @@ export default function Game() {
                         <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={data.photoUrls[0]} alt="game image" />
                         <h1 className="text-header mb-6">{data.title}</h1>
                         <div className="flex items-center">
-                            <h1 className="price-big">275 ₽</h1>
+                            <h1 className="price-big">
+                                {
+                                    data.psPlusDiscount ?
+                                        getDiscount(currentPrice, data.psPlusDiscount)
+                                        : getDiscount(currentPrice, (data.discount.percent || 0))
+                                } ₽
+                            </h1>
                             <div className="flex">
                                 {data.discount?.percent !== 0 && (
                                     <Tag type="discount">-{data.discount?.percent}%</Tag>

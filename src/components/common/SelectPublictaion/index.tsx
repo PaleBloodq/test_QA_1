@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Price, Publication } from "../../../types/publicationType"
 import SelectPlatform from "./SelectPlatform"
 import { useDispatch, useSelector } from "react-redux"
-import { selectedPublicationSelector } from "../../../features/Game/publicationSelectors"
-import { setSelectedPublication } from "../../../features/Game/publicationSlice"
+import { selectedPlatformSelector, selectedPublicationSelector } from "../../../features/Game/publicationSelectors"
+import { setSelectedPlatform, setSelectedPublication } from "../../../features/Game/publicationSlice"
 
 type SelectPublicationType = {
     publications: Publication[],
@@ -14,14 +14,18 @@ export default function SelectPublication({ publications }: SelectPublicationTyp
 
     const selectedPublication = useSelector(selectedPublicationSelector)
 
-    const [selectedPlatform, setSelectedPlatform] = useState(publications[0]?.price[0]?.platform || "null")
+    const selectedPlatform = useSelector(selectedPlatformSelector)
+    useEffect(() => {
+        dispatch(setSelectedPlatform(publications[0]?.price[0]?.platform))
+    }, [])
+    // const [selectedPlatform, setSelectedPlatform] = useState(publications[0]?.price[0]?.platform || "null")
 
 
 
     return (
         <>
             <h2 className="text-title text-[18px] mb-[18px]">Издания</h2>
-            <SelectPlatform publications={publications} setSelectedPlatform={setSelectedPlatform} selectedPlatform={selectedPlatform} />
+            <SelectPlatform publications={publications} />
             <div className="w-full gap-3 flex justify-between">
                 {publications.map((publication) => {
                     return (
