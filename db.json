@@ -11,7 +11,10 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": [{ "platform": "PS4", "price": 1530 }, { "PS5": 1730 }],
+          "price": [
+            { "platform": "PS4", "price": 1530 },
+            { "platform": "PS5", "price": 1730 }
+          ],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -23,7 +26,7 @@
           "title": "Definitive",
           "price": [
             { "platform": "PS4", "price": 2750 },
-            { "platform": "PS5", "price": 500 }
+            { "platform": "PS5", "price": 3000 }
           ]
         }
       ],
@@ -45,7 +48,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -79,7 +82,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -113,7 +116,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -147,7 +150,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -181,7 +184,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -215,7 +218,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -249,7 +252,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -283,7 +286,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -317,7 +320,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -356,7 +359,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -392,7 +395,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -428,7 +431,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -466,7 +469,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -502,7 +505,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",
@@ -538,7 +541,7 @@
         {
           "id": "222",
           "title": "Standart",
-          "price": { "platform": "PS4", "price": 1530 },
+          "price": [{ "platform": "PS4", "price": 1530 }],
           "includes": [
             "Игра SKULL and BONES",
             "Все элитные бойцы",

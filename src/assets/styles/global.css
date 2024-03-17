@@ -10,7 +10,10 @@
 
 @layer components {
   .custom-border {
-    @apply border border-[#E7E7E8] dark:border-[#26292d] rounded-xl bg-[#F6F7FA] dark:bg-[#26292d];
+    @apply border border-[#E7E7E8] dark:border-[#26292d] rounded-xl bg-[#F6F7FA] dark:bg-[#FFFFFF0D];
+  }
+  .custom-border__red {
+    @apply border border-[#B13430] dark:border-[#B13430] rounded-xl bg-[#B134300c] dark:bg-[#B134300c];
   }
   .red-gradient {
     @apply bg-gradient-to-r from-[#C35530] to-[#B13430];

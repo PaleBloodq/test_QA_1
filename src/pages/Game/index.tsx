@@ -3,17 +3,29 @@ import { useGetProductQuery } from "../../services/productsApi"
 import { gameType } from "../../types/gameType"
 import Container from "../../components/common/Container"
 import Tag from "../../components/common/Tag"
+import SelectPublication from "../../components/common/SelectPublictaion"
+import { useEffect, useState } from "react"
+// import { getDiscount } from "../../hooks/getDiscount"
 
 export default function Game() {
 
     type GamePageType = {
-        data: gameType | undefined,
+        data?: gameType,
         isLoading: boolean,
     }
 
     const { gameId } = useParams()
 
     const { data, isLoading }: GamePageType = useGetProductQuery(gameId)
+    const [selectedPublication, setSelectedPublication] = useState('')
+
+    useEffect(() => {
+        if (data?.publications) {
+            setSelectedPublication(data.publications[0].id)
+        }
+    }, [data])
+
+
 
     return (
         <Container>
@@ -39,7 +51,7 @@ export default function Game() {
                                 </div>
                             )
                         }
-                        <h2 className="text-title text-[18px]">Издания</h2>
+                        <SelectPublication publications={data.publications} selected={selectedPublication} setSelected={setSelectedPublication} />
                     </div>
                 ) : (<h1>Страница не найдена</h1>)
                 }

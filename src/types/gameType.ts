@@ -1,3 +1,5 @@
+import { Publication } from "./publicationType";
+
 export type gameType = {
   id: string;
   type: string;
@@ -13,19 +15,7 @@ export type gameType = {
   cashback?: number;
 };
 
-type Publication = {
-  id: string;
-  title: string;
-  price: Price;
-  includes?: string[]; // Опциональное поле, поскольку не все публикации его имеют
-};
-
 type Discount = {
   percent: number;
   deadline: string;
-};
-
-type Price = {
-  platform: string;
-  price: number;
 };
