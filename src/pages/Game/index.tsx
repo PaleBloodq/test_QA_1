@@ -13,6 +13,7 @@ import { selectedPlatformSelector, selectedPublicationSelector } from '../../fea
 import { useEffect } from 'react';
 import { Publication } from '../../types/publicationType';
 import { isNew } from '../../hooks/useIsNew';
+import SelectPrice from '../../components/common/SelectPrice';
 
 export default function Game() {
     const dispatch = useDispatch();
@@ -44,6 +45,10 @@ export default function Game() {
     }
 
     const { publications, photoUrls, title } = data || {};
+    const currentPublication = publications?.find((pub: Publication) => pub.id === selectedPublication)
+
+    const isPsPlus = currentPublication?.psPlusDiscount
+
 
     return (
         <Container>
@@ -55,16 +60,20 @@ export default function Game() {
                         {isNew(data.releaseDate) && <Tag type="new">Новинка</Tag>}
                     </div>
                     <div className="flex items-center">
-                        <h1 className="price-big">
-                            {getDiscount(
-                                currentPrice,
-                                publications?.find((pub: Publication) => pub.id === selectedPublication)?.psPlusDiscount ||
-                                publications?.find((pub: Publication) => pub.id === selectedPublication)?.discount.percent
-                            )}{' '}
-                            ₽
-                        </h1>
+                        {!isPsPlus
+                            ?
+                            (
+                                <h1 className="price-big">
+                                    {getDiscount(
+                                        currentPrice,
+                                        currentPublication?.psPlusDiscount ||
+                                        currentPublication?.discount.percent
+                                    )}{' '}
+                                    ₽
+                                </h1>
+                            ) : <SelectPrice />}
                         <div className="flex">
-                            {publications?.find((pub: Publication) => pub.id === selectedPublication)?.psPlusDiscount === 0 && publications?.find((pub: Publication) => pub.id === selectedPublication)?.discount.percent ? (
+                            {currentPublication?.psPlusDiscount === 0 && currentPublication?.discount.percent ? (
                                 <Tag type="discount">
                                     -{publications.find((pub: Publication) => pub.id === selectedPublication)?.discount.percent}%
                                 </Tag>
@@ -72,10 +81,10 @@ export default function Game() {
                             {data.publications?.find((pub: Publication) => pub.id === selectedPublication)?.cashback ? <Tag type="cashback">Кэшбэк: {data.publications?.find((pub: Publication) => pub.id === selectedPublication)?.cashback}₽</Tag> : null}
                         </div>
                     </div>
-                    {publications?.find((pub: Publication) => pub.id === selectedPublication)?.discount.percent ? (
+                    {currentPublication?.discount.percent ? (
                         <div className="w-full flex justify-between mb-5">
                             <p className="text-subtitle">Скидка действует до:</p>
-                            <p className="text-subtitle-info">{publications?.find((pub: Publication) => pub.id === selectedPublication)?.discount.deadline}</p>
+                            <p className="text-subtitle-info">{currentPublication?.discount.deadline}</p>
                         </div>
                     ) : null}
                     <SelectPublication publications={publications} />
