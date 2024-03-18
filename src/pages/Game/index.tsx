@@ -55,6 +55,7 @@ export default function Game() {
                         {isNew(data.releaseDate) && <Tag type="new">Новинка</Tag>}
                     </div>
                     <div className="flex items-center">
+                        {/* {publications.find} */}
                         <h1 className="price-big">
                             {getDiscount(
                                 currentPrice,

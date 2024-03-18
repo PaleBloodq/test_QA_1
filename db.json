@@ -35,11 +35,10 @@
             { "platform": "PS5", "price": 3000 }
           ],
           "discount": {
-            "percent": 25,
+            "percent": 100,
             "deadline": "2024-12-5"
           },
           "psPlusDiscount": 15,
-          "cashback": 12,
           "cashback": 12
         },
         {
