@@ -12,6 +12,7 @@ import { getDiscount } from '../../hooks/getDiscount';
 import { selectedPlatformSelector, selectedPublicationSelector } from '../../features/Game/publicationSelectors';
 import { useEffect } from 'react';
 import { Publication } from '../../types/publicationType';
+import { isNew } from '../../hooks/useIsNew';
 
 export default function Game() {
     const dispatch = useDispatch();
@@ -49,7 +50,10 @@ export default function Game() {
             <div className="flex flex-col items-center">
                 <div className="flex flex-col items-start">
                     <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={photoUrls?.[0]} alt="game image" />
-                    <h1 className="text-header mb-6">{title}</h1>
+                    <div className='flex items-center  mb-6'>
+                        <h1 className="text-header">{title}</h1>
+                        {isNew(data.releaseDate) && <Tag type="new">Новинка</Tag>}
+                    </div>
                     <div className="flex items-center">
                         <h1 className="price-big">
                             {getDiscount(
@@ -65,14 +69,15 @@ export default function Game() {
                                     -{publications.find((pub: Publication) => pub.id === selectedPublication)?.discount.percent}%
                                 </Tag>
                             )}
+                            {data.publications?.find((pub: Publication) => pub.id === selectedPublication)?.cashback ? <Tag type="cashback">Кэшбэк: {data.publications?.find((pub: Publication) => pub.id === selectedPublication)?.cashback}₽</Tag> : null}
                         </div>
                     </div>
-                    {publications?.find((pub: Publication) => pub.id === selectedPublication)?.discount.percent && (
+                    {publications?.find((pub: Publication) => pub.id === selectedPublication)?.discount.percent ? (
                         <div className="w-full flex justify-between mb-5">
                             <p className="text-subtitle">Скидка действует до:</p>
                             <p className="text-subtitle-info">{publications?.find((pub: Publication) => pub.id === selectedPublication)?.discount.deadline}</p>
                         </div>
-                    )}
+                    ) : null}
                     <SelectPublication publications={publications} />
                 </div>
             </div>

@@ -24,7 +24,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 0
         },
         {
           "id": "22",
@@ -37,7 +38,23 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12,
+          "cashback": 12
+        },
+        {
+          "id": "333",
+          "title": "Deluxe",
+          "price": [
+            { "platform": "PS4", "price": 5000 },
+            { "platform": "PS5", "price": 7000 }
+          ],
+          "discount": {
+            "percent": 0,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 0,
+          "cashback": 12
         }
       ]
     },
@@ -62,7 +79,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -75,7 +93,7 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "cashback": 12
         }
       ]
     },
@@ -100,7 +118,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -113,7 +132,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     },
@@ -138,7 +158,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -151,7 +172,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     },
@@ -176,7 +198,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -189,7 +212,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     },
@@ -214,7 +238,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -227,7 +252,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     },
@@ -252,7 +278,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -265,7 +292,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     },
@@ -290,7 +318,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -303,7 +332,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     },
@@ -313,7 +343,7 @@
       "photoUrls": ["https://i.postimg.cc/3Nv7zQ8K/p1-3657681-f3347e4a.jpg"],
       "platforms": "PS4",
       "languages": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "releaseDate": "2024-03-18",
       "publications": [
         {
           "id": "222",
@@ -328,7 +358,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -341,7 +372,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     },
@@ -366,7 +398,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -379,7 +412,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     }
@@ -409,7 +443,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -422,7 +457,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     },
@@ -449,7 +485,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -462,7 +499,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     },
@@ -489,7 +527,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -502,7 +541,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     }
@@ -531,7 +571,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -544,7 +585,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     },
@@ -571,7 +613,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -584,7 +627,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     },
@@ -611,7 +655,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "id": "22",
@@ -624,7 +669,8 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
-          "psPlusDiscount": 15
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
       ]
     }
