@@ -4,9 +4,9 @@ export type Publication = {
   id: string;
   title: string;
   price: Price[];
-  includes?: string[];
+  includes: string[];
   discount: Discount;
-  cashback?: number;
+  cashback: number;
   psPlusDiscount?: number;
 };
 

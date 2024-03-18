@@ -10,7 +10,6 @@ export type gameType = {
   languages: string[];
   releaseDate: string;
   publications: Publication[];
-  discount?: Discount;
 };
 
 export type Discount = {
