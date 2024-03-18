@@ -55,7 +55,6 @@ export default function Game() {
                         {isNew(data.releaseDate) && <Tag type="new">Новинка</Tag>}
                     </div>
                     <div className="flex items-center">
-                        {/* {publications.find} */}
                         <h1 className="price-big">
                             {getDiscount(
                                 currentPrice,
@@ -65,11 +64,11 @@ export default function Game() {
                             ₽
                         </h1>
                         <div className="flex">
-                            {publications?.find((pub: Publication) => pub.id === selectedPublication)?.discount.percent !== 0 && (
+                            {publications?.find((pub: Publication) => pub.id === selectedPublication)?.psPlusDiscount === 0 && publications?.find((pub: Publication) => pub.id === selectedPublication)?.discount.percent ? (
                                 <Tag type="discount">
                                     -{publications.find((pub: Publication) => pub.id === selectedPublication)?.discount.percent}%
                                 </Tag>
-                            )}
+                            ) : null}
                             {data.publications?.find((pub: Publication) => pub.id === selectedPublication)?.cashback ? <Tag type="cashback">Кэшбэк: {data.publications?.find((pub: Publication) => pub.id === selectedPublication)?.cashback}₽</Tag> : null}
                         </div>
                     </div>
