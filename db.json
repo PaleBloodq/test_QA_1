@@ -33,6 +33,10 @@
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 3000 }
           ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
           "psPlusDiscount": 15
         }
       ]

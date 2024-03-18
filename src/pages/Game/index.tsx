@@ -55,16 +55,16 @@ export default function Game() {
                         <div className="flex items-center">
                             <h1 className="price-big">
                                 {
-                                    data.psPlusDiscount ?
-                                        getDiscount(currentPrice, data.psPlusDiscount)
-                                        : getDiscount(currentPrice, (data.discount.percent || 0))
+                                    data.publications.find((publ) => publ.id === selectedPublication)?.psPlusDiscount ?
+                                        getDiscount(currentPrice, data.publications.find((publ) => publ.id === selectedPublication)?.psPlusDiscount)
+                                        : getDiscount(currentPrice, data.publications.find((publ) => publ.id === selectedPublication)?.discount.percent)
                                 } ₽
                             </h1>
                             <div className="flex">
                                 {data.discount?.percent !== 0 && (
-                                    <Tag type="discount">-{data.discount?.percent}%</Tag>
+                                    <Tag type="discount">-{data.publications.find((publ) => publ.id === selectedPublication)?.discount.percent}%</Tag>
                                 )}
-                                {data.cashback !== 0 && <Tag type="cashback">Кэшбэк: {data.cashback}</Tag>}
+                                {/* {data.cashback !== 0 && <Tag type="cashback">Кэшбэк: {data.cashback}</Tag>} */}
                             </div>
                         </div>
                         {
