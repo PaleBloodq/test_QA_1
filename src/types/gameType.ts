@@ -11,11 +11,9 @@ export type gameType = {
   releaseDate: string;
   publications: Publication[];
   discount?: Discount;
-  psPlusDiscount?: number;
-  cashback?: number;
 };
 
-type Discount = {
+export type Discount = {
   percent: number;
   deadline: string;
 };

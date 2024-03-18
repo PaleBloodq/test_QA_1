@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Price, Publication } from "../../../types/publicationType"
 import SelectPlatform from "./SelectPlatform"
 import { useDispatch, useSelector } from "react-redux"
@@ -18,7 +18,6 @@ export default function SelectPublication({ publications }: SelectPublicationTyp
     useEffect(() => {
         dispatch(setSelectedPlatform(publications[0]?.price[0]?.platform))
     }, [])
-    // const [selectedPlatform, setSelectedPlatform] = useState(publications[0]?.price[0]?.platform || "null")
 
 
 

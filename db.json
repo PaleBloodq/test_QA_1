@@ -19,7 +19,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -27,15 +32,10 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 3000 }
-          ]
+          ],
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 0,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 25,
-      "cashback": 25
+      ]
     },
     {
       "id": "2",
@@ -53,7 +53,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -61,15 +66,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "3",
@@ -87,7 +91,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -95,15 +104,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "4",
@@ -121,7 +129,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -129,15 +142,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "5",
@@ -155,7 +167,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -163,15 +180,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "6",
@@ -189,7 +205,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -197,15 +218,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "7",
@@ -223,7 +243,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -231,15 +256,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "8",
@@ -257,7 +281,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -265,15 +294,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "9",
@@ -291,7 +319,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -299,15 +332,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "10",
@@ -325,7 +357,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -333,15 +370,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     }
   ],
 
@@ -364,7 +400,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -372,15 +413,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 0,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "50",
-      "cashback": 25
+      ]
     },
     {
       "id": "9",
@@ -400,7 +440,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -408,15 +453,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "7",
@@ -436,7 +480,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -444,15 +493,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     }
   ],
   "new": [
@@ -474,7 +522,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -482,15 +535,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "7",
@@ -510,7 +562,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -518,15 +575,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 90,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "1",
@@ -546,7 +602,12 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         },
         {
           "id": "22",
@@ -554,15 +615,14 @@
           "price": [
             { "platform": "PS4", "price": 2750 },
             { "platform": "PS5", "price": 500 }
-          ]
+          ],
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15
         }
-      ],
-      "discount": {
-        "percent": 0,
-        "deadline": "14.03.2024"
-      },
-      "psPlusDiscount": "50",
-      "cashback": 25
+      ]
     }
   ],
   "psPlus": [
@@ -574,27 +634,40 @@
       "previewImg": "https://i.postimg.cc/qMtGWP54/2.png",
       "platforms": ["PS4", "PS5"],
       "languages": ["Полность на русском", "Английский"],
+      "description": "Премиальная подписка для PlayStation. Включает всё, что есть в PS Plus Essential и Extra, а ещё  откроет каталог классических хитов Sony и эксклюзивные демо-версии.",
       "releaseDate": "2024-03-13",
       "durationVariations": [
         {
           "duration": 1,
-          "price": 995
+          "price": 995,
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "duration": 3,
-          "price": 2400
+          "price": 2400,
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "duration": 12,
-          "price": 10200
+          "price": 10200,
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
-      ],
-      "discount": {
-        "percent": 10,
-        "deadline": "18.03.2024"
-      },
-      "psPlusDiscount": 50,
-      "cashback": 25
+      ]
     },
     {
       "id": "81264",
@@ -604,27 +677,40 @@
       "previewImg": "https://i.postimg.cc/pVcZGWks/1.png",
       "platforms": ["PS4", "PS5"],
       "languages": ["Полность на русском", "Английский"],
+      "description": "Премиальная подписка для PlayStation. Включает всё, что есть в PS Plus Essential и Extra, а ещё  откроет каталог классических хитов Sony и эксклюзивные демо-версии.",
       "releaseDate": "2024-03-13",
       "durationVariations": [
         {
           "duration": 1,
-          "price": 1405
+          "price": 1405,
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "duration": 3,
-          "price": 2800
+          "price": 2800,
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "duration": 12,
-          "price": 11400
+          "price": 11400,
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
-      ],
-      "discount": {
-        "percent": 10,
-        "deadline": "18.03.2024"
-      },
-      "psPlusDiscount": 50,
-      "cashback": 25
+      ]
     },
     {
       "id": "81265",
@@ -634,27 +720,40 @@
       "previewImg": "https://i.postimg.cc/x8Z3c5qw/image.png",
       "platforms": ["PS4", "PS5"],
       "languages": ["Полность на русском", "Английский"],
+      "description": "Премиальная подписка для PlayStation. Включает всё, что есть в PS Plus Essential и Extra, а ещё  откроет каталог классических хитов Sony и эксклюзивные демо-версии.",
       "releaseDate": "2024-03-13",
       "durationVariations": [
         {
           "duration": 1,
-          "price": 1745
+          "price": 1745,
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "duration": 3,
-          "price": 3000
+          "price": 3000,
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15,
+          "cashback": 12
         },
         {
           "duration": 12,
-          "price": 14400
+          "price": 14400,
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
-      ],
-      "discount": {
-        "percent": 10,
-        "deadline": "18.03.2024"
-      },
-      "psPlusDiscount": 50,
-      "cashback": 25
+      ]
     }
   ],
   "eaPlay": [
@@ -666,19 +765,20 @@
       "previewImg": "https://i.postimg.cc/XYS0tX5n/1.png",
       "platforms": ["Xbox"],
       "languages": ["Полность на русском", "Английский"],
+      "description": "Премиальная подписка для PlayStation. Включает всё, что есть в PS Plus Essential и Extra, а ещё  откроет каталог классических хитов Sony и эксклюзивные демо-версии.",
       "releaseDate": "2024-03-13",
       "durationVariations": [
         {
           "duration": 1,
-          "price": 340
+          "price": 340,
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
-      ],
-      "discount": {
-        "percent": 10,
-        "deadline": "18.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     },
     {
       "id": "453",
@@ -688,19 +788,20 @@
       "previewImg": "https://i.postimg.cc/R0vxV8G8/image.png",
       "platforms": ["Xbox"],
       "languages": ["Полность на русском", "Английский"],
+      "description": "Премиальная подписка для PlayStation. Включает всё, что есть в PS Plus Essential и Extra, а ещё  откроет каталог классических хитов Sony и эксклюзивные демо-версии.",
       "releaseDate": "2024-03-13",
       "durationVariations": [
         {
           "duration": 12,
-          "price": 1625
+          "price": 1625,
+          "discount": {
+            "percent": 25,
+            "deadline": "2024-12-5"
+          },
+          "psPlusDiscount": 15,
+          "cashback": 12
         }
-      ],
-      "discount": {
-        "percent": 10,
-        "deadline": "18.03.2024"
-      },
-      "psPlusDiscount": 0,
-      "cashback": 25
+      ]
     }
   ]
 }

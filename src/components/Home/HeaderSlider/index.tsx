@@ -50,7 +50,7 @@ export default function HeaderSlider() {
                                     <img className="rounded-xl" src={game.previewImg} alt="" />
                                     <div className="absolute bottom-[50px] z-10 flex w-full justify-center games-center">
                                         <h1 className="text-white font-bold text-2xl">{game.discount && game.discount.percent > 0 ? (getDiscount(game.publications[0].price[0].price, game.discount?.percent)) : (game.publications[0].price[0].price)} ₽</h1>
-                                        {game.discount?.percent !== 0 && <Tag type="discount">-{game.discount?.percent}%</Tag>}
+                                        {game.publications[0].discount.percent !== 0 && <Tag type="discount">-{game.publications[0].discount.percent}%</Tag>}
                                         {isNew && <Tag type="new">Новинка</Tag>}
                                     </div>
                                 </Link>
