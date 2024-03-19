@@ -23,7 +23,7 @@ export default function SelectPublication({ publications }: SelectPublicationTyp
 
     return (
         <>
-            <h2 className="text-title text-[18px] mb-[18px]">Издания</h2>
+            <h2 className="text-title-xl mb-[18px]">Издания</h2>
             <SelectPlatform publications={publications} />
             <div className="w-full gap-3 flex justify-between">
                 {publications.map((publication) => {

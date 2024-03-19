@@ -7,7 +7,7 @@ export type Publication = {
   includes: string[];
   discount: Discount;
   cashback: number;
-  psPlusDiscount?: number;
+  psPlusDiscount: number;
 };
 
 export type Price = {

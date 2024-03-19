@@ -29,7 +29,7 @@ export default function GamesSlider({ data, isLoading }: GamesSliderProps) {
                             <img className='rounded-xl max-h-[200px] mb-[18px]' src={game.previewImg} alt="game image" />
                             <h1 className='text-title text-start'>{game.title}</h1>
                             {game.publications && <h2 className='text-subtitle'>{game.publications[0].title}</h2>}
-                            <div className='flex gap-1'>
+                            <div className='flex gap-2'>
                                 <h3 className='price-small'>{game.publications[0].discount.percent && game.publications[0].discount.percent > 0 ? (getDiscount(game.publications[0].price[0].price, game.publications[0].discount.percent)) : (game.publications[0].price[0].price)} ₽</h3>
                                 {game.publications[0].discount.percent !== 0 && <Tag type="discount">-{game.publications[0].discount.percent}%</Tag>}
                             </div>

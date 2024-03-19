@@ -4,9 +4,9 @@
       "id": "1",
       "title": "SKULL and BONES",
       "photoUrls": ["https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"],
-      "platformss": ["PS4", "PS5"],
-      "languagess": ["Полностью на русском"],
-      "releaseDate": "22.10.2020",
+      "platforms": ["PS4", "PS5"],
+      "languages": ["Полностью на русском"],
+      "releaseDate": "2024-03-20",
       "publications": [
         {
           "id": "222",
@@ -39,7 +39,12 @@
             "deadline": "2024-12-5"
           },
           "psPlusDiscount": 15,
-          "cashback": 12
+          "cashback": 12,
+          "includes": [
+            "Игра SKULL and BONES",
+            "Все элитные бойцы",
+            "8 обликов солдат (2-й год войны)"
+          ]
         },
         {
           "id": "333",
@@ -53,7 +58,12 @@
             "deadline": "2024-12-5"
           },
           "psPlusDiscount": 0,
-          "cashback": 12
+          "cashback": 12,
+          "includes": [
+            "Игра SKULL and BONES",
+            "Все элитные бойцы",
+            "8 обликов солдат (2-й год войны)"
+          ]
         }
       ]
     },
@@ -61,9 +71,9 @@
       "id": "2",
       "title": "Battlefield V",
       "photoUrls": ["https://i.postimg.cc/8PvP0Mch/1af34a63a2529ab4cf8e42d04c0497d7.jpg"],
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
+      "releaseDate": "2020-10-12",
       "publications": [
         {
           "id": "222",
@@ -92,6 +102,7 @@
             "percent": 25,
             "deadline": "2024-12-5"
           },
+          "psPlusDiscount": 0,
           "cashback": 12
         }
       ]
@@ -100,9 +111,9 @@
       "id": "3",
       "title": "The Outlast Trials",
       "photoUrls": ["https://i.postimg.cc/50GbP2M7/333684.jpg"],
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
+      "releaseDate": "2024-03-18",
       "publications": [
         {
           "id": "222",
@@ -140,9 +151,9 @@
       "id": "4",
       "title": "Resident Evil Village",
       "photoUrls": ["https://i.postimg.cc/Btfs07b2/350641.jpg"],
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
+      "releaseDate": "2024-03-18",
       "publications": [
         {
           "id": "222",
@@ -180,9 +191,9 @@
       "id": "5",
       "title": "EA Sports FC24",
       "photoUrls": ["https://i.postimg.cc/TPdd1s99/54mxthdxuhda7zozhp4ohtv14493quh0.webp"],
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
+      "releaseDate": "2024-03-18",
       "publications": [
         {
           "id": "222",
@@ -220,9 +231,9 @@
       "id": "6",
       "title": "Helldivers",
       "photoUrls": ["https://i.postimg.cc/g0gYZKtP/boxart.jpg"],
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
+      "releaseDate": "2024-03-18",
       "publications": [
         {
           "id": "222",
@@ -260,9 +271,9 @@
       "id": "7",
       "title": "Pacific Drive",
       "photoUrls": ["https://i.postimg.cc/P5krsJv0/co6590.jpg"],
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
+      "releaseDate": "2024-03-18",
       "publications": [
         {
           "id": "222",
@@ -300,9 +311,9 @@
       "id": "8",
       "title": "GTA V",
       "photoUrls": ["https://i.postimg.cc/dQkyJ7D0/p1-3235031-bfcf47b0.jpg"],
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
+      "releaseDate": "2024-03-18",
       "publications": [
         {
           "id": "222",
@@ -340,8 +351,8 @@
       "id": "9",
       "title": "Resident Evil 4",
       "photoUrls": ["https://i.postimg.cc/3Nv7zQ8K/p1-3657681-f3347e4a.jpg"],
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
       "releaseDate": "2024-03-18",
       "publications": [
         {
@@ -380,9 +391,9 @@
       "id": "10",
       "title": "Brothers a Tale of Two Sons",
       "photoUrls": ["https://i.postimg.cc/qRgpXCW6/qlxn-Sv-JLKr-JZg-MASFWT4-XQ.jpg"],
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
-      "releaseDate": "22.10.2020",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
+      "releaseDate": "2024-03-18",
       "publications": [
         {
           "id": "222",
@@ -425,8 +436,8 @@
       "title": "SKULL and BONES",
       "photoUrls": ["https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"],
       "previewImg": "https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg",
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
       "releaseDate": "2023-03-13",
       "publications": [
         {
@@ -467,8 +478,8 @@
       "title": "Resident Evil 4",
       "photoUrls": ["https://i.postimg.cc/3Nv7zQ8K/p1-3657681-f3347e4a.jpg"],
       "previewImg": "https://i.postimg.cc/3Nv7zQ8K/p1-3657681-f3347e4a.jpg",
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
       "releaseDate": "2024-03-13",
       "publications": [
         {
@@ -509,8 +520,8 @@
       "title": "Pacific Drive",
       "photoUrls": ["https://i.postimg.cc/P5krsJv0/co6590.jpg"],
       "previewImg": "https://i.postimg.cc/P5krsJv0/co6590.jpg",
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
       "releaseDate": "2023-03-13",
       "publications": [
         {
@@ -553,8 +564,8 @@
       "title": "Brothers a Tale of Two Sons",
       "photoUrls": ["https://i.postimg.cc/qRgpXCW6/qlxn-Sv-JLKr-JZg-MASFWT4-XQ.jpg"],
       "previewImg": "https://i.postimg.cc/qRgpXCW6/qlxn-Sv-JLKr-JZg-MASFWT4-XQ.jpg",
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
       "releaseDate": "2024-03-13",
       "publications": [
         {
@@ -595,8 +606,8 @@
       "title": "Pacific Drive",
       "photoUrls": ["https://i.postimg.cc/P5krsJv0/co6590.jpg"],
       "previewImg": "https://i.postimg.cc/P5krsJv0/co6590.jpg",
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
       "releaseDate": "2024-03-13",
       "publications": [
         {
@@ -637,8 +648,8 @@
       "title": "SKULL and BONES",
       "photoUrls": ["https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"],
       "previewImg": "https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg",
-      "platforms": "PS4",
-      "languages": "Полностью на русском",
+      "platforms": ["PS4"],
+      "languages": ["Полностью на русском"],
       "releaseDate": "2024-03-13",
       "publications": [
         {

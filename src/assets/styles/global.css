@@ -15,6 +15,9 @@
   .custom-border__red {
     @apply border border-[#B13430] dark:border-[#B13430] rounded-xl bg-[#B134300c] dark:bg-[#B134300c];
   }
+  .custom-border__psPlus {
+    @apply border border-[#3c67d7] dark:border-[#ffb800] rounded-xl bg-[#f5f7fd] dark:bg-[#262520] text-[#3c67d7] dark:text-[#ffb800];
+  }
   .red-gradient {
     @apply bg-gradient-to-r from-[#C35530] to-[#B13430];
   }
@@ -23,6 +26,9 @@
   }
   .text-title {
     @apply text-base font-medium text-black dark:text-white;
+  }
+  .text-title-xl {
+    @apply text-[18px] font-medium text-black dark:text-white;
   }
   .text-subtitle {
     @apply text-[14px] text-[#606D7B] dark:text-[#FFFFFF99];
@@ -35,5 +41,8 @@
   }
   .price-big {
     @apply text-[32px] text-black dark:text-white font-medium;
+  }
+  .custom-marker::marker {
+    color: #b13430;
   }
 }
