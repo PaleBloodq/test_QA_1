@@ -1,4 +1,6 @@
+import Donation from "../../components/Home/Donation";
 import HeaderSlider from "../../components/Home/HeaderSlider";
+import Leaders from "../../components/Home/Leaders";
 import NewGames from "../../components/Home/NewGames";
 import Subscribes from "../../components/Home/Subscribes";
 import Container from "../../components/common/Container";
@@ -11,6 +13,8 @@ export default function Home() {
             <HeaderSlider />
             <NewGames />
             <Subscribes />
+            <Leaders />
+            <Donation />
         </Container>
     )
 }

@@ -1,12 +1,18 @@
 import Container from "../../components/common/Container";
 import { useParams } from "react-router";
 import { useGetSubscribeQuery } from "../../services/subscribesApi";
-import Tag from "../../components/common/Tag";
 
 
 export default function Subscription() {
 
-    const { platform, id }: { platform: string, id: string } = useParams();
+    interface RouteParams {
+        [key: string]: string | undefined;
+        platform: string;
+        id: string;
+    }
+
+
+    const { platform, id } = useParams<RouteParams>();
     const { data = [], isLoading } = useGetSubscribeQuery(`${platform} ${id}`);
 
     return (

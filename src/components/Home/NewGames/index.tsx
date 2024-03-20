@@ -12,7 +12,7 @@ export default function NewGames() {
                 <img src={lightningIcon} alt="new" />
                 <h1 className="text-header">Новинки</h1>
             </div>
-            <GamesSlider data={data} isLoading={isLoading} />
+            <GamesSlider type="game" data={data} isLoading={isLoading} />
         </div>
     )
 }
