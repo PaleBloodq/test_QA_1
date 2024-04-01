@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const subscribesApi = createApi({
   reducerPath: "subscribesApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_DATABASE_URL }),
   endpoints: (builder) => ({
     getSubscribes: builder.query({
       query: () => `subscribes`,
