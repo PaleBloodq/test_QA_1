@@ -1,18 +1,37 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { useTransition, animated } from 'react-spring';
 import Home from './pages/Home';
 import Game from './pages/Game';
 import Subscription from './pages/Subscription';
 import Cart from './pages/Cart';
+import { useEffect } from 'react';
 
 export default function App() {
-  return (
-    <div className='w-full h-full bg-white dark:bg-[#1a1e22]'>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/game/:gameId' element={<Game />} />
-        <Route path='/subscription/:platform/:id' element={<Subscription />} />
-        <Route path='/cart' element={<Cart />} />
-      </Routes>
-    </div>
-  )
+
+  const location = useLocation();
+  const transitions = useTransition(location, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    config: { duration: 250 }
+  });
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 250)
+  }, [location])
+
+  return transitions((styles, item) => (
+    <animated.div style={styles} className="animated-page">
+      <div className='w-full h-full bg-white dark:bg-[#1a1e22]'>
+        <Routes location={item}>
+          <Route path='/' element={<Home />} />
+          <Route path='/game/:gameId' element={<Game />} />
+          <Route path='/subscription/:platform/:id' element={<Subscription />} />
+          <Route path='/cart' element={<Cart />} />
+        </Routes>
+      </div>
+    </animated.div>
+  ))
 }
