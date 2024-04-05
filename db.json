@@ -40,11 +40,7 @@
           },
           "psPlusDiscount": 15,
           "cashback": 12,
-          "includes": [
-            "Игра SKULL and BONES",
-            "Все элитные бойцы",
-            "8 обликов солдат (2-й год войны)"
-          ]
+          "includes": ["Игра SKULL and BONES", "8 обликов солдат (2-й год войны)"]
         },
         {
           "id": "333",

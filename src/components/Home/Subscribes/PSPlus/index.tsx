@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useGetPsSubscribesQuery } from "../../../../services/subscribesApi"
 import SubscriptionPeriodSelector from "../../../common/SubscriptionPeriodSelect"
-import { subscriptionType } from "../../../../types/subscriptionType";
+import { durationVariationsType, subscriptionType } from "../../../../types/subscriptionType";
 import { Link } from "react-router-dom";
+import useIsLoading from "../../../../hooks/useIsLoading";
 
-export default function PSPlus() {
-    const { data = [], isLoading } = useGetPsSubscribesQuery({})
+export default function PSPlus({ data = [] }: { data: subscriptionType[] }) {
+    const isLoading = useIsLoading(data[0])
     const [selectedDuration, setSelectedDuration] = useState(1)
 
     return (
@@ -13,8 +13,8 @@ export default function PSPlus() {
             <h1 className="text-header mb-[22px]">Подписки PS Plus</h1>
             <SubscriptionPeriodSelector selected={selectedDuration} onChange={setSelectedDuration} />
             <div className="flex flex-col gap-2">
-                {!isLoading && data.map((subscription: subscriptionType) => {
-                    const priceForSelectedDuration = subscription.durationVariations.find(variation => variation.duration === selectedDuration)?.price;
+                {!isLoading && data[0].durationVariations.map((subscription: durationVariationsType) => {
+                    const priceForSelectedDuration = subscription.price.find(variation => variation.duration === selectedDuration)?.price;
                     return (
                         <Link to={`/subscription/ps/${subscription.id}`} className="flex w-full px-2 py-2 custom-border justify-between items-center" key={'pssub-' + subscription.id}>
                             <img src={subscription.previewImg} alt="preview" />

@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { useGetSliderGamesQuery } from "../../../services/sliderApi"
+import { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { getDiscount } from '../../../hooks/getDiscount';
 
@@ -11,10 +10,11 @@ import Tag from '../../common/Tag';
 import { gameType } from '../../../types/gameType';
 import { Link } from 'react-router-dom';
 import { isNew } from '../../../hooks/useIsNew';
+import useIsLoading from '../../../hooks/useIsLoading';
 
-export default function HeaderSlider() {
-    const { data = [], isLoading } = useGetSliderGamesQuery({});
+export default function HeaderSlider({ data }) {
     const swiperRef = useRef(null);
+    const isLoading = useIsLoading(data)
 
     useEffect(() => {
         if (swiperRef.current) {
@@ -26,8 +26,6 @@ export default function HeaderSlider() {
             });
         }
     }, []);
-
-
 
     return (
         <div className="h-[355px] w-full">

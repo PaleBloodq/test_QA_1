@@ -1,10 +1,12 @@
 import lightningIcon from "@icons/lightning.svg";
 import GamesSlider from "../../common/GamesSlider";
-import { useGetSliderNewGamesQuery } from "../../../services/sliderApi";
+import useIsLoading from "../../../hooks/useIsLoading";
+import { gameType } from "../../../types/gameType";
 
-export default function NewGames() {
+export default function NewGames({ data }: { data: gameType[] }) {
 
-    const { data = [], isLoading } = useGetSliderNewGamesQuery({})
+    const isLoading = useIsLoading(data && data.length | 0)
+
 
     return (
         <div className="mt-7 pt-6 pb-3 px-4 custom-border flex flex-col">

@@ -5,7 +5,7 @@ import Container from '../../components/common/Container';
 import SelectPublication from '../../components/common/SelectPublictaion';
 import SelectPrice from '../../components/common/SelectPrice';
 import Tag from '../../components/common/Tag';
-import { useGetProductQuery } from '../../services/productsApi';
+// import { useGetProductQuery } from '../../services/productsApi';
 import { currentPriceSelector } from '../../features/Game/currentPriceSelectors';
 import { setCurrentPrice } from '../../features/Game/currentPriceSlice';
 import { setSelectedPublication } from '../../features/Game/publicationSlice';
@@ -22,34 +22,34 @@ import Button from '../../components/common/Button';
 export default function Game() {
     const dispatch = useDispatch();
     const { gameId } = useParams();
-    const { data, isLoading, isError } = useGetProductQuery(gameId) as { data: gameType; isLoading: boolean; isError: boolean };
+    // const { data, isLoading, isError } = useGetProductQuery(gameId) as { data: gameType; isLoading: boolean; isError: boolean };
     const selectedPublication = useSelector(selectedPublicationSelector);
     const selectedPlatform = useSelector(selectedPlatformSelector);
     const currentPrice = useSelector(currentPriceSelector);
 
-    useEffect(() => {
-        if (data?.publications) {
-            dispatch(setSelectedPublication(data.publications[0].id));
-        }
-    }, [data, dispatch]);
+    // useEffect(() => {
+    //     if (data?.publications) {
+    //         dispatch(setSelectedPublication(data.publications[0].id));
+    //     }
+    // }, [data, dispatch]);
 
-    useEffect(() => {
-        const publication = data?.publications.find((pub: Publication) => pub.id === selectedPublication);
-        const price = publication?.price.find((p) => p.platform === selectedPlatform)?.price;
-        dispatch(setCurrentPrice(price));
-    }, [selectedPublication, selectedPlatform, data]);
+    // useEffect(() => {
+    //     const publication = data?.publications.find((pub: Publication) => pub.id === selectedPublication);
+    //     const price = publication?.price.find((p) => p.platform === selectedPlatform)?.price;
+    //     dispatch(setCurrentPrice(price));
+    // }, [selectedPublication, selectedPlatform, data]);
 
-    if (isError) {
-        return <div>Произошла ошибка, пожалуйста перезагрузите страницу</div>;
-    }
+    // if (isError) {
+    //     return <div>Произошла ошибка, пожалуйста перезагрузите страницу</div>;
+    // }
 
-    if (isLoading) {
-        return <div>Загрузка...</div>;
-    }
+    // if (isLoading) {
+    //     return <div>Загрузка...</div>;
+    // }
 
-    const { publications, photoUrls, title } = data || {};
-    const currentPublication = publications?.find((pub: Publication) => pub.id === selectedPublication);
-    const isPsPlus = currentPublication?.psPlusDiscount;
+    // const { publications, photoUrls, title } = data || {};
+    // const currentPublication = publications?.find((pub: Publication) => pub.id === selectedPublication);
+    // const isPsPlus = currentPublication?.psPlusDiscount;
 
     return (
         <Container>

@@ -1,10 +1,9 @@
+import useIsLoading from "../../../hooks/useIsLoading";
 import GamesSlider from "../../common/GamesSlider";
-import { useGetSliderLeadersGamesQuery } from "../../../services/sliderApi";
 
-export default function Leaders() {
+export default function Leaders({ data = [] }) {
 
-    const { data = [], isLoading } = useGetSliderLeadersGamesQuery({})
-
+    const isLoading = useIsLoading(data[0])
 
     return (
         <div className="mt-7 pt-6 pb-3 px-4 custom-border flex flex-col">

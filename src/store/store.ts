@@ -1,26 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { productsApi } from "../services/productsApi";
-import { sliderApi } from "../services/sliderApi";
 import searchSlice from "../features/Search/searchSlice";
-import { subscribesApi } from "../services/subscribesApi";
 import publicationSlice from "../features/Game/publicationSlice";
 import currentPriceSlice from "../features/Game/currentPriceSlice";
 
 export const store = configureStore({
   reducer: {
     [productsApi.reducerPath]: productsApi.reducer,
-    [sliderApi.reducerPath]: sliderApi.reducer,
-    [subscribesApi.reducerPath]: subscribesApi.reducer,
     search: searchSlice,
     publication: publicationSlice,
     currentPrice: currentPriceSlice,
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(
-      productsApi.middleware,
-      sliderApi.middleware,
-      subscribesApi.middleware
-    );
+    return getDefaultMiddleware().concat(productsApi.middleware);
   },
 });
 

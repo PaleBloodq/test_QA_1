@@ -42,9 +42,10 @@ const GameCard = React.memo(({ game }: { game: gameType }) => {
 });
 
 const DonationCard = React.memo(({ donation }: { donation: donationType }) => {
+    console.log(donation)
     return (
         <Link to={'/donation/' + donation.id} className='w-full h-[240px] flex flex-col items-start justify-between'>
-            <img className='h-full rounded-xl mb-[18px]' src={donation.previewImg} alt="donation image" />
+            <img className='h-full rounded-xl mb-[18px]' src={donation.photoUrls[0]} alt="donation image" />
         </Link>
     );
 });
@@ -60,15 +61,15 @@ const GamesSlider = React.memo(({ data, isLoading, type }: GamesSliderProps) => 
                     modules={[Pagination]}
                     className="newGamesSlider"
                 >
-                    {data.map((item, index) => (
-                        <SwiperSlide key={index}>
+                    {data.map((item, index) => {
+                        return <SwiperSlide key={index}>
                             {type === "game" ? (
                                 <GameCard game={item as gameType} />
                             ) : type === "donation" ? (
                                 <DonationCard donation={item as donationType} />
                             ) : null}
                         </SwiperSlide>
-                    ))}
+                    })}
                 </Swiper>
             }
         </>

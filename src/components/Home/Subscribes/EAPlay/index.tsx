@@ -1,21 +1,22 @@
 import { Link } from "react-router-dom"
-import { useGetEaSubscribesQuery } from "../../../../services/subscribesApi"
 import { subscriptionType } from "../../../../types/subscriptionType"
+import useIsLoading from "../../../../hooks/useIsLoading"
 
-export default function EAPlay() {
+export default function EAPlay({ data = [] }: { data: subscriptionType[] }) {
 
-    const { data = [], isLoading } = useGetEaSubscribesQuery({})
+    const isLoading = useIsLoading(data[0])
+
 
     return (
         <div>
             <h1 className="text-header mb-[22px]">Подписки EA Play</h1>
             <div className="flex flex-col gap-2">
-                {!isLoading && (data).map((subscription: subscriptionType) => (
-                    <Link to={`/subscription/ea/${subscription.id}`} className="flex w-full px-2 py-2 custom-border justify-between items-center" key={`sub-` + subscription.id} >
-                        <img src={subscription.previewImg} alt="preview" />
+                {!isLoading && (
+                    <Link to={`/subscription/ea/${data[0].id}`} className="flex w-full px-2 py-2 custom-border justify-between items-center" key={`sub-` + data[0].id} >
+                        <img src={data[0].durationVariations[0].previewImg} alt="preview" />
                         <div className="flex flex-col gap-2 items-start">
-                            <h1 className="text-subtitle">{subscription.title}</h1>
-                            <h2 className="price-small">{subscription.durationVariations[0].price} ₽</h2>
+                            <h1 className="text-subtitle">{data[0].title}</h1>
+                            {/* <h2 className="price-small">{subscription.durationVariations[0]} ₽</h2> */}
                         </div>
                         <div className="self-start">
                             <svg className="fill-[#606D7B] dark:fill-[#606D7B]" width="23" height="23" viewBox="0 0 23 23" xmlns=" http://www.w3.org/2000/svg">
@@ -23,7 +24,7 @@ export default function EAPlay() {
                             </svg>
                         </div>
                     </Link>
-                ))}
+                )}
             </div>
         </div >
     )

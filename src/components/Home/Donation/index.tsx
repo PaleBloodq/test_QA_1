@@ -1,12 +1,10 @@
 import gamepadIcon from "@icons/gamepad.svg";
 import GamesSlider from "../../common/GamesSlider";
-import { useGetSliderDonationsQuery } from "../../../services/sliderApi";
+import useIsLoading from "../../../hooks/useIsLoading";
 
-export default function Donation() {
+export default function Donation({ data = [] }) {
 
-    const { data = [], isLoading } = useGetSliderDonationsQuery({})
-
-    console.log(data)
+    const isLoading = useIsLoading(data[0])
 
     return (
         <div className="mt-7 pt-6 pb-3 px-4 custom-border flex flex-col">
