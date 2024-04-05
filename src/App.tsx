@@ -13,13 +13,13 @@ export default function App() {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
-    config: { duration: 250 }
+    config: { duration: 300 }
   });
 
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo(0, 0);
-    }, 250)
+    }, 300)
   }, [location])
 
   return transitions((styles, item) => (
