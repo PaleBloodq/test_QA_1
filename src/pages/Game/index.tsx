@@ -18,38 +18,37 @@ import { isDatePassed } from '../../hooks/isDatePassed';
 import ReleaseTimer from '../../components/common/ReleaseTimer';
 import Line from '../../components/common/Line';
 import Button from '../../components/common/Button';
+import { useGetAnyProductQuery } from '../../services/productsApi';
 
 export default function Game() {
     const dispatch = useDispatch();
     const { gameId } = useParams();
-    // const { data, isLoading, isError } = useGetProductQuery(gameId) as { data: gameType; isLoading: boolean; isError: boolean };
+    const { data = [], isLoading } = useGetAnyProductQuery(gameId);
     const selectedPublication = useSelector(selectedPublicationSelector);
     const selectedPlatform = useSelector(selectedPlatformSelector);
     const currentPrice = useSelector(currentPriceSelector);
 
-    // useEffect(() => {
-    //     if (data?.publications) {
-    //         dispatch(setSelectedPublication(data.publications[0].id));
-    //     }
-    // }, [data, dispatch]);
 
-    // useEffect(() => {
-    //     const publication = data?.publications.find((pub: Publication) => pub.id === selectedPublication);
-    //     const price = publication?.price.find((p) => p.platform === selectedPlatform)?.price;
-    //     dispatch(setCurrentPrice(price));
-    // }, [selectedPublication, selectedPlatform, data]);
+    useEffect(() => {
+        if (data?.publications) {
+            dispatch(setSelectedPublication(data.publications[0].id));
+        }
+    }, [data, dispatch]);
 
-    // if (isError) {
-    //     return <div>Произошла ошибка, пожалуйста перезагрузите страницу</div>;
-    // }
+    useEffect(() => {
+        const publication = data?.publications?.find((pub: Publication) => pub.id === selectedPublication);
+        const price = publication?.price.find((p) => p.platform === selectedPlatform)?.price;
+        dispatch(setCurrentPrice(price));
+    }, [selectedPublication, selectedPlatform, data]);
 
-    // if (isLoading) {
-    //     return <div>Загрузка...</div>;
-    // }
 
-    // const { publications, photoUrls, title } = data || {};
-    // const currentPublication = publications?.find((pub: Publication) => pub.id === selectedPublication);
-    // const isPsPlus = currentPublication?.psPlusDiscount;
+    if (isLoading) {
+        return <div>Загрузка...</div>;
+    }
+
+    const { publications, photoUrls, title } = data || {};
+    const currentPublication = publications?.find((pub: Publication) => pub.id === selectedPublication);
+    const isPsPlus = currentPublication?.psPlusDiscount;
 
     return (
         <Container>

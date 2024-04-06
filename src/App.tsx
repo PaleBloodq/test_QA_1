@@ -27,7 +27,7 @@ export default function App() {
       <div className='w-full h-full bg-white dark:bg-[#1a1e22]'>
         <Routes location={item}>
           <Route path='/' element={<Home />} />
-          {/* <Route path='/game/:gameId' element={<Game />} /> */}
+          <Route path='/game/:gameId' element={<Game />} />
           {/* <Route path='/subscription/:platform/:id' element={<Subscription />} /> */}
           {/* <Route path='/cart' element={<Cart />} /> */}
         </Routes>
