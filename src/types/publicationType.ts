@@ -3,14 +3,14 @@ import { Discount } from "./gameType";
 export type Publication = {
   id: string;
   title: string;
-  price: Price[];
+  price: PriceType[];
   includes: string[];
   discount: Discount;
   cashback: number;
   psPlusDiscount: number;
 };
 
-export type Price = {
+export type PriceType = {
   platform: string;
   price: number;
 };

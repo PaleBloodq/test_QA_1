@@ -1,6 +1,6 @@
 import { Publication } from "./publicationType";
 
-export type gameType = {
+export type GameType = {
   id: string;
   type: string;
   title: string;

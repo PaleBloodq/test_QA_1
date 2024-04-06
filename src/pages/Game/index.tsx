@@ -1,17 +1,15 @@
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import Container from '../../components/common/Container';
 import SelectPublication from '../../components/common/SelectPublictaion';
 import SelectPrice from '../../components/common/SelectPrice';
 import Tag from '../../components/common/Tag';
-// import { useGetProductQuery } from '../../services/productsApi';
 import { currentPriceSelector } from '../../features/Game/currentPriceSelectors';
 import { setCurrentPrice } from '../../features/Game/currentPriceSlice';
 import { setSelectedPublication } from '../../features/Game/publicationSlice';
 import { selectedPlatformSelector, selectedPublicationSelector } from '../../features/Game/publicationSelectors';
-import { gameType } from '../../types/gameType';
-import { Publication } from '../../types/publicationType';
+import { PriceType, Publication } from '../../types/publicationType';
 import { isNew } from '../../hooks/useIsNew';
 import { getDiscount } from '../../hooks/getDiscount';
 import { isDatePassed } from '../../hooks/isDatePassed';
@@ -37,7 +35,7 @@ export default function Game() {
 
     useEffect(() => {
         const publication = data?.publications?.find((pub: Publication) => pub.id === selectedPublication);
-        const price = publication?.price.find((p) => p.platform === selectedPlatform)?.price;
+        const price = publication?.price.find((p: PriceType) => p.platform === selectedPlatform)?.price;
         dispatch(setCurrentPrice(price));
     }, [selectedPublication, selectedPlatform, data]);
 
@@ -86,7 +84,7 @@ export default function Game() {
                     <div className='flex flex-col px-3'>
                         <h1 className='text-title-xl mb-[20px]'>Состав издания:</h1>
                         <ul className='list-disc'>
-                            {currentPublication?.includes.map((item, index) => (
+                            {currentPublication?.includes.map((item: ReactNode, index: number) => (
                                 <li key={index} className='custom-marker text-subtitle'>{item}</li>
                             ))}
                         </ul>
@@ -95,11 +93,11 @@ export default function Game() {
                     <div className='flex flex-col gap-2 w-full'>
                         <div className='w-full flex justify-between'>
                             <p className='text-subtitle'>Платформа:</p>
-                            <p className='text-title text-[14px]'>{data.platforms.map((platform) => platform).join(', ')}</p>
+                            <p className='text-title text-[14px]'>{data.platforms.map((platform: string[]) => platform).join(', ')}</p>
                         </div>
                         <div className='w-full flex justify-between'>
                             <p className='text-subtitle'>Язык:</p>
-                            <p className='text-title text-[14px]'>{data.languages.map((lang) => lang).join(', ')}</p>
+                            <p className='text-title text-[14px]'>{data.languages.map((lang: string[]) => lang).join(', ')}</p>
                         </div>
                         <div className='w-full flex justify-between'>
                             <p className='text-subtitle'>Дата релиза:</p>
