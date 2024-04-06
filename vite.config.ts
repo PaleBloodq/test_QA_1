@@ -5,11 +5,13 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: "/aoki-store",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
       "@icons": path.resolve(__dirname, "./src/assets/icons"),
       "@services": path.resolve(__dirname, "./src/services"),
+      "@components": path.resolve(__dirname, "./src/components/"),
     },
   },
 });
