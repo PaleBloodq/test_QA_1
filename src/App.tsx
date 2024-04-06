@@ -28,8 +28,8 @@ export default function App() {
         <Routes location={item}>
           <Route path='/' element={<Home />} />
           <Route path='/game/:gameId' element={<Game />} />
-          {/* <Route path='/subscription/:platform/:id' element={<Subscription />} /> */}
-          {/* <Route path='/cart' element={<Cart />} /> */}
+          <Route path='/subscription/:subscriptionId/:id' element={<Subscription />} />
+          <Route path='/cart' element={<Cart />} />
         </Routes>
       </div>
     </animated.div>

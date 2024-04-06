@@ -3,20 +3,22 @@ import SubscriptionPeriodSelector from "../../../common/SubscriptionPeriodSelect
 import { durationVariationsType, subscriptionType } from "../../../../types/subscriptionType";
 import { Link } from "react-router-dom";
 import useIsLoading from "../../../../hooks/useIsLoading";
+import { useSelector } from "react-redux";
+import { durationSelector } from "../../../../features/Subscription/subscriptionSelectors";
 
 export default function PSPlus({ data = [] }: { data: subscriptionType[] }) {
     const isLoading = useIsLoading(data[0])
-    const [selectedDuration, setSelectedDuration] = useState(1)
+    const duration = useSelector(durationSelector)
 
     return (
         <div>
             <h1 className="text-header mb-[22px]">Подписки PS Plus</h1>
-            <SubscriptionPeriodSelector selected={selectedDuration} onChange={setSelectedDuration} />
+            <SubscriptionPeriodSelector selected={duration} />
             <div className="flex flex-col gap-2">
                 {!isLoading && data[0].durationVariations.map((subscription: durationVariationsType) => {
-                    const priceForSelectedDuration = subscription.price.find(variation => variation.duration === selectedDuration)?.price;
+                    const priceForSelectedDuration = subscription.price.find(variation => variation.duration === duration)?.price;
                     return (
-                        <Link to={`/subscription/ps/${subscription.id}`} className="flex w-full px-2 py-2 custom-border justify-between items-center" key={'pssub-' + subscription.id}>
+                        <Link to={`/subscription/${data[0].id}/${subscription.id}`} className="flex w-full px-2 py-2 custom-border justify-between items-center" key={'pssub-' + subscription.id}>
                             <img src={subscription.previewImg} alt="preview" />
                             <div className="flex flex-col gap-2 items-start">
                                 <h1 className="text-subtitle">{subscription.title}</h1>

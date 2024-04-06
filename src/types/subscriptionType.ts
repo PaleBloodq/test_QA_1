@@ -13,10 +13,7 @@ export type subscriptionType = {
 export type durationVariationsType = {
   id: string;
   title: string;
-  price: {
-    duration: number;
-    price: number;
-  }[];
+  price: SubscriptionPriceType[];
   photoUrls: string[];
   previewImg: string;
   discriptin: string;
@@ -26,4 +23,9 @@ export type durationVariationsType = {
     deadline: string;
   };
   cashback: number;
+};
+
+export type SubscriptionPriceType = {
+  duration: number;
+  price: number;
 };
