@@ -25,7 +25,7 @@ export default function SelectSubscription({ durations }: { durations: durationV
               >
                 <h1 className="text-subtitle">{duration.title}</h1>
                 <h2 className="price-small">
-                  {duration.price.find((item) => item.duration === currentDuration)?.price}
+                  {duration.price.find((item) => item.duration === currentDuration)?.price} ₽
                 </h2>
               </button>
             )

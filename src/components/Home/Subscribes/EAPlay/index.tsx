@@ -12,7 +12,7 @@ export default function EAPlay({ data = [] }: { data: subscriptionType[] }) {
             <h1 className="text-header mb-[22px]">Подписки EA Play</h1>
             <div className="flex flex-col gap-2">
                 {!isLoading && (
-                    <Link to={`/subscription/ea/${data[0].id}`} className="flex w-full px-2 py-2 custom-border justify-between items-center" key={`sub-` + data[0].id} >
+                    <Link to={`/subscription/${data[0].id}/${data[0].durationVariations[0].id}`} className="flex w-full px-2 py-2 custom-border justify-between items-center" key={`sub-` + data[0].id} >
                         <img src={data[0].durationVariations[0].previewImg} alt="preview" />
                         <div className="flex flex-col gap-2 items-start">
                             <h1 className="text-subtitle">{data[0].title}</h1>

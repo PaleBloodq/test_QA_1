@@ -36,6 +36,7 @@ export default function Subscription() {
     }, [selectedSubscription])
 
     console.log(currentSubscription)
+    console.log(data)
 
     return (
         <Container>
@@ -43,7 +44,7 @@ export default function Subscription() {
                 {!isLoading && currentSubscription !== undefined ? (
                     <div className="flex flex-col items-start">
                         <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={currentSubscription.photoUrls[0]} alt="game image" />
-                        <h1 className="text-header mb-2">{currentSubscription.title}</h1>
+                        <h1 className="text-header mb-2">{data.title.includes('PS') ? 'PS Plus' : 'EA Play'} {currentSubscription.title}</h1>
                         <div className="flex items-center">
                             <h1 className="price-big">{currentSubscription.price.find((price: SubscriptionPriceType) => price.duration === currentDuration).price} ₽</h1>
                         </div>
