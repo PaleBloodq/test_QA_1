@@ -5,6 +5,12 @@ const searchSlice = createSlice({
   name: "search",
   initialState: {
     value: "",
+    platforms: [],
+    languages: [],
+    lowPrice: 0,
+    highPrice: 0,
+    offset: 0,
+    limit: 20,
   },
   reducers: {
     setSearchValue: (state, action: PayloadAction<string>) => {
