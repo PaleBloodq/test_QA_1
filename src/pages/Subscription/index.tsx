@@ -36,8 +36,6 @@ export default function Subscription() {
         setCurrentSubscription(data.durationVariations?.find((sub: subscriptionType) => sub.id === selectedSubscription))
     }, [selectedSubscription])
 
-    console.log(currentSubscription)
-    console.log(data)
 
     return (
         <Container>

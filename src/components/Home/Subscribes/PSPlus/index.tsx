@@ -1,4 +1,3 @@
-import { useState } from "react";
 import SubscriptionPeriodSelector from "../../../common/SubscriptionPeriodSelect"
 import { durationVariationsType, subscriptionType } from "../../../../types/subscriptionType";
 import { Link } from "react-router-dom";

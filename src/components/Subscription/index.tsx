@@ -3,7 +3,6 @@ import SubscriptionPeriodSelector from "../common/SubscriptionPeriodSelect";
 import { durationSelector, selectedSubscriptionSelector } from "../../features/Subscription/subscriptionSelectors";
 import { durationVariationsType } from "../../types/subscriptionType";
 import { setSelectedSubscription } from "../../features/Subscription/subscriptionSlice";
-import Button from "../common/Button";
 
 export default function SelectSubscription({ durations }: { durations: durationVariationsType[] }) {
 

@@ -5,6 +5,7 @@ import Game from './pages/Game';
 import Subscription from './pages/Subscription';
 import Cart from './pages/Cart';
 import { useEffect } from 'react';
+import DonationPage from './pages/DonationPage';
 
 export default function App() {
 
@@ -29,6 +30,7 @@ export default function App() {
           <Route path='/' element={<Home />} />
           <Route path='/game/:gameId' element={<Game />} />
           <Route path='/subscription/:subscriptionId/:id' element={<Subscription />} />
+          <Route path='/donation/:id' element={<DonationPage />} />
           <Route path='/cart' element={<Cart />} />
         </Routes>
       </div>
