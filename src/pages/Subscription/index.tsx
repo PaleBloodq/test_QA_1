@@ -8,6 +8,7 @@ import { SubscriptionPriceType, subscriptionType } from "../../types/subscriptio
 import { durationSelector, selectedSubscriptionSelector } from "../../features/Subscription/subscriptionSelectors";
 import { setSelectedSubscription } from "../../features/Subscription/subscriptionSlice";
 import Line from "../../components/common/Line";
+import Button from "../../components/common/Button";
 
 
 export default function Subscription() {
@@ -69,6 +70,7 @@ export default function Subscription() {
                                 <p className='text-title text-[14px]'>{data.releaseDate}</p>
                             </div>
                         </div>
+                        <Button onClick={() => console.log('click')}>Добавить в корзину</Button>
                     </div>
                 ) : (<h1>Загрузка...</h1>)
                 }
