@@ -17,6 +17,7 @@ import ReleaseTimer from '../../components/common/ReleaseTimer';
 import Line from '../../components/common/Line';
 import Button from '../../components/common/Button';
 import { useGetAnyProductQuery } from '../../services/productsApi';
+import { addToCart } from '../../features/Cart/cartSlice';
 
 export default function Game() {
     const dispatch = useDispatch();

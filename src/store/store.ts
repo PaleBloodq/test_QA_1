@@ -4,6 +4,7 @@ import searchSlice from "../features/Search/searchSlice";
 import publicationSlice from "../features/Game/publicationSlice";
 import currentPriceSlice from "../features/Game/currentPriceSlice";
 import subscriptionSlice from "../features/Subscription/subscriptionSlice";
+import cartSlice from "../features/Cart/cartSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     publication: publicationSlice,
     currentPrice: currentPriceSlice,
     subscription: subscriptionSlice,
+    cart: cartSlice,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(productsApi.middleware);

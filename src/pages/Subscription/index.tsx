@@ -7,6 +7,7 @@ import SelectSubscription from "../../components/Subscription";
 import { SubscriptionPriceType, subscriptionType } from "../../types/subscriptionType";
 import { durationSelector, selectedSubscriptionSelector } from "../../features/Subscription/subscriptionSelectors";
 import { setSelectedSubscription } from "../../features/Subscription/subscriptionSlice";
+import Line from "../../components/common/Line";
 
 
 export default function Subscription() {
@@ -25,7 +26,6 @@ export default function Subscription() {
     const selectedSubscription = useSelector(selectedSubscriptionSelector);
     const currentDuration = useSelector(durationSelector);
     const [currentSubscription, setCurrentSubscription] = useState(data.durationVariations?.find((sub: subscriptionType) => sub.id === id))
-    console.log(currentSubscription)
     useEffect(() => {
         setCurrentSubscription(data.durationVariations?.find((sub: subscriptionType) => sub.id === id))
         dispatch(setSelectedSubscription(data.durationVariations?.find((sub: subscriptionType) => sub.id === id).id))
@@ -34,6 +34,8 @@ export default function Subscription() {
     useEffect(() => {
         setCurrentSubscription(data.durationVariations?.find((sub: subscriptionType) => sub.id === selectedSubscription))
     }, [selectedSubscription])
+
+    console.log(currentSubscription)
 
     return (
         <Container>
@@ -46,6 +48,26 @@ export default function Subscription() {
                             <h1 className="price-big">{currentSubscription.price.find((price: SubscriptionPriceType) => price.duration === currentDuration).price} ₽</h1>
                         </div>
                         <SelectSubscription durations={data.durationVariations} />
+                        <div className="mt-8 w-full">
+                            <p className="text-subtitle-info">
+                                {currentSubscription.description}
+                            </p>
+                        </div>
+                        <Line />
+                        <div className='flex flex-col gap-2 w-full'>
+                            <div className='w-full flex justify-between'>
+                                <p className='text-subtitle'>Платформа:</p>
+                                <p className='text-title text-[14px]'>{data.platforms.map((platform: string[]) => platform).join(', ')}</p>
+                            </div>
+                            <div className='w-full flex justify-between'>
+                                <p className='text-subtitle'>Язык:</p>
+                                <p className='text-title text-[14px]'>{data.languages.map((lang: string[]) => lang).join(', ')}</p>
+                            </div>
+                            <div className='w-full flex justify-between'>
+                                <p className='text-subtitle'>Дата релиза:</p>
+                                <p className='text-title text-[14px]'>{data.releaseDate}</p>
+                            </div>
+                        </div>
                     </div>
                 ) : (<h1>Загрузка...</h1>)
                 }
