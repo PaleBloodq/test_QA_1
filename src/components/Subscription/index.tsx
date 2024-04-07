@@ -15,13 +15,13 @@ export default function SelectSubscription({ durations }: { durations: durationV
       <h1 className="text-title mb-5">Издания</h1>
       <div>
         <SubscriptionPeriodSelector selected={currentDuration} />
-        <div className="w-full gap-3 flex justify-between">
+        <div className="w-full gap-3 flex justify-center flex-wrap">
           {durations.map((duration) => {
             return (
               <button
                 onClick={() => dispatch(setSelectedSubscription(duration.id))}
                 key={duration.id}
-                className={`w-full h-20 flex flex-col justify-center items-center ${duration.id == selectedSubscription ? 'custom-border__red' : 'custom-border'}`}
+                className={`w-[107px] h-20 flex flex-col justify-center items-center ${duration.id == selectedSubscription ? 'custom-border__red' : 'custom-border'}`}
               >
                 <h1 className="text-subtitle">{duration.title}</h1>
                 <h2 className="price-small">
