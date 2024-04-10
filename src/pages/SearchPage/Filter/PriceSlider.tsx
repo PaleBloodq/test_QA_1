@@ -26,11 +26,11 @@ const PriceSlider = memo(({ initData }: { initData: FilterInitData }) => {
             <div className="flex gap-[10px] w-full">
                 <div className="w-[168px] h-[50px] custom-border flex px-5 gap-2 items-center">
                     <p className="text-subtitle">От:</p>
-                    <input onChange={(e) => Number(e.target.value) > (initData.lowPrice - 1) ? dispatch(setSearchLowPrice(e.target.value)) : dispatch(setSearchLowPrice(initData.lowPrice))} value={lowPrice} className="w-full bg-transparent outline-none text-subtitle-info" type="number" />
+                    <input onChange={(e) => Number(e.target.value) > (initData.lowPrice - 1) ? dispatch(setSearchLowPrice(Number(e.target.value))) : dispatch(setSearchLowPrice(initData.lowPrice))} value={lowPrice} className="w-full bg-transparent outline-none text-subtitle-info" type="number" />
                 </div>
                 <div className="w-[168px] h-[50px] custom-border flex px-5 gap-2 items-center">
                     <p className="text-subtitle">До:</p>
-                    <input onChange={(e) => Number(e.target.value) < initData.highPrice ? dispatch(setSearchHighPrice(e.target.value)) : dispatch(setSearchHighPrice(initData.highPrice))} value={highPrice} className="w-full bg-transparent outline-none text-subtitle-info" type="number" />
+                    <input onChange={(e) => Number(e.target.value) < initData.highPrice ? dispatch(setSearchHighPrice(Number(e.target.value))) : dispatch(setSearchHighPrice(initData.highPrice))} value={highPrice} className="w-full bg-transparent outline-none text-subtitle-info" type="number" />
                 </div>
             </div>
             <div className="w-full flex justify-center">

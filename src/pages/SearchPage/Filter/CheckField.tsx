@@ -1,8 +1,10 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
-export default function CheckField({ children }) {
+export default function CheckField({ children, defaultChecked }) {
 
     const [checked, setChecked] = useState(false)
+
+    useEffect(() => { setChecked(defaultChecked) }, [defaultChecked])
 
     return (
         <div onClick={() => setChecked(!checked)} className="h-[44px] custom-border flex px-3 items-center gap-3">

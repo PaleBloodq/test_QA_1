@@ -1,10 +1,11 @@
 import CheckField from "./CheckField";
 import 'rc-slider/assets/index.css';
 import { setSearchLanguages, setSearchPlatforms } from "../../../features/Search/searchSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../../../components/common/Button";
 import PriceSlider from "./PriceSlider";
 import { FilterInitData } from "../../../types/filterInitData";
+import { searchSelector } from "../../../features/Search/searchSelectors";
 
 type FilterPropsType = {
     initData: FilterInitData,
@@ -15,6 +16,8 @@ type FilterPropsType = {
 export default function Filter({ initData, setShowFilter }: FilterPropsType) {
 
     const dispatch = useDispatch();
+
+    const { platforms, languages } = useSelector(searchSelector)
 
     return (
         <div className="absoulte top-0 left-0 w-full h-full">
@@ -29,13 +32,13 @@ export default function Filter({ initData, setShowFilter }: FilterPropsType) {
             <div>
                 <h3 className="text-subtitle block mb-4">Платформа</h3>
                 <div className="flex gap-[10px]">
-                    {initData.platforms.map((platform: string, index: number) => <button key={'platform-' + index} onClick={() => dispatch(setSearchPlatforms(platform))}><CheckField>{platform}</CheckField></button>)}
+                    {initData.platforms.map((platform: string, index: number) => <button key={'platform-' + index} onClick={() => dispatch(setSearchPlatforms(platform))}><CheckField defaultChecked={platforms.includes(platform)}>{platform}</CheckField></button>)}
                 </div>
             </div>
             <div className="mt-7">
                 <h3 className="text-subtitle block mb-4">Язык</h3>
                 <div className="flex gap-[10px]">
-                    {initData.languages.map((lang: string, index: number) => <button key={'language-' + index} onClick={() => dispatch(setSearchLanguages(lang))}><CheckField>{lang}</CheckField></button>)}
+                    {initData.languages.map((lang: string, index: number) => <button key={'language-' + index} onClick={() => dispatch(setSearchLanguages(lang))}><CheckField defaultChecked={languages.includes(lang)}>{lang}</CheckField></button>)}
                 </div>
             </div>
             <div className="mt-7">
