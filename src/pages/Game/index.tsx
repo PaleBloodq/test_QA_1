@@ -18,6 +18,7 @@ import Line from '../../components/common/Line';
 import Button from '../../components/common/Button';
 import { useGetAnyProductQuery } from '../../services/productsApi';
 import { addToCart } from '../../features/Cart/cartSlice';
+import { CartItemType } from '../../types/cartItem';
 
 export default function Game() {
     const dispatch = useDispatch();
@@ -48,6 +49,20 @@ export default function Game() {
     const { publications, photoUrls, title } = data || {};
     const currentPublication = publications?.find((pub: Publication) => pub.id === selectedPublication);
     const isPsPlus = currentPublication?.psPlusDiscount;
+
+    console.log(currentPublication, currentPrice)
+
+    const cartItem: CartItemType = {
+        id: currentPublication?.id,
+        type: data?.type,
+        img: data?.previewImg,
+        title: data?.title,
+        publication: currentPublication?.title,
+        platform: selectedPlatform,
+        price: currentPrice,
+        discount: currentPublication?.discount.percent,
+        cashback: currentPublication?.cashback
+    }
 
     return (
         <Container>
@@ -105,7 +120,7 @@ export default function Game() {
                             <p className='text-title text-[14px]'>{data.releaseDate}</p>
                         </div>
                     </div>
-                    <Button onClick={() => console.log('click')}>Добавить в корзину</Button>
+                    <Button onClick={() => dispatch(addToCart(cartItem))}>Добавить в корзину</Button>
                 </div>
             </div>
         </Container>

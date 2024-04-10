@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { getDiscount } from '../../../hooks/getDiscount';
 
@@ -7,12 +7,12 @@ import 'swiper/css/pagination';
 
 import './headerSlider.css';
 import Tag from '../../common/Tag';
-import { gameType } from '../../../types/gameType';
+import { GameType } from '../../../types/gameType';
 import { Link } from 'react-router-dom';
 import { isNew } from '../../../hooks/useIsNew';
 import useIsLoading from '../../../hooks/useIsLoading';
 
-export default function HeaderSlider({ data }) {
+export default function HeaderSlider({ data }: { data: GameType[] }) {
     const swiperRef = useRef(null);
     const isLoading = useIsLoading(data)
 
@@ -38,7 +38,7 @@ export default function HeaderSlider({ data }) {
                     className="headerSwiper"
                     ref={swiperRef}
                 >
-                    {data.map((game: gameType, index: number) => {
+                    {data.map((game: GameType, index: number) => {
                         return (
                             <SwiperSlide key={`header-${index}`}>
                                 <Link className="flex w-full h-full relative" to={"/game/" + game.id}>

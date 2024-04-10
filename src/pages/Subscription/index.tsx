@@ -9,6 +9,7 @@ import { durationSelector, selectedSubscriptionSelector } from "../../features/S
 import { setSelectedSubscription } from "../../features/Subscription/subscriptionSlice";
 import Line from "../../components/common/Line";
 import Button from "../../components/common/Button";
+import { CartItemType } from "../../types/cartItem";
 
 
 export default function Subscription() {
@@ -35,6 +36,7 @@ export default function Subscription() {
     useEffect(() => {
         setCurrentSubscription(data.durationVariations?.find((sub: subscriptionType) => sub.id === selectedSubscription))
     }, [selectedSubscription])
+
 
 
     return (
