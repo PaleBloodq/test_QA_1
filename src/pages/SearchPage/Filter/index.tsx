@@ -32,13 +32,13 @@ export default function Filter({ initData, setShowFilter }: FilterPropsType) {
             <div>
                 <h3 className="text-subtitle block mb-4">Платформа</h3>
                 <div className="flex gap-[10px]">
-                    {initData.platforms.map((platform: string, index: number) => <button key={'platform-' + index} onClick={() => dispatch(setSearchPlatforms(platform))}><CheckField defaultChecked={platforms.includes(platform)}>{platform}</CheckField></button>)}
+                    {initData.platforms.map((platform: string, index: number) => <button key={'platform-' + index} onClick={() => dispatch(setSearchPlatforms(platform))}><CheckField checked={platforms.includes(platform)}>{platform}</CheckField></button>)}
                 </div>
             </div>
             <div className="mt-7">
                 <h3 className="text-subtitle block mb-4">Язык</h3>
                 <div className="flex gap-[10px]">
-                    {initData.languages.map((lang: string, index: number) => <button key={'language-' + index} onClick={() => dispatch(setSearchLanguages(lang))}><CheckField defaultChecked={languages.includes(lang)}>{lang}</CheckField></button>)}
+                    {initData.languages.map((lang: string, index: number) => <button key={'language-' + index} onClick={() => dispatch(setSearchLanguages(lang))}><CheckField checked={languages.includes(lang)}>{lang}</CheckField></button>)}
                 </div>
             </div>
             <div className="mt-7">
