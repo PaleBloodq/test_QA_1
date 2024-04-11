@@ -45,15 +45,15 @@ export default function Subscription() {
         id: currentSubscription?.id,
         type: "subscription",
         img: currentSubscription?.previewImg,
-        title: "PS Plus",
+        title: data?.title?.includes('PS') ? "PS Plus" : "EA Play",
         publication: `${currentSubscription?.title} ${currentDuration} мес`,
-        platform: 'PS',
+        platform: data?.title?.includes('PS') ? 'PS' : "EA",
         price: currentPrice,
         discount: currentSubscription?.discount.percent,
         cashback: currentSubscription?.cashback
     }
 
-    console.log(cartItem)
+    console.log(data)
 
 
     return (
