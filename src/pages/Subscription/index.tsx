@@ -11,6 +11,7 @@ import Line from "../../components/common/Line";
 import Button from "../../components/common/Button";
 import { CartItemType } from "../../types/cartItem";
 import { addToCart } from "../../features/Cart/cartSlice";
+import AddToCartButton from "../../components/common/AddToCartButton";
 
 
 export default function Subscription() {
@@ -87,7 +88,7 @@ export default function Subscription() {
                                 <p className='text-title text-[14px]'>{data.releaseDate}</p>
                             </div>
                         </div>
-                        <Button onClick={() => dispatch(addToCart(cartItem))}>Добавить в корзину</Button>
+                        <AddToCartButton cartItem={cartItem} />
                     </div>
                 ) : (<h1>Загрузка...</h1>)
                 }

@@ -19,6 +19,7 @@ import Button from '../../components/common/Button';
 import { useGetAnyProductQuery } from '../../services/productsApi';
 import { addToCart } from '../../features/Cart/cartSlice';
 import { CartItemType } from '../../types/cartItem';
+import AddToCartButton from '../../components/common/AddToCartButton';
 
 export default function Game() {
     const dispatch = useDispatch();
@@ -120,7 +121,7 @@ export default function Game() {
                             <p className='text-title text-[14px]'>{data.releaseDate}</p>
                         </div>
                     </div>
-                    <Button onClick={() => dispatch(addToCart(cartItem))}>Добавить в корзину</Button>
+                    <AddToCartButton cartItem={cartItem} />
                 </div>
             </div>
         </Container>

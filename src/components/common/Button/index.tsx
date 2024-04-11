@@ -6,7 +6,7 @@ type ButtonProps = {
 
 export default function Button({ children, onClick }: ButtonProps) {
     return (
-        <button className="w-full h-[50px] rounded-lg red-gradient text-white font-medium text-[15px] mt-5 active:scale-[0.99]" onClick={onClick}>
+        <button className="w-full h-[50px] rounded-lg red-gradient text-white font-medium text-[15px] mt-5 active:scale-[0.98] transition-all" onClick={onClick}>
             {children}
         </button>
     )

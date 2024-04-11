@@ -9,6 +9,7 @@ import Button from "../../components/common/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../features/Cart/cartSlice";
 import { CartItemType } from "../../types/cartItem";
+import AddToCartButton from "../../components/common/AddToCartButton";
 
 export default function DonationPage() {
 
@@ -57,7 +58,7 @@ export default function DonationPage() {
                                 <p className='text-title text-[14px]'>{data.releaseDate}</p>
                             </div>
                         </div>
-                        <Button onClick={() => dispatch(addToCart(cartItem))}>Добавить в корзину</Button>
+                        <AddToCartButton cartItem={cartItem} />
                     </div>
                 }
             </div>
