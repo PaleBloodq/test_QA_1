@@ -8,6 +8,7 @@ import { getDiscount } from "../../hooks/getDiscount";
 import Tag from "../../components/common/Tag";
 import CheckBox from "../../components/common/CheckBox";
 import { userSelector } from "../../features/User/userSelectors";
+import Order from "./Order";
 
 export default function Cart() {
 
@@ -71,6 +72,7 @@ export default function Cart() {
                     </div>
                 </div>
             </div>
+            <Order />
         </Container>
     )
 }
