@@ -582,7 +582,11 @@
         "platforms": ["PS4"],
         "languages": ["Полность на русском"],
         "releaseDate": "2024-02-11",
-        "quantityVariations": [100, 500, 1050, 1600, 2800, 5900, 12000],
+        "quantityVariations": [
+          { "id": "dlaskdklas", "count": 100 },
+          { "id": "dasdasdaxczxczx", "count": 200 },
+          { "id": "kasjdjasdjkas", "count": 300 }
+        ],
         "unitPrice": 5
       },
       {
@@ -594,7 +598,11 @@
         "platforms": ["PS4", "PS5", "PC"],
         "languages": ["Полность на русском"],
         "releaseDate": "2024-02-11",
-        "quantityVariations": [25, 50, 100, 150, 1000, 2000, 5000],
+        "quantityVariations": [
+          { "id": "cmkzxcmzxc", "count": 100 },
+          { "id": "qwje21uye1892", "count": 200 },
+          { "id": "vmqsakldnoasj", "count": 300 }
+        ],
         "unitPrice": 10
       }
     ],
@@ -1138,7 +1146,11 @@
       "platforms": ["PS4"],
       "languages": ["Полность на русском"],
       "releaseDate": "2024-02-11",
-      "quantityVariations": [100, 500, 1050, 1600, 2800, 5900, 12000],
+      "quantityVariations": [
+        { "id": "dlaskdklas", "count": 100 },
+        { "id": "dasdasdaxczxczx", "count": 200 },
+        { "id": "kasjdjasdjkas", "count": 300 }
+      ],
       "unitPrice": 5
     },
     {
@@ -1150,7 +1162,11 @@
       "platforms": ["PS4", "PS5", "PC"],
       "languages": ["Полность на русском"],
       "releaseDate": "2024-02-11",
-      "quantityVariations": [25, 50, 100, 150, 1000, 2000, 5000],
+      "quantityVariations": [
+        { "id": "cmkzxcmzxc", "count": 100 },
+        { "id": "qwje21uye1892", "count": 200 },
+        { "id": "vmqsakldnoasj", "count": 300 }
+      ],
       "unitPrice": 10
     }
   ],
@@ -1217,7 +1233,11 @@
       "platforms": ["PS4"],
       "languages": ["Полность на русском"],
       "releaseDate": "2024-02-11",
-      "quantityVariations": [100, 500, 1050, 1600, 2800, 5900, 12000],
+      "quantityVariations": [
+        { "id": "dlaskdklas", "count": 100 },
+        { "id": "dasdasdaxczxczx", "count": 200 },
+        { "id": "kasjdjasdjkas", "count": 300 }
+      ],
       "unitPrice": 5
     },
     {

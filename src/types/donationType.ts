@@ -7,6 +7,11 @@ export type donationType = {
   platforms: string[];
   languages: string[];
   releaseDate: string;
-  quantityVariations: number[];
+  quantityVariations: QuantityVariations[];
   unitPrice: number;
+};
+
+export type QuantityVariations = {
+  id: string;
+  count: number;
 };

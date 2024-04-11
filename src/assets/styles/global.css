@@ -43,6 +43,9 @@ body {
   .price-small {
     @apply text-[18px] text-black dark:text-white font-medium;
   }
+  .price-medium {
+    @apply text-[24px] text-black dark:text-white font-medium;
+  }
   .price-big {
     @apply text-[32px] text-black dark:text-white font-medium;
   }
