@@ -10,6 +10,7 @@ import { setSelectedSubscription } from "../../features/Subscription/subscriptio
 import Line from "../../components/common/Line";
 import Button from "../../components/common/Button";
 import { CartItemType } from "../../types/cartItem";
+import { addToCart } from "../../features/Cart/cartSlice";
 
 
 export default function Subscription() {
@@ -37,6 +38,22 @@ export default function Subscription() {
         setCurrentSubscription(data.durationVariations?.find((sub: subscriptionType) => sub.id === selectedSubscription))
     }, [selectedSubscription])
 
+    const currentPrice = currentSubscription?.price.find((price: SubscriptionPriceType) => price.duration === currentDuration).price
+
+
+    const cartItem: CartItemType = {
+        id: currentSubscription?.id,
+        type: "subscription",
+        img: currentSubscription?.previewImg,
+        title: "PS Plus",
+        publication: `${currentSubscription?.title} ${currentDuration} мес`,
+        platform: 'PS',
+        price: currentPrice,
+        discount: currentSubscription?.discount.percent,
+        cashback: currentSubscription?.cashback
+    }
+
+    console.log(cartItem)
 
 
     return (
@@ -47,7 +64,7 @@ export default function Subscription() {
                         <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={currentSubscription.photoUrls[0]} alt="game image" />
                         <h1 className="text-header mb-2">{data.title.includes('PS') ? 'PS Plus' : 'EA Play'} {currentSubscription.title}</h1>
                         <div className="flex items-center">
-                            <h1 className="price-big">{currentSubscription.price.find((price: SubscriptionPriceType) => price.duration === currentDuration).price} ₽</h1>
+                            <h1 className="price-big">{currentPrice} ₽</h1>
                         </div>
                         <SelectSubscription durations={data.durationVariations} />
                         <div className="mt-8 w-full">
@@ -70,7 +87,7 @@ export default function Subscription() {
                                 <p className='text-title text-[14px]'>{data.releaseDate}</p>
                             </div>
                         </div>
-                        <Button onClick={() => console.log('click')}>Добавить в корзину</Button>
+                        <Button onClick={() => dispatch(addToCart(cartItem))}>Добавить в корзину</Button>
                     </div>
                 ) : (<h1>Загрузка...</h1>)
                 }
