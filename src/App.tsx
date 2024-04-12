@@ -7,6 +7,7 @@ import Cart from './pages/Cart';
 import { useEffect } from 'react';
 import DonationPage from './pages/DonationPage';
 import SearchPage from './pages/SearchPage';
+import Profile from './pages/Profile';
 
 export default function App() {
 
@@ -34,6 +35,7 @@ export default function App() {
           <Route path='/donation/:id' element={<DonationPage />} />
           <Route path='/search' element={<SearchPage />} />
           <Route path='/cart' element={<Cart />} />
+          <Route path='/profile' element={<Profile />} />
         </Routes>
       </div>
     </animated.div>

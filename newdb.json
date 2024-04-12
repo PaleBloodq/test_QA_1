@@ -1369,5 +1369,45 @@
         }
       ]
     }
+  ],
+  "user": {
+    "accountEmail": "sample@gmail.com",
+    "accountPassword": "zxcqwe",
+    "billEmail": "sample@gmail.com",
+    "cashback": 50
+  },
+  "orders": [
+    {
+      "date": "01.03.2024",
+      "totalCost": 5085,
+      "cart": [
+        {
+          "name": "Resident Evil 4",
+          "description": "Standart - PS4 - PS5",
+          "price": 4120
+        },
+        {
+          "name": "Resident Evil Village",
+          "description": "Gold - PS4 - PS5",
+          "price": 965
+        }
+      ]
+    },
+    {
+      "date": "01.03.2024",
+      "totalCost": 5085,
+      "cart": [
+        {
+          "name": "Resident Evil 4",
+          "description": "Standart - PS4 - PS5",
+          "price": 4120
+        },
+        {
+          "name": "Resident Evil Village",
+          "description": "Gold - PS4 - PS5",
+          "price": 965
+        }
+      ]
+    }
   ]
 }

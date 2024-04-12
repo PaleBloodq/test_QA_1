@@ -31,6 +31,9 @@ body {
   .text-title {
     @apply text-base font-medium text-black dark:text-white;
   }
+  .text-title-sm {
+    @apply text-sm font-medium text-black dark:text-white;
+  }
   .text-title-xl {
     @apply text-[18px] font-medium text-black dark:text-white;
   }

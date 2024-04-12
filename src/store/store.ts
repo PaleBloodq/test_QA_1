@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { productsApi } from "../services/productsApi";
+import { userApi } from "../services/userApi";
 import searchSlice from "../features/Search/searchSlice";
 import publicationSlice from "../features/Game/publicationSlice";
 import currentPriceSlice from "../features/Game/currentPriceSlice";
@@ -10,6 +11,7 @@ import userSlice from "../features/User/userSlice";
 export const store = configureStore({
   reducer: {
     [productsApi.reducerPath]: productsApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
     search: searchSlice,
     publication: publicationSlice,
     currentPrice: currentPriceSlice,
@@ -18,7 +20,7 @@ export const store = configureStore({
     user: userSlice,
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(productsApi.middleware);
+    return getDefaultMiddleware().concat(productsApi.middleware, userApi.middleware);
   },
 });
 
