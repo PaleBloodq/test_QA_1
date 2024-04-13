@@ -30,7 +30,8 @@ export default function HeaderSlider({ data }: { data: GameType[] }) {
         <div className="h-[355px] w-full">
             {!isLoading && (
                 <Swiper
-                    slidesPerView={"auto"}
+                    loop={true}
+                    slidesPerView={1.2}
                     centeredSlides={true}
                     spaceBetween={13}
                     pagination={false}
@@ -42,10 +43,12 @@ export default function HeaderSlider({ data }: { data: GameType[] }) {
                             <SwiperSlide key={`header-${index}`}>
                                 <Link className="flex w-full h-full relative" to={"/game/" + game.id}>
                                     <img className="rounded-xl" src={game.previewImg} alt="" />
-                                    <div className="absolute bottom-[50px] z-10 flex w-full justify-center items-center gap-2">
-                                        <h1 className="text-white font-bold text-2xl">{game.publications[0].discount.percent && game.publications[0].discount.percent > 0 ? (getDiscount(game.publications[0].price[0].price, game.publications[0].discount.percent)) : (game.publications[0].price[0].price)} ₽</h1>
-                                        {game.publications[0].discount.percent !== 0 && <Tag type="discount">-{game.publications[0].discount.percent}%</Tag>}
-                                        {isNew(game.releaseDate) && <Tag type="new">Новинка</Tag>}
+                                    <div className="absolute bottom-[50px] z-10 flex w-full items-center gap-2 flex-col justify-center">
+                                        <h1 className="text-white font-bold text-4xl">{game.publications[0].discount.percent && game.publications[0].discount.percent > 0 ? (getDiscount(game.publications[0].price[0].price, game.publications[0].discount.percent)) : (game.publications[0].price[0].price)} ₽</h1>
+                                        <div className='w-16 flex gap-3 justify-center'>
+                                            {game.publications[0].discount.percent !== 0 && <Tag type="discount">-{game.publications[0].discount.percent}%</Tag>}
+                                            {isNew(game.releaseDate) && <Tag type="new">Новинка</Tag>}
+                                        </div>
                                     </div>
                                 </Link>
                             </SwiperSlide>
