@@ -5,16 +5,12 @@ import DonationQuantity from "./DonationQuantity";
 import { QuantityVariations, donationType } from "../../types/donationType";
 import { useEffect, useState } from "react";
 import Line from "../../components/common/Line";
-import Button from "../../components/common/Button";
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../features/Cart/cartSlice";
 import { CartItemType } from "../../types/cartItem";
 import AddToCartButton from "../../components/common/AddToCartButton";
 
 export default function DonationPage() {
 
     const { id } = useParams()
-    const dispatch = useDispatch()
     const { data = {} as donationType, isLoading } = useGetAnyProductQuery(id);
     const [selectedQuantity, setSelectedQuantity] = useState(0)
     const [currentPrice, setCurrentPrice] = useState(data.unitPrice * selectedQuantity)

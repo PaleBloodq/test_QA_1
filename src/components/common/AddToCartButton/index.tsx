@@ -2,8 +2,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../features/Cart/cartSlice";
 import Button from "../Button";
 import { cartSelector } from "../../../features/Cart/cartSelectors";
+import { CartItemType } from "../../../types/cartItem";
 
-export default function AddToCartButton({ cartItem }) {
+export default function AddToCartButton({ cartItem }: { cartItem: CartItemType }) {
     const dispatch = useDispatch();
 
     const { items } = useSelector(cartSelector)

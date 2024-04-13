@@ -3,8 +3,8 @@ import Container from "../../components/common/Container";
 import Tag from "../../components/common/Tag";
 import { useGetOrdersQuery, useGetUserQuery } from "../../services/userApi";
 import Input from "../../components/common/Input";
-import Line from "../../components/common/Line";
 import Button from "../../components/common/Button";
+import { OrderType } from "../../types/orderType";
 
 export default function Profile() {
 
@@ -63,7 +63,7 @@ export default function Profile() {
                 </div>
                 :
                 <div className="w-full flex flex-col mt-7 gap-[13px]">
-                    {!isOrdersLoading && ordersData?.map((order, index) =>
+                    {!isOrdersLoading && ordersData?.map((order: OrderType, index: number) =>
                         <div key={index} className="w-full custom-border p-5 flex flex-col">
                             <div className="flex w-full justify-between mb-6">
                                 <h1 className="text-title">Заказ от {order.date}</h1>
@@ -75,7 +75,7 @@ export default function Profile() {
                                 </div>
                             </div>
                             <div className="w-full flex flex-col">
-                                {order.cart.map((cartItem, index) => <React.Fragment key={index} >
+                                {order.cart.map((cartItem, index: number) => <React.Fragment key={index} >
                                     <div className="flex flex-col gap-1">
                                         <h1 className="text-title-sm">{cartItem.name}</h1>
                                         <p className="text-subtitle">{cartItem.description}</p>

@@ -15,9 +15,7 @@ import { getDiscount } from '../../hooks/getDiscount';
 import { isDatePassed } from '../../hooks/isDatePassed';
 import ReleaseTimer from '../../components/common/ReleaseTimer';
 import Line from '../../components/common/Line';
-import Button from '../../components/common/Button';
 import { useGetAnyProductQuery } from '../../services/productsApi';
-import { addToCart } from '../../features/Cart/cartSlice';
 import { CartItemType } from '../../types/cartItem';
 import AddToCartButton from '../../components/common/AddToCartButton';
 

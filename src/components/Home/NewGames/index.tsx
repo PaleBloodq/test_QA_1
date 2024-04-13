@@ -1,9 +1,9 @@
 import lightningIcon from "@icons/lightning.svg";
 import GamesSlider from "../../common/GamesSlider";
 import useIsLoading from "../../../hooks/useIsLoading";
-import { gameType } from "../../../types/gameType";
+import { GameType } from "../../../types/gameType";
 
-export default function NewGames({ data }: { data: gameType[] }) {
+export default function NewGames({ data }: { data: GameType[] }) {
 
     const isLoading = useIsLoading(data && data.length | 0)
 

@@ -1,6 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { CartItemType } from "../../types/cartItem";
 
-const initialState = {
+type State = {
+  items: CartItemType[];
+  hasAccount: boolean;
+  accountEmail: string;
+  accountPassword: string;
+  reciptEmail: string;
+  rememberData: boolean;
+  promocode: string;
+};
+
+const initialState: State = {
   items: [],
   hasAccount: true,
   accountEmail: "",

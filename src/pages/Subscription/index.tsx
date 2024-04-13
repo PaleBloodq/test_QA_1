@@ -8,9 +8,7 @@ import { SubscriptionPriceType, subscriptionType } from "../../types/subscriptio
 import { durationSelector, selectedSubscriptionSelector } from "../../features/Subscription/subscriptionSelectors";
 import { setSelectedSubscription } from "../../features/Subscription/subscriptionSlice";
 import Line from "../../components/common/Line";
-import Button from "../../components/common/Button";
 import { CartItemType } from "../../types/cartItem";
-import { addToCart } from "../../features/Cart/cartSlice";
 import AddToCartButton from "../../components/common/AddToCartButton";
 
 
