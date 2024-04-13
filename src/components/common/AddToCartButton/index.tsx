@@ -12,8 +12,10 @@ export default function AddToCartButton({ cartItem }: { cartItem: CartItemType }
 
     return (
         <>
-            <div className='w-[345px] fixed bottom-4'>
-                <Button onClick={() => dispatch(addToCart(cartItem))}>{!isAdded ? 'Добавить в корзину' : 'В корзине'}</Button>
+            <div className="w-full h-[80px] bg-[#161616] fixed bottom-0 left-0 flex justify-center items-start">
+                <div className='w-[345px] mt-[-5px]'>
+                    <Button onClick={() => dispatch(addToCart(cartItem))}>{!isAdded ? 'Добавить в корзину' : 'В корзине'}</Button>
+                </div>
             </div>
             <div className='h-16'></div>
         </>
