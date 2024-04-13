@@ -49,7 +49,6 @@ export default function Game() {
     const currentPublication = publications?.find((pub: Publication) => pub.id === selectedPublication);
     const isPsPlus = currentPublication?.psPlusDiscount;
 
-    console.log(currentPublication, currentPrice)
 
     const cartItem: CartItemType = {
         id: currentPublication?.id,

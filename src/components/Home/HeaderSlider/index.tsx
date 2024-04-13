@@ -15,7 +15,6 @@ import useIsLoading from '../../../hooks/useIsLoading';
 export default function HeaderSlider({ data }: { data: GameType[] }) {
     const swiperRef = useRef(null);
     const isLoading = useIsLoading(data)
-
     useEffect(() => {
         if (swiperRef.current) {
             const swiper = swiperRef.current.swiper;

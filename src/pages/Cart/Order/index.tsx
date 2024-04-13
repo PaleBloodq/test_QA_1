@@ -48,7 +48,7 @@ export default function Order() {
                         </svg>
                     </button>
                 </div>
-                <Button onClick={console.log('Оформление заказа')}>Оформить заказ</Button>
+                <Button onClick={() => console.log('Оформление заказа')}>Оформить заказ</Button>
             </div>
         </div>
     )

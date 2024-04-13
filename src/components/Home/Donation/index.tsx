@@ -1,8 +1,9 @@
 import gamepadIcon from "@icons/gamepad.svg";
 import GamesSlider from "../../common/GamesSlider";
 import useIsLoading from "../../../hooks/useIsLoading";
+import { donationType } from "../../../types/donationType";
 
-export default function Donation({ data = [] }) {
+export default function Donation({ data = [] }: { data: donationType[] }) {
 
     const isLoading = useIsLoading(data[0])
 

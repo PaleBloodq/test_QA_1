@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux"
 
-export default function SelectType({ hasAccount, setHasAccount }: { hasAccount: boolean, setHasAccount: (arg: boolean) => void }) {
+export default function SelectType({ hasAccount, setHasAccount }: { hasAccount: boolean, setHasAccount: (arg: boolean) => any }) {
 
     const dispatch = useDispatch()
 

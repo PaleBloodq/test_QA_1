@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux"
 
 type Props = {
     value: string,
-    setValue: (arg: string) => void,
+    setValue: (arg: string) => any,
     placeholder: string,
     type: string,
     hardlyEditable?: boolean,

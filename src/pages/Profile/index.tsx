@@ -21,8 +21,6 @@ export default function Profile() {
         setAccountPassword(userData?.accountPassword)
     }, [userData])
 
-    console.log(userData)
-    console.log(ordersData)
 
     return (
         <Container>

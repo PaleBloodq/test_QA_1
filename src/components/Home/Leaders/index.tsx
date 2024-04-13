@@ -1,7 +1,8 @@
 import useIsLoading from "../../../hooks/useIsLoading";
+import { GameType } from "../../../types/gameType";
 import GamesSlider from "../../common/GamesSlider";
 
-export default function Leaders({ data = [] }) {
+export default function Leaders({ data = [] }: { data: GameType[] }) {
 
     const isLoading = useIsLoading(data[0])
 

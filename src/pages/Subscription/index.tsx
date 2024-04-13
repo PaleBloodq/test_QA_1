@@ -52,8 +52,6 @@ export default function Subscription() {
         cashback: currentSubscription?.cashback
     }
 
-    console.log(data)
-
 
     return (
         <Container>

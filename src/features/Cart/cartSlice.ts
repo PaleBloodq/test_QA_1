@@ -28,7 +28,6 @@ const cartSlice = createSlice({
     addToCart: (state, action) => {
       if (!state.items.find((item) => item.id === action.payload.id)) {
         state.items = [...state.items, action.payload];
-        console.log(state.items);
       }
     },
     deleteFromCart: (state, action) => {
