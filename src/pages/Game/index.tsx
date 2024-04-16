@@ -95,9 +95,9 @@ export default function Game() {
                     <SelectPublication publications={publications} />
                     {!isDatePassed(data.releaseDate) && <ReleaseTimer releaseDate={data.releaseDate} />}
                     <Line />
-                    <div className='flex flex-col px-3'>
+                    <div className='flex flex-col'>
                         <h1 className='text-title-xl mb-[20px]'>Состав издания:</h1>
-                        <ul className='list-disc'>
+                        <ul className='list-disc ml-3'>
                             {currentPublication?.includes.map((item: ReactNode, index: number) => (
                                 <li key={index} className='custom-marker text-subtitle'>{item}</li>
                             ))}

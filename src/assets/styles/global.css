@@ -20,7 +20,7 @@ body {
     @apply border border-[#B13430] dark:border-[#B13430] rounded-xl bg-[#B134300c] dark:bg-[#B134300c];
   }
   .custom-border__psPlus {
-    @apply border border-[#3c67d7] dark:border-[#ffb800] rounded-xl bg-[#f5f7fd] dark:bg-[#262520] text-[#3c67d7] dark:text-[#ffb800];
+    @apply border border-[#ffb800] rounded-xl bg-[#f5f7fd] dark:bg-[#262520] text-[#3c67d7] dark:text-[#ffb800];
   }
   .red-gradient {
     @apply bg-gradient-to-r from-[#C35530] to-[#B13430];
