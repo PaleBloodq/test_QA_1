@@ -24,3 +24,6 @@ ngrok.exe
 *.njsproj
 *.sln
 *.sw?
+
+# Python
+__pycache__/
