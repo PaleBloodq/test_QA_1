@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 
+
 class BaseModel(models.Model):
     id = models.UUIDField(
         primary_key=True,
@@ -77,7 +78,7 @@ class Product(BaseModel):
 
 
 class ProductPublication(BaseModel):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='publications')
     platform = models.ForeignKey(Platform, on_delete=models.CASCADE)
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
@@ -91,3 +92,16 @@ class ProductPublication(BaseModel):
 class ProductDuration(BaseModel):
     product_publication = models.ForeignKey(ProductPublication, on_delete=models.CASCADE)
     duration = models.IntegerField()
+
+
+class Tag(EnumBaseModel):
+    database_name = models.CharField(max_length=255)
+        
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+
+
+class ProductTag(BaseModel):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='tag')
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
