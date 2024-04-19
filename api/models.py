@@ -47,7 +47,7 @@ class Product(BaseModel):
     
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     type = models.CharField(verbose_name='Тип', max_length=32, choices=TypeChoices.choices)
-    language = models.ManyToManyField(Language, verbose_name='Язык')
+    languages = models.ManyToManyField(Language, verbose_name='Языки')
     release_date = models.DateField(verbose_name='Дата релиза', )
     
     def __str__(self) -> str:
@@ -60,7 +60,7 @@ class Product(BaseModel):
 
 class ProductPublication(BaseModel):
     product = models.ForeignKey(Product, verbose_name='Товар', on_delete=models.CASCADE, related_name='publications')
-    platform = models.ManyToManyField(Platform, verbose_name='Платформа')
+    platforms = models.ManyToManyField(Platform, verbose_name='Платформы')
     price = models.IntegerField(verbose_name='Стоимость')
     title = models.CharField(verbose_name='Заголовок', max_length=255, null=True)
     duration = models.IntegerField(verbose_name='Длительность в месяцах', null=True)
@@ -71,7 +71,7 @@ class ProductPublication(BaseModel):
     cashback = models.IntegerField(verbose_name='Кэшбек', null=True, blank=True)
     
     def __str__(self) -> str:
-        return f'{self.product}: {self.title} ({self.platform})'
+        return f'{self.product}: {self.title} ({self.platforms})'
     
     class Meta:
         verbose_name = 'Издание'
@@ -80,7 +80,7 @@ class ProductPublication(BaseModel):
 
 class Tag(EnumBaseModel):
     database_name = models.CharField(verbose_name='Системное название', max_length=255)
-    product = models.ManyToManyField(Product, verbose_name='Товар', related_name='tag', blank=True)
+    products = models.ManyToManyField(Product, verbose_name='Товары', related_name='tag', blank=True)
         
     class Meta:
         verbose_name = 'Тег'

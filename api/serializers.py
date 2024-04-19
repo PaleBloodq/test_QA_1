@@ -21,15 +21,13 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 
 class ProductPublicationSerializer(serializers.ModelSerializer):
-    platform = serializers.CharField()
-    language = serializers.CharField()
+    # platform = serializers.CharField()
     
     class Meta:
         model = models.ProductPublication
         fields = (
             'id',
-            'platform',
-            'language',
+            # 'platform',
             'title',
             'price',
             'preview',
@@ -42,6 +40,7 @@ class ProductPublicationSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     type = serializers.CharField()
     publications = ProductPublicationSerializer(many=True)
+    languages = serializers.ListField()
     
     class Meta:
         model = models.Product
@@ -49,6 +48,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'type',
+            'languages',
             'release_date',
             'publications',
         )

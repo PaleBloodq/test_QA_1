@@ -11,8 +11,8 @@ class GetCategories(APIView):
                 'tag': tag.database_name,
                 'name': tag.name,
                 'objects': serializers.ProductSerializer(
-                    models.Product.objects.filter(tag__tag=tag),
+                    tag.products.all(),
                     many=True,
-                ).data
+                ).data,
             } for tag in models.Tag.objects.all()]
         return Response(response)
