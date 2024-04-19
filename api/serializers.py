@@ -52,14 +52,3 @@ class ProductSerializer(serializers.ModelSerializer):
             'release_date',
             'publications',
         )
-
-
-class DonationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Donation
-        fields = (
-            'title',
-            'preview',
-            'photo',
-            'release_date',
-        )

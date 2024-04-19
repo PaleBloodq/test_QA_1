@@ -1,33 +1,26 @@
 from django.contrib import admin
 from api import models
 
-admin.site.register(models.Type)
-
 admin.site.register(models.Platform)
 
 admin.site.register(models.Language)
 
-class DonationQuantityInline(admin.StackedInline):
-    model = models.DonationQuantity
-    extra = 0
-
-class DonationAdmin(admin.ModelAdmin):
-    inlines = [DonationQuantityInline]
-
-admin.site.register(models.Donation, DonationAdmin)
-
-class ProductTagInline(admin.StackedInline):
-    model = models.ProductTag
-    extra = 0
-
-class TagAdmin(admin.ModelAdmin):
-    inlines = [ProductTagInline]
-
-admin.site.register(models.Tag, TagAdmin)
+admin.site.register(models.Tag)
 
 class ProductPublicationInline(admin.StackedInline):
     model = models.ProductPublication
     extra = 0
+    
+    def get_exclude(self, request, obj: models.Product):
+        match obj.type:
+            case models.Product.TypeChoices.DONATION:
+                return ('title', 'duration')
+            case models.Product.TypeChoices.SUBSCRIPTION:
+                return ('quantity', )
+            case models.Product.TypeChoices.GAME:
+                return ('duration', 'quantity')
+            case _:
+                return super().get_exclude(request, obj)
 
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductPublicationInline]
