@@ -7,22 +7,29 @@ admin.site.register(models.Platform)
 
 admin.site.register(models.Language)
 
-admin.site.register(models.Donation)
+class DonationQuantityInline(admin.StackedInline):
+    model = models.DonationQuantity
+    extra = 0
 
-admin.site.register(models.Product)
+class DonationAdmin(admin.ModelAdmin):
+    inlines = [DonationQuantityInline]
 
-admin.site.register(models.Tag)
+admin.site.register(models.Donation, DonationAdmin)
 
-######################################
-# Удалить когда будет готова админка #
-######################################
+class ProductTagInline(admin.StackedInline):
+    model = models.ProductTag
+    extra = 0
 
-admin.site.register(models.DonationQuantity)
+class TagAdmin(admin.ModelAdmin):
+    inlines = [ProductTagInline]
 
-admin.site.register(models.ProductPublication)
+admin.site.register(models.Tag, TagAdmin)
 
-admin.site.register(models.ProductDuration)
+class ProductPublicationInline(admin.StackedInline):
+    model = models.ProductPublication
+    extra = 0
 
-admin.site.register(models.ProductTag)
+class ProductAdmin(admin.ModelAdmin):
+    inlines = [ProductPublicationInline]
 
-######################################
+admin.site.register(models.Product, ProductAdmin)

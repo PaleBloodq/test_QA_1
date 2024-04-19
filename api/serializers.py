@@ -21,8 +21,8 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 
 class ProductPublicationSerializer(serializers.ModelSerializer):
-    platform = PlatformSerializer()
-    language = LanguageSerializer()
+    platform = serializers.CharField()
+    language = serializers.CharField()
     
     class Meta:
         model = models.ProductPublication
