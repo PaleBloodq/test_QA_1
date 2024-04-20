@@ -1,7 +1,5 @@
-from typing import Collection
 import uuid
 from django.db import models
-from django.core.exceptions import ValidationError
 
 
 class BaseModel(models.Model):
@@ -68,9 +66,13 @@ class ProductPublication(BaseModel):
     includes = models.TextField(verbose_name='Включает', null=True, blank=True)
     preview = models.ImageField(verbose_name='Превью', null=True, blank=True)
     photo = models.ImageField(verbose_name='Изображение', null=True, blank=True)
-    cashback = models.IntegerField(verbose_name='Кэшбек', null=True, blank=True)
+    cashback = models.IntegerField(verbose_name='Кэшбек %', null=True, blank=True)
+    ps_plus_discount = models.IntegerField(verbose_name='Скидка PS Plus %', null=True, blank=True)
+    discount = models.IntegerField(verbose_name='Скидка %', null=True, blank=True)
+    discount_deadline = models.DateField(verbose_name='Окончание скидки', null=True, blank=True)
     
     def __str__(self) -> str:
+        models.RowRange
         return f'{self.product}: {self.title} ({self.platforms})'
     
     class Meta:
@@ -80,7 +82,7 @@ class ProductPublication(BaseModel):
 
 class Tag(EnumBaseModel):
     database_name = models.CharField(verbose_name='Системное название', max_length=255)
-    products = models.ManyToManyField(Product, verbose_name='Товары', related_name='tag', blank=True)
+    products = models.ManyToManyField(Product, verbose_name='Товары', related_name='tags', blank=True)
         
     class Meta:
         verbose_name = 'Тег'

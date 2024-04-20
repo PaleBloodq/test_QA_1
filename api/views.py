@@ -16,3 +16,62 @@ class GetCategories(APIView):
                 ).data,
             } for tag in models.Tag.objects.all()]
         return Response(response)
+
+
+class GetProduct(APIView):
+    def get(self, request: Request, product_id: str):
+        response = serializers.ProductSerializer(
+            models.Product.objects.get(id=product_id)
+        ).data
+        return Response(response)
+
+
+class GetPublication(APIView):
+    def get(self, request: Request, publication_id: str):
+        response = serializers.SingleProductPublicationSerializer(
+            models.ProductPublication.objects.get(id=publication_id)
+        ).data
+        return Response(response)
+
+
+class GetFilters(APIView):
+    def get(self, request: Request):
+        response = {
+            'platforms': serializers.PlatformSerializer(
+                models.Platform.objects.all(),
+                many=True,
+            ).data,
+            'languages': serializers.LanguageSerializer(
+                models.Language.objects.all(),
+                many=True,
+            ).data,
+            'minPrice': models.ProductPublication.objects.latest('-price').price,
+            'maxPrice': models.ProductPublication.objects.latest('price').price,
+        }
+        return Response(response)
+
+
+class SearchProducts(APIView):
+    def post(self, request: Request):
+        offset = request.data.get('offset', 0)
+        limit = request.data.get('limit', 20)
+        query = {}
+        if request.data.get('minPrice'):
+            query['price__gte'] = request.data.get('minPrice')
+        if request.data.get('maxPrice'):
+            query['price__lte'] = request.data.get('maxPrice')
+        if request.data.get('platforms'):
+            query['platforms__in'] = request.data.get('platforms')
+        if request.data.get('languages'):
+            query['product__languages__in'] = request.data.get('languages')
+        if request.data.get('q'):
+            query['product__title__iregex'] = request.data.get('q')
+        if query:
+            instance = models.ProductPublication.objects.filter(**query).distinct()[offset:limit]
+        else:
+            instance = models.ProductPublication.objects.all()[offset:limit]
+        response = serializers.SingleProductPublicationSerializer(
+            instance,
+            many=True,
+        ).data
+        return Response(response)
