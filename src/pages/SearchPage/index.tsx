@@ -3,9 +3,10 @@ import Container from "../../components/common/Container";
 import { searchSelector } from "../../features/Search/searchSelectors";
 import { setSearchValue } from "../../features/Search/searchSlice";
 import { useGetSearchFiltersQuery, useGetSearchProductsQuery } from "../../services/productsApi";
-import Tag from "../../components/common/Tag";
 import { useState } from "react";
 import Filter from "./Filter";
+import SearchItem from "./SearchItem";
+import { SearchItemType } from "../../types/searchItem";
 
 export default function SearchPage() {
 
@@ -16,6 +17,39 @@ export default function SearchPage() {
     const { data = [], isLoading } = useGetSearchProductsQuery({})
     const filterData = useGetSearchFiltersQuery({})
 
+
+    const transformProducts = (products: any[]): SearchItemType[] => {
+        return products.flatMap(product => {
+            if (product.type === "game" || product.type === "subscription") {
+                return (product.publications || product.durationVariations).map(pub => ({
+                    id: pub.id,
+                    title: `${product.title}`,
+                    pubTitle: pub.title,
+                    type: product.type,
+                    previewImg: pub.previewImg,
+                    prices: pub.price,
+                    photoUrls: pub.photoUrls,
+                    includes: pub.includes,
+                    discount: pub.discount,
+                    psPlusDiscount: pub.psPlusDiscount,
+                    cashback: pub.cashback,
+                    description: pub.description
+                }));
+            } else if (product.type === "donation") {
+                return [{
+                    id: product.id,
+                    title: product.title,
+                    type: product.type,
+                    previewImg: product.previewImg,  // Правильно используем previewImg для изображения предпросмотра
+                    prices: [{ platform: product.platforms[0], price: product.unitPrice }],  // Цена за единицу
+                    photoUrls: product.photoUrls  // Используем массив URL из оригинального объекта
+                }];
+            }
+            return [];
+        });
+    };
+
+    const products = transformProducts(data);
 
     return (
         <Container>
@@ -46,33 +80,8 @@ export default function SearchPage() {
                         </button>
                     </div>
                     {!isLoading &&
-                        <div className="w-full grid grid-cols-2 gap-x-4 gap-y-12 mt-8">
-                            <div className="w-full h-auto flex flex-col justify-between items-start">
-                                <img className="w-[165px] h-[210px] rounded-xl" src={data[0].previewImg} alt="Картинка" />
-                                <h1 className="mt-5 text-title">{data[0].title}</h1>
-                                <h2 className="text-subtitle">{data[0].publications[0].title}</h2>
-                                <div className="flex items-center w-full">
-                                    <h2 className="price-small mt-2 mr-1">{data[0].publications[0].price[0].price} ₽</h2>
-                                    <Tag type="discount">-{data[0].publications[0].discount.percent}%</Tag>
-                                </div>
-                            </div>
-                            <div className="w-full h-auto flex flex-col items-start">
-                                <img className="w-[165px] h-[210px] rounded-xl" src={data[1].previewImg} alt="Картинка" />
-                                <h1 className="mt-5 text-title">{data[1].title}</h1>
-                            </div>
-                            <div className="w-full h-auto flex flex-col items-start">
-                                <img className="w-[165px] h-[210px] rounded-xl" src={data[2].durationVariations[0].photoUrls[0]} alt="Картинка" />
-                                <h1 className="mt-5 text-title">{data[2].title}</h1>
-                            </div>
-                            <div className="w-full h-auto flex flex-col items-start">
-                                <img className="w-[165px] h-[210px] rounded-xl" src={data[3].previewImg} alt="Картинка" />
-                                <h1 className="mt-5 text-title">{data[3].title}</h1>
-                                <h2 className="text-subtitle">{data[3].publications[0].title}</h2>
-                                <div className="flex items-center w-full">
-                                    <h2 className="price-small mt-2 mr-1">{data[3].publications[0].price[0].price} ₽</h2>
-                                    <Tag type="discount">-{data[3].publications[0].discount.percent}%</Tag>
-                                </div>
-                            </div>
+                        <div className="w-full flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
+                            {products.map((item, index) => <SearchItem key={index} item={item} />)}
                         </div>
                     }
                 </div>
