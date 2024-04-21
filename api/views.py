@@ -1,7 +1,7 @@
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from api import models, serializers
+from api import models, serializers, utils
 
 
 class GetCategories(APIView):
@@ -75,3 +75,10 @@ class SearchProducts(APIView):
             many=True,
         ).data
         return Response(response)
+
+
+class Test(APIView):
+    def get(self, request: Request):
+        if '127.0.0.1' in utils.get_ip(request):
+            return Response(status=200)
+        return Response(status=500)

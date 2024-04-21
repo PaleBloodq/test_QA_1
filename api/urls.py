@@ -1,4 +1,9 @@
-from django.urls import path, include
+from django.urls import path
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 from api import views
 
 urlpatterns = [
@@ -7,4 +12,13 @@ urlpatterns = [
     path('catalog/category/', views.GetCategories.as_view()),
     path('catalog/filters/', views.GetFilters.as_view()),
     path('catalog/search/list/', views.SearchProducts.as_view()),
+    # path('order/buy/', views..as_view()),
+    # path('order/promocode/check/', views..as_view()),
+    path('profile/data/', views.APIView().as_view()),
+    path('profile/orders/', views.APIView().as_view()),
+    path('profile/', views.APIView().as_view()),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('test/', views.Test.as_view()),
 ]

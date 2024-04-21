@@ -8,15 +8,15 @@ class BaseModel(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
-    created_at = models.DateTimeField(verbose_name='Создан в', auto_now_add=True)
-    updated_at = models.DateTimeField(verbose_name='Обновлен в', auto_now=True)
+    created_at = models.DateTimeField('Создан в', auto_now_add=True)
+    updated_at = models.DateTimeField('Обновлен в', auto_now=True)
     
     class Meta:
         abstract = True
 
 
 class EnumBaseModel(BaseModel):
-    name = models.CharField(verbose_name='Название', max_length=255, unique=True)
+    name = models.CharField('Название', max_length=255, unique=True)
     
     def __str__(self) -> str:
         return self.name
@@ -43,10 +43,10 @@ class Product(BaseModel):
         SUBSCRIPTION = 'SUBSCRIPTION', 'Подписка'
         DONATION = 'DONATION', 'Донат'
     
-    title = models.CharField(verbose_name='Заголовок', max_length=255)
-    type = models.CharField(verbose_name='Тип', max_length=32, choices=TypeChoices.choices)
+    title = models.CharField('Заголовок', max_length=255)
+    type = models.CharField('Тип', max_length=32, choices=TypeChoices.choices)
     languages = models.ManyToManyField(Language, verbose_name='Языки')
-    release_date = models.DateField(verbose_name='Дата релиза', )
+    release_date = models.DateField('Дата релиза', )
     
     def __str__(self) -> str:
         return self.title
@@ -59,17 +59,17 @@ class Product(BaseModel):
 class ProductPublication(BaseModel):
     product = models.ForeignKey(Product, verbose_name='Товар', on_delete=models.CASCADE, related_name='publications')
     platforms = models.ManyToManyField(Platform, verbose_name='Платформы')
-    price = models.IntegerField(verbose_name='Стоимость')
-    title = models.CharField(verbose_name='Заголовок', max_length=255, null=True)
-    duration = models.IntegerField(verbose_name='Длительность в месяцах', null=True)
-    quantity = models.IntegerField(verbose_name='Количество игровой валюты', null=True)
-    includes = models.TextField(verbose_name='Включает', null=True, blank=True)
-    preview = models.ImageField(verbose_name='Превью', null=True, blank=True)
-    photo = models.ImageField(verbose_name='Изображение', null=True, blank=True)
-    cashback = models.IntegerField(verbose_name='Кэшбек %', null=True, blank=True)
-    ps_plus_discount = models.IntegerField(verbose_name='Скидка PS Plus %', null=True, blank=True)
-    discount = models.IntegerField(verbose_name='Скидка %', null=True, blank=True)
-    discount_deadline = models.DateField(verbose_name='Окончание скидки', null=True, blank=True)
+    price = models.IntegerField('Стоимость')
+    title = models.CharField('Заголовок', max_length=255, null=True)
+    duration = models.IntegerField('Длительность в месяцах', null=True)
+    quantity = models.IntegerField('Количество игровой валюты', null=True)
+    includes = models.TextField('Включает', null=True, blank=True)
+    preview = models.ImageField('Превью', null=True, blank=True)
+    photo = models.ImageField('Изображение', null=True, blank=True)
+    cashback = models.IntegerField('Кэшбек %', null=True, blank=True)
+    ps_plus_discount = models.IntegerField('Скидка PS Plus %', null=True, blank=True)
+    discount = models.IntegerField('Скидка %', null=True, blank=True)
+    discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
     
     def __str__(self) -> str:
         models.RowRange
@@ -81,9 +81,32 @@ class ProductPublication(BaseModel):
 
 
 class Tag(EnumBaseModel):
-    database_name = models.CharField(verbose_name='Системное название', max_length=255)
+    database_name = models.CharField('Системное название', max_length=255)
     products = models.ManyToManyField(Product, verbose_name='Товары', related_name='tags', blank=True)
         
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
+
+
+class Profile(BaseModel):
+    playstation_email = models.EmailField('E-mail от аккаунта PlayStation', null=True, blank=True)
+    playstation_password = models.CharField('Пароль от аккаунта PlayStation', null=True, blank=True)
+    bill_email = models.EmailField('E-mail для чеков', null=True, blank=True)
+    cashpack = models.IntegerField('')
+    
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+
+class Orders(BaseModel):
+    date = models.DateField('Дата заказа')
+    amount = models.IntegerField('Сумма заказа')
+    
+
+class OrderProduct(BaseModel):
+    order = models.ForeignKey(Orders, verbose_name='Заказ', on_delete=models.CASCADE, related_name='order_product')
+    item = models.CharField('Позиция', max_length=255)
+    description = models.CharField('Описание', max_length=255)
+    price = models.IntegerField('Стоимость')
