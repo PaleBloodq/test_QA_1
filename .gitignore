@@ -24,3 +24,11 @@ ngrok.exe
 *.njsproj
 *.sln
 *.sw?
+
+# Python
+__pycache__/
+
+# Sensitive information
+*.pem
+*.pub
+*.env
