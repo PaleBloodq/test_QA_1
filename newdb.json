@@ -1197,11 +1197,13 @@
             "8 обликов солдат (2-й год войны)"
           ],
           "discount": {
-            "percent": 25,
+            "percent": 5,
             "deadline": "2024-12-5"
           },
           "psPlusDiscount": 15,
-          "cashback": 12
+          "cashback": 12,
+          "photoUrls": ["https://i.postimg.cc/qRgpXCW6/qlxn-Sv-JLKr-JZg-MASFWT4-XQ.jpg"],
+          "previewImg": "https://i.postimg.cc/qRgpXCW6/qlxn-Sv-JLKr-JZg-MASFWT4-XQ.jpg"
         },
         {
           "id": "22",
@@ -1216,11 +1218,13 @@
             "8 обликов солдат (2-й год войны)"
           ],
           "discount": {
-            "percent": 25,
+            "percent": 5,
             "deadline": "2024-12-5"
           },
           "psPlusDiscount": 15,
-          "cashback": 12
+          "cashback": 12,
+          "photoUrls": ["https://i.postimg.cc/qRgpXCW6/qlxn-Sv-JLKr-JZg-MASFWT4-XQ.jpg"],
+          "previewImg": "https://i.postimg.cc/qRgpXCW6/qlxn-Sv-JLKr-JZg-MASFWT4-XQ.jpg"
         }
       ]
     },
@@ -1331,7 +1335,9 @@
             "deadline": "2024-12-5"
           },
           "psPlusDiscount": 0,
-          "cashback": 0
+          "cashback": 0,
+          "photoUrls": ["https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"],
+          "previewImg": "https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"
         },
         {
           "id": "22",
@@ -1346,7 +1352,9 @@
           },
           "psPlusDiscount": 15,
           "cashback": 12,
-          "includes": ["Игра SKULL and BONES", "8 обликов солдат (2-й год войны)"]
+          "includes": ["Игра SKULL and BONES", "8 обликов солдат (2-й год войны)"],
+          "photoUrls": ["https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"],
+          "previewImg": "https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"
         },
         {
           "id": "333",
@@ -1365,7 +1373,9 @@
             "Игра SKULL and BONES",
             "Все элитные бойцы",
             "8 обликов солдат (2-й год войны)"
-          ]
+          ],
+          "photoUrls": ["https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"],
+          "previewImg": "https://i.postimg.cc/Z5FYTmrn/91j-BG-yhb-YL-AC-UF1000-1000-QL80.jpg"
         }
       ]
     }
