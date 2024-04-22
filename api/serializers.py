@@ -100,3 +100,14 @@ class SingleProductPublicationSerializer(serializers.ModelSerializer):
             'discount_deadline',
             'product',
         )
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Profile
+        fields = (
+            'playstation_email',
+            'playstation_password',
+            'bill_email',
+            'cashback',
+        )

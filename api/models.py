@@ -97,6 +97,13 @@ class Profile(BaseModel):
     cashback = models.IntegerField('Баллы', default=0)
     token_seed = models.IntegerField('Семя токена', default=0)
     
+    @classmethod
+    def get_or_none(cls, *args, **kwargs):
+        instance = cls.objects.filter(*args, **kwargs)
+        if instance:
+            return instance.get()
+        return None
+    
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'

@@ -109,3 +109,37 @@ class VerifyToken(APIView):
                 return Response(status=status.HTTP_200_OK)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class Profile(APIView):
+    def post(self, request: Request):
+        token = request.data.get('token')
+        if token:
+            profile = utils.decode_token(token)
+            if profile:
+                response = serializers.ProfileSerializer(profile).data
+                return Response(response)
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateProfile(APIView):
+    def post(self, request: Request):
+        token = request.data.get('token')
+        if token:
+            profile = utils.decode_token(token)
+            if profile:
+                if request.data.get('psEmail'):
+                    profile.playstation_email = request.data.get('psEmail')
+                if request.data.get('psPassword'):
+                    profile.playstation_password = request.data.get('psPassword')
+                if request.data.get('billEmail'):
+                    profile.bill_email = request.data.get('billEmail')
+                try:
+                    profile.save()
+                except:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+                response = serializers.ProfileSerializer(profile).data
+                return Response(response)
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_400_BAD_REQUEST)

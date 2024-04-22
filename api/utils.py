@@ -44,9 +44,8 @@ def decode_token(token: str) -> models.Profile | None:
         telegram_id = decoded.get('telegram_id')
         token_seed = decoded.get('seed')
         if telegram_id:
-            profile = models.Profile.objects.filter(telegram_id=telegram_id)
+            profile = models.Profile.get_or_none(telegram_id=telegram_id)
             if profile:
-                profile = profile.get()
                 if profile.token_seed == token_seed:
                     return profile
     except:
