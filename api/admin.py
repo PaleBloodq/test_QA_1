@@ -29,3 +29,12 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductPublicationInline]
 
 admin.site.register(models.Product, ProductAdmin)
+
+class OrderProductInline(admin.TabularInline):
+    model = models.OrderProduct
+    extra = 0
+
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [OrderProductInline]
+
+admin.site.register(models.Order, OrderAdmin)

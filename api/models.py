@@ -90,7 +90,7 @@ class Tag(EnumBaseModel):
 
 
 class Profile(BaseModel):
-    telegram_id = models.IntegerField('Телеграм ID')
+    telegram_id = models.IntegerField('Телеграм ID', unique=True)
     playstation_email = models.EmailField('E-mail от аккаунта PlayStation', null=True, blank=True)
     playstation_password = models.CharField('Пароль от аккаунта PlayStation', null=True, blank=True)
     bill_email = models.EmailField('E-mail для чеков', null=True, blank=True)
@@ -104,18 +104,35 @@ class Profile(BaseModel):
             return instance.get()
         return None
     
+    def __str__(self) -> str:
+        return str(self.telegram_id)
+    
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
 
-class Orders(BaseModel):
+class Order(BaseModel):
+    class StatusChoices(models.TextChoices):
+        OK = 'OK', 'Ок'
+        PAID = 'PAID', 'Оплачен'
+        ERROR = 'ERROR', 'Ошибка'
+    
+    profile = models.ForeignKey(Profile, verbose_name='Пользователь', on_delete=models.CASCADE, related_name='order')
     date = models.DateField('Дата заказа')
     amount = models.IntegerField('Сумма заказа')
+    status = models.CharField('Статус', choices=StatusChoices.choices, default=StatusChoices.OK)
+    
+    def __str__(self) -> str:
+        return f'{self.profile} от {self.date} ({self.amount})'
+    
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
     
 
 class OrderProduct(BaseModel):
-    order = models.ForeignKey(Orders, verbose_name='Заказ', on_delete=models.CASCADE, related_name='order_product')
+    order = models.ForeignKey(Order, verbose_name='Заказ', on_delete=models.CASCADE, related_name='order_products')
     item = models.CharField('Позиция', max_length=255)
     description = models.CharField('Описание', max_length=255)
     price = models.IntegerField('Стоимость')

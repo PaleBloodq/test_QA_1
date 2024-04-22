@@ -111,3 +111,26 @@ class ProfileSerializer(serializers.ModelSerializer):
             'bill_email',
             'cashback',
         )
+
+
+class OrderProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.OrderProduct
+        fields = (
+            'item',
+            'description',
+            'price',
+        )
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    order_products = OrderProductSerializer(many=True)
+    
+    class Meta:
+        model = models.Order
+        fields = (
+            'date',
+            'amount',
+            'status',
+            'order_products',
+        )

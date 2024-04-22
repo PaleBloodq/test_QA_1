@@ -10,7 +10,7 @@ urlpatterns = [
     # path('order/buy/', views..as_view()),
     # path('order/promocode/check/', views..as_view()),
     path('profile/update/', views.UpdateProfile.as_view()),
-    path('profile/orders/', views.APIView.as_view()),
+    path('profile/orders/', views.Orders.as_view()),
     path('profile/', views.Profile.as_view()),
     path('token/refresh/', views.RefreshToken.as_view()),
     path('token/verify/', views.VerifyToken.as_view()),

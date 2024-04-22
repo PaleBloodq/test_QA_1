@@ -143,3 +143,20 @@ class UpdateProfile(APIView):
                 return Response(response)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class Orders(APIView):
+    def post(self, request: Request):
+        token = request.data.get('token')
+        if token:
+            profile = utils.decode_token(token)
+            if profile:
+                offset = request.data.get('offset', 0)
+                limit = request.data.get('limit', 20)
+                response = serializers.OrderSerializer(
+                    models.Order.objects.filter(profile=profile).distinct().order_by('-date')[offset:limit],
+                    many=True,
+                ).data
+                return Response(response)
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
