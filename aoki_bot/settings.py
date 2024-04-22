@@ -24,10 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.environ['DJANGO_DEBUG'] == '1' else False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [host for host in os.environ['DJANGO_ALLOWED_HOSTS'].split(',')]
 
 # Application definition
 
@@ -79,11 +78,11 @@ WSGI_APPLICATION = 'aoki_bot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['DJANGO_DB_NAME'],
-        'USER': os.environ['DJANGO_DB_USER'],
-        'PASSWORD': os.environ['DJANGO_DB_PASSWORD'],
-        'HOST': os.environ['DJANGO_DB_HOST'],
-        'PORT': os.environ['DJANGO_DB_PORT'],
+        'NAME': os.environ['POSTGRES_NAME'],
+        'USER': os.environ['POSTGRES_USER'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': os.environ['POSTGRES_HOST'],
+        'PORT': os.environ['POSTGRES_PORT'],
     }
 }
 
