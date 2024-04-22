@@ -90,10 +90,12 @@ class Tag(EnumBaseModel):
 
 
 class Profile(BaseModel):
+    telegram_id = models.IntegerField('Телеграм ID')
     playstation_email = models.EmailField('E-mail от аккаунта PlayStation', null=True, blank=True)
     playstation_password = models.CharField('Пароль от аккаунта PlayStation', null=True, blank=True)
     bill_email = models.EmailField('E-mail для чеков', null=True, blank=True)
-    cashpack = models.IntegerField('')
+    cashback = models.IntegerField('Баллы', default=0)
+    token_seed = models.IntegerField('Семя токена', default=0)
     
     class Meta:
         verbose_name = 'Пользователь'

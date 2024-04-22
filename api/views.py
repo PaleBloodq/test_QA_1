@@ -1,6 +1,7 @@
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import status
 from api import models, serializers, utils
 
 
@@ -77,8 +78,32 @@ class SearchProducts(APIView):
         return Response(response)
 
 
-class Test(APIView):
-    def get(self, request: Request):
-        if '127.0.0.1' in utils.get_ip(request):
-            return Response(status=200)
-        return Response(status=500)
+class GetToken(APIView):
+    def post(self, request: Request):
+        telegram_id = request.data.get('telegram_id')
+        if telegram_id:
+            return Response({
+                'token': utils.encode_profile(telegram_id)
+            }, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class RefreshToken(APIView):
+    def post(self, request: Request):
+        token = request.data.get('token')
+        if token:
+            profile = utils.decode_token(token)
+            if profile:
+                return Response({
+                    'token': utils.encode_profile(profile.telegram_id, True)
+                }, status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class VerifyToken(APIView):
+    def post(self, request: Request):
+        token = request.data.get('token')
+        if token and utils.decode_token(token):
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_403_FORBIDDEN)
