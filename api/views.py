@@ -104,6 +104,8 @@ class RefreshToken(APIView):
 class VerifyToken(APIView):
     def post(self, request: Request):
         token = request.data.get('token')
-        if token and utils.decode_token(token):
-            return Response(status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_403_FORBIDDEN)
+        if token:
+            if utils.decode_token(token):
+                return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
