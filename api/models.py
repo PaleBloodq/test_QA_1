@@ -95,7 +95,7 @@ class Profile(BaseModel):
     playstation_password = models.CharField('Пароль от аккаунта PlayStation', null=True, blank=True)
     bill_email = models.EmailField('E-mail для чеков', null=True, blank=True)
     cashback = models.IntegerField('Баллы', default=0)
-    token_seed = models.IntegerField('Семя токена', default=0)
+    token_seed = models.UUIDField('Семя токена', default=uuid.uuid4)
     
     @classmethod
     def get_or_none(cls, *args, **kwargs):

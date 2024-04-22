@@ -95,7 +95,7 @@ class RefreshToken(APIView):
             profile = utils.decode_token(token)
             if profile:
                 return Response({
-                    'token': utils.encode_profile(profile.telegram_id, True)
+                    'token': utils.encode_profile(profile.telegram_id)
                 }, status=status.HTTP_200_OK)
             return Response(status=status.HTTP_403_FORBIDDEN)
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -112,9 +112,9 @@ class VerifyToken(APIView):
 
 
 class Profile(APIView):
-    def post(self, request: Request):
-        token = request.data.get('token')
-        if token:
+    def get(self, request: Request):
+        if request.META.get('HTTP_AUTHORIZATION'):
+            token = request.META.get('HTTP_AUTHORIZATION').removeprefix('Bearer ')
             profile = utils.decode_token(token)
             if profile:
                 response = serializers.ProfileSerializer(profile).data
@@ -125,8 +125,8 @@ class Profile(APIView):
 
 class UpdateProfile(APIView):
     def post(self, request: Request):
-        token = request.data.get('token')
-        if token:
+        if request.META.get('HTTP_AUTHORIZATION'):
+            token = request.META.get('HTTP_AUTHORIZATION').removeprefix('Bearer ')
             profile = utils.decode_token(token)
             if profile:
                 if request.data.get('psEmail'):
@@ -146,9 +146,9 @@ class UpdateProfile(APIView):
 
 
 class Orders(APIView):
-    def post(self, request: Request):
-        token = request.data.get('token')
-        if token:
+    def get(self, request: Request):
+        if request.META.get('HTTP_AUTHORIZATION').removeprefix('Bearer '):
+            token = request.META.get('HTTP_AUTHORIZATION').removeprefix('Bearer ')
             profile = utils.decode_token(token)
             if profile:
                 offset = request.data.get('offset', 0)

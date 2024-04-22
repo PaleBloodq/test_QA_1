@@ -38,3 +38,5 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderProductInline]
 
 admin.site.register(models.Order, OrderAdmin)
+
+admin.site.register(models.Profile)
