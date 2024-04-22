@@ -27,3 +27,8 @@ ngrok.exe
 
 # Python
 __pycache__/
+
+# Sensitive information
+*.pem
+*.pub
+*.env
