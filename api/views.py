@@ -119,8 +119,7 @@ class Profile(APIView):
             if profile:
                 response = serializers.ProfileSerializer(profile).data
                 return Response(response)
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
 
 class UpdateProfile(APIView):
@@ -141,8 +140,7 @@ class UpdateProfile(APIView):
                     return Response(status=status.HTTP_400_BAD_REQUEST)
                 response = serializers.ProfileSerializer(profile).data
                 return Response(response)
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
 
 class Orders(APIView):
@@ -158,5 +156,4 @@ class Orders(APIView):
                     many=True,
                 ).data
                 return Response(response)
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_403_FORBIDDEN)
