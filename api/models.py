@@ -1,13 +1,12 @@
 import uuid
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
+
+percent_validator = MinValueValidator(0), MaxValueValidator(100)
 
 
 class BaseModel(models.Model):
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField('Создан в', auto_now_add=True)
     updated_at = models.DateTimeField('Обновлен в', auto_now=True)
     
@@ -66,14 +65,13 @@ class ProductPublication(BaseModel):
     includes = models.TextField('Включает', null=True, blank=True)
     preview = models.ImageField('Превью', null=True, blank=True)
     photo = models.ImageField('Изображение', null=True, blank=True)
-    cashback = models.IntegerField('Кэшбек %', null=True, blank=True)
-    ps_plus_discount = models.IntegerField('Скидка PS Plus %', null=True, blank=True)
-    discount = models.IntegerField('Скидка %', null=True, blank=True)
+    cashback = models.IntegerField('Кэшбек %', null=True, blank=True, validators=percent_validator)
+    ps_plus_discount = models.IntegerField('Скидка PS Plus %', null=True, blank=True, validators=percent_validator)
+    discount = models.IntegerField('Скидка %', null=True, blank=True, validators=percent_validator)
     discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
     
     def __str__(self) -> str:
-        models.RowRange
-        return f'{self.product}: {self.title} ({self.platforms})'
+        return f'{self.product}: {self.title}'
     
     class Meta:
         verbose_name = 'Издание'
@@ -124,7 +122,7 @@ class Order(BaseModel):
     status = models.CharField('Статус', choices=StatusChoices.choices, default=StatusChoices.OK)
     
     def __str__(self) -> str:
-        return f'{self.profile} от {self.date} ({self.amount})'
+        return f'{self.profile} от {self.date}'
     
     class Meta:
         verbose_name = 'Заказ'
@@ -141,7 +139,7 @@ class OrderProduct(BaseModel):
 class PromoCode(BaseModel):
     promo_code = models.CharField('Промокод', max_length=255)
     expiration = models.DateTimeField('Дата окончания')
-    discount = models.IntegerField('Скидка %')
+    discount = models.IntegerField('Скидка %', validators=percent_validator)
     
     def __str__(self) -> str:
         return f'{self.discount}% {self.promo_code}'

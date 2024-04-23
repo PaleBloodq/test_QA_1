@@ -1,11 +1,18 @@
 from django.contrib import admin
 from api import models
 
+
 admin.site.register(models.Platform)
+
 
 admin.site.register(models.Language)
 
+
 admin.site.register(models.Tag)
+
+
+admin.site.register(models.Profile)
+
 
 class ProductPublicationInline(admin.TabularInline):
     model = models.ProductPublication
@@ -25,20 +32,32 @@ class ProductPublicationInline(admin.TabularInline):
                     pass
         return super().get_exclude(request, obj)
 
-class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductPublicationInline]
 
-admin.site.register(models.Product, ProductAdmin)
+@admin.register(models.Product)
+class ProductAdmin(admin.ModelAdmin):
+    @admin.display(description='Количество изданий')
+    def count_publications(self, obj: models.Product):
+        return obj.publications.count()
+    
+    inlines = [ProductPublicationInline]
+    list_display = ['title', 'type', 'release_date', 'count_publications']
+
 
 class OrderProductInline(admin.TabularInline):
     model = models.OrderProduct
     extra = 0
 
+
+@admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderProductInline]
+    list_display = ['date', 'status', 'profile', 'amount']
+    list_filter = ['date', 'status', 'profile', 'amount']
 
-admin.site.register(models.Order, OrderAdmin)
 
-admin.site.register(models.Profile)
+@admin.register(models.PromoCode)
+class PromoCodeAdmin(admin.ModelAdmin):
+    list_display = ['promo_code', 'discount', 'expiration']
 
-admin.site.register(models.PromoCode)
+class TestAdmin(admin.AdminSite):
+    pass
