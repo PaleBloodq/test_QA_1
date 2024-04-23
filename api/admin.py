@@ -58,6 +58,3 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(models.PromoCode)
 class PromoCodeAdmin(admin.ModelAdmin):
     list_display = ['promo_code', 'discount', 'expiration']
-
-class TestAdmin(admin.AdminSite):
-    pass
