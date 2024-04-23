@@ -1,4 +1,6 @@
 import uuid
+import requests
+from bs4 import BeautifulSoup
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -46,6 +48,41 @@ class Product(BaseModel):
     type = models.CharField('Тип', max_length=32, choices=TypeChoices.choices)
     languages = models.ManyToManyField(Language, verbose_name='Языки')
     release_date = models.DateField('Дата релиза', )
+    ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True)
+    
+    def normalize_price(self, price: int):
+        if price <= 899:
+            exchange_rate = 5.5
+        elif 900 <= price <= 1699:
+            exchange_rate = 5
+        else:
+            exchange_rate = 4.5
+        price *= exchange_rate
+        if price >= 1000 and price % 1000 < 25:
+            price -= price % 1000 + 5
+        if price % 5 > 0:
+            price -= price % 5
+        return int(price)
+    
+    def parse_publications(self):
+        if self.ps_store_url:
+            for soup_edition in BeautifulSoup(requests.get(self.ps_store_url).text, 'html.parser').find_all('article'):
+                try:
+                    publication = ProductPublication(
+                        product=self,
+                        price=self.normalize_price(int(soup_edition.find('span', {'class': 'psw-t-title-m'}).text.split(',')[0].replace('.', ''))),
+                        title=soup_edition.find('h3', {'class': 'psw-t-title-s'}).text
+                    )
+                    for soup_platform in soup_edition.find_all('span', {'class': 'psw-t-tag'}):
+                        platform, created = Platform.objects.get_or_create(name=soup_platform.text)
+                        publication.platforms.add(platform)
+                    publication.save()
+                except:
+                    pass
+    
+    def save(self) -> None:
+        super().save()
+        self.parse_publications()
     
     def __str__(self) -> str:
         return self.title
