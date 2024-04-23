@@ -136,3 +136,16 @@ class OrderProduct(BaseModel):
     item = models.CharField('Позиция', max_length=255)
     description = models.CharField('Описание', max_length=255)
     price = models.IntegerField('Стоимость')
+
+
+class PromoCode(BaseModel):
+    promo_code = models.CharField('Промокод', max_length=255)
+    expiration = models.DateTimeField('Дата окончания')
+    discount = models.IntegerField('Скидка %')
+    
+    def __str__(self) -> str:
+        return f'{self.discount}% {self.promo_code}'
+    
+    class Meta:
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоды'
