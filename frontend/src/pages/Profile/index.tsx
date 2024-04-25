@@ -1,27 +1,41 @@
 import React, { useEffect, useState } from "react";
 import Container from "../../components/common/Container";
 import Tag from "../../components/common/Tag";
-import { useGetOrdersQuery, useGetUserQuery } from "../../services/userApi";
+import { useGetOrdersQuery, useGetUserQuery, useUpdateUserDataMutation } from "../../services/userApi";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import { OrderType } from "../../types/orderType";
 
 export default function Profile() {
 
-    const { data: userData = [], isLoading: isUserLoading } = useGetUserQuery({})
+    const { data: userData = [], isLoading: isUserLoading, status } = useGetUserQuery({})
     const { data: ordersData = [], isLoading: isOrdersLoading } = useGetOrdersQuery({})
     const [showOrderHistory, setShowOrderHistory] = useState(false)
-    const [accountPassword, setAccountPassword] = useState('')
-    const [accountMail, setAccountMail] = useState('')
-    const [billMail, setBillMail] = useState('')
+    const [accountPassword, setAccountPassword] = useState(userData?.playstation_password)
+    const [accountMail, setAccountMail] = useState(userData?.playstation_email)
+    const [billMail, setBillMail] = useState(userData?.bill_email)
+
+    const [updateUserData, { data, isLoading, error }] = useUpdateUserDataMutation();
 
     useEffect(() => {
-        setAccountMail(userData?.accountEmail)
-        setBillMail(userData?.billEmail)
-        setAccountPassword(userData?.accountPassword)
+        setAccountMail(userData?.playstation_email)
+        setBillMail(userData?.bill_email)
+        setAccountPassword(userData?.playstation_password)
     }, [userData])
 
+    const updatedData = {
+        id: 123981283,
+        username: billMail,
+        psEmail: accountMail,
+        psPassword: accountPassword,
+        billEmail: billMail
+    }
 
+    function handleUpdateUserData() {
+        updateUserData({ updatedData })
+    }
+
+    console.log(updatedData)
     return (
         <Container>
             <div className="w-full h-[100px] custom-border px-6 flex items-center justify-start">
@@ -29,7 +43,7 @@ export default function Profile() {
                     <>
                         <div className="w-14 h-14 rounded-full bg-blue-400 mr-6"></div>
                         <div className="flex flex-col gap-[10px]">
-                            <h1 className="text-title-xl">This.Is.Me</h1>
+                            <h1 className="text-title-xl">{userData?.bill_email}</h1>
                             <div className="flex gap-4">
                                 <p className="text-subtitle">Баллы:</p>
                                 <Tag type="discount">{userData?.cashback} ₽</Tag>
@@ -56,7 +70,7 @@ export default function Profile() {
                     <p className="text-subtitle mb-3">E-mail для чеков:</p>
                     <Input localValue={true} hardlyEditable={true} placeholder="E-Mail" type="email" value={billMail} setValue={setBillMail} />
                     <span className="mt-36">
-                        <Button onClick={() => console.log('save changes')}>Сохранить изменения</Button>
+                        <Button onClick={handleUpdateUserData}>Сохранить изменения</Button>
                     </span>
                 </div>
                 :

@@ -21,7 +21,8 @@ export default function SearchPage() {
         platforms: platforms,
         languages: languages,
         limit: limit,
-        q: value
+        q: value,
+        offset: offset,
     }
     useEffect(() => {
         getSearchProducts({ params })

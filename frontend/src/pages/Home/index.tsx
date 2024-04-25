@@ -13,8 +13,6 @@ export default function Home() {
 
     const { data = [] } = useGetCategoryProductsQuery({})
 
-
-
     return (
         <Container>
             <Navigation />
