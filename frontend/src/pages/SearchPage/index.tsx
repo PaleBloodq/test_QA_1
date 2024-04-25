@@ -67,9 +67,13 @@ export default function SearchPage() {
                             </svg>
                         </button>
                     </div>
-                    {!isLoading &&
-                        <div className="w-full flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
+                    {!isLoading && data?.length > 0 ?
+                        <div className="w-full min-h-screen flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
                             {data?.map((item: any, index: number) => <SearchItem key={index} item={item} />)}
+                        </div>
+                        :
+                        <div className="w-full h-screen flex justify-center flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
+                            <h1 className="text-header">Ничего не нашлось 😓</h1>
                         </div>
                     }
                 </div>

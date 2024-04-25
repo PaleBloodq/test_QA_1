@@ -22,10 +22,10 @@ export default function SearchItem({ item }: { item: any }) {
     console.log(baseLink)
 
     return (
-        <Link to={baseLink} className="w-[165px] h-auto flex flex-col justify-between items-start">
+        <Link to={baseLink} className="w-[165px] h-fit flex flex-col justify-between items-start">
             <img className="w-[165px] h-[210px] rounded-xl" src={replaceUrl(item.product.type === 'GAME' ? item.preview : item.photo)} alt="Картинка" />
             <h1 className="mt-5 text-title">{item.product.title}</h1>
-            <h2 className="text-subtitle">{item.title}</h2>
+            <h2 className="text-subtitle">{item.title} {item.product.type === "SUBSCRIPTION" && item.duration + ' мес'}</h2>
             {
                 item?.discount ? (
                     <div className="flex gap-2">
