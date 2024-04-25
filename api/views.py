@@ -170,3 +170,8 @@ class CreateOrder(APIView):
     @utils.auth_required
     def post(self, request: Request, profile: models.Profile):
         return Response(status=status.HTTP_200_OK)
+
+
+class UpdateProductPublications(APIView):
+    def post(self, request: Request, product_id: str):
+        return Response()
