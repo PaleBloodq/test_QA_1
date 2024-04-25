@@ -1,6 +1,6 @@
 import CheckField from "./CheckField";
 import 'rc-slider/assets/index.css';
-import { resetSearchSettings, setSearchHighPrice, setSearchLanguages, setSearchLowPrice, setSearchPlatforms } from "../../../features/Search/searchSlice";
+import { resetSearchSettings, setSearchLanguages, setSearchPlatforms } from "../../../features/Search/searchSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../../../components/common/Button";
 import PriceSlider from "./PriceSlider";
@@ -10,17 +10,27 @@ import { searchSelector } from "../../../features/Search/searchSelectors";
 type FilterPropsType = {
     initData: FilterInitData,
     setShowFilter: (value: boolean) => void,
+    getSearchProducts: (arg: any) => any
 
 }
 
-export default function Filter({ initData, setShowFilter }: FilterPropsType) {
+export default function Filter({ initData, setShowFilter, getSearchProducts }: FilterPropsType) {
 
     const dispatch = useDispatch();
 
-    const { platforms, languages } = useSelector(searchSelector)
+    const { platforms, languages, limit, maxPrice, minPrice, offset, value } = useSelector(searchSelector)
 
     function resetFilter() {
         dispatch(resetSearchSettings(initData))
+    }
+
+    const params = {
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        platforms: platforms,
+        languages: languages,
+        limit: limit,
+        q: value
     }
 
     return (
@@ -55,7 +65,7 @@ export default function Filter({ initData, setShowFilter }: FilterPropsType) {
                 <div className="flex flex-col gap-4">
                     <PriceSlider initData={initData} />
                     <div className="w-full mt-[100px]">
-                        <Button onClick={() => setShowFilter(false)}>Применить фильтры</Button>
+                        <Button onClick={() => { setShowFilter(false); getSearchProducts({ params }) }}>Применить фильтры</Button>
                     </div>
                 </div>
             </div>

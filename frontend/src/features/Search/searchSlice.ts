@@ -47,7 +47,6 @@ const searchSlice = createSlice({
       state.offset = action.payload;
     },
     resetSearchSettings: (state, action) => {
-      state.value = "";
       state.languages = [];
       state.platforms = [];
       state.minPrice = action.payload.minPrice;
