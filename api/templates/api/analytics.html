@@ -1,0 +1,63 @@
+{% extends "admin_tools/dashboard/module.html" %}
+{% load admin_tools_dashboard_tags %}
+
+{% block module_content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
+<div class="chart-container" style="position: relative; height:40vh; width:45%">
+    <canvas id="chart"></canvas>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded",  () => {
+        var ctx = document.getElementById("chart").getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    {% for date in module.children.dates %}"{{date}}",{% endfor %}
+                ],
+                datasets: [
+                    {
+                        label: 'Количество заказов',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        data: [{% for amount in module.children.orders_amount %}{{amount}},{% endfor %}],
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-1'
+                    },
+                    {
+                        label: 'Оборот',
+                        backgroundColor: 'rgba(255, 206, 86, 1)',
+                        data: [{% for day in module.children.income %}{{day}},{% endfor %}],
+                        borderWidth: 1,
+                        yAxisID: 'y-axis-2'
+
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        id: 'y-axis-1',
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            beginAtZero: true
+                        }
+                        }, {
+                        id: 'y-axis-2',
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

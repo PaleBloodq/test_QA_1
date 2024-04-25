@@ -19,9 +19,9 @@ class ProductPublicationInline(admin.TabularInline):
     extra = 0
     ordering = ('title', )
     
-    def get_exclude(self, request, obj: models.Product):
-        if obj:
-            match obj.type:
+    def get_exclude(self, request, product: models.Product):
+        if product:
+            match product.type:
                 case models.Product.TypeChoices.DONATION:
                     return ('title', 'duration')
                 case models.Product.TypeChoices.SUBSCRIPTION:
@@ -30,10 +30,10 @@ class ProductPublicationInline(admin.TabularInline):
                     return ('duration', 'quantity')
                 case _:
                     pass
-        return super().get_exclude(request, obj)
+        return super().get_exclude(request, product)
 
 
-@admin.register(models.Product)
+@admin.register(models.Product, site=admin.site)
 class ProductAdmin(admin.ModelAdmin):
     @admin.display(description='Количество изданий')
     def count_publications(self, obj: models.Product):
@@ -48,13 +48,13 @@ class OrderProductInline(admin.TabularInline):
     extra = 0
 
 
-@admin.register(models.Order)
+@admin.register(models.Order, site=admin.site)
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderProductInline]
     list_display = ['date', 'status', 'profile', 'amount']
     list_filter = ['date', 'status', 'profile', 'amount']
 
 
-@admin.register(models.PromoCode)
+@admin.register(models.PromoCode, site=admin.site)
 class PromoCodeAdmin(admin.ModelAdmin):
     list_display = ['promo_code', 'discount', 'expiration']
