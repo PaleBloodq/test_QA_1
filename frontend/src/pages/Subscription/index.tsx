@@ -5,7 +5,7 @@ import { useGetAnyProductQuery } from "../../services/productsApi";
 import { useDispatch, useSelector } from "react-redux";
 import SelectSubscription from "../../components/Subscription";
 import { durationSelector, selectedSubscriptionSelector } from "../../features/Subscription/subscriptionSelectors";
-import { setSelectedSubscription } from "../../features/Subscription/subscriptionSlice";
+import { setDuration, setSelectedSubscription } from "../../features/Subscription/subscriptionSlice";
 import Line from "../../components/common/Line";
 import { CartItemType } from "../../types/cartItem";
 import AddToCartButton from "../../components/common/AddToCartButton";
@@ -30,10 +30,10 @@ export default function Subscription() {
     const selectedSubscription = useSelector(selectedSubscriptionSelector);
     const currentDuration = useSelector(durationSelector);
     const [currentSubscription, setCurrentSubscription] = useState(data.publications?.find((sub: Publication) => sub.id === id))
-    useEffect(() => {
-        setCurrentSubscription(data.publications?.find((sub: Publication) => sub.id === id))
-        dispatch(setSelectedSubscription(data.publications?.find((sub: Publication) => sub.id === id).id))
-    }, [data])
+    // useEffect(() => {
+    //     setCurrentSubscription(data.publications?.find((sub: Publication) => sub.id === id))
+    //     dispatch(setSelectedSubscription(data.publications?.find((sub: Publication) => sub.id === id).id))
+    // }, [data])
 
     useEffect(() => {
         setCurrentSubscription(data.publications?.find((sub: Publication) => sub.id === selectedSubscription))
@@ -41,8 +41,9 @@ export default function Subscription() {
 
     const currentPrice = currentSubscription?.price
 
-    console.log(data)
+    console.log(currentDuration)
     console.log(currentSubscription)
+
 
     const cartItem: CartItemType = {
         id: currentSubscription?.id,
@@ -55,6 +56,12 @@ export default function Subscription() {
         discount: currentSubscription?.discount,
         cashback: currentSubscription?.cashback
     }
+    useEffect(() => {
+        dispatch(setDuration(data?.publications?.find((pub) => pub.id === id).duration))
+        dispatch(setSelectedSubscription(data?.publications?.find((pub) => pub.id === id).id))
+    }, [isLoading])
+
+    console.log(selectedSubscription)
 
     return (
         <Container>

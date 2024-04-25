@@ -38,7 +38,6 @@ export default function SearchPage() {
                 <div className="w-full flex flex-col">
                     <div className="w-full h-[38px] flex items-center justify-between">
                         <input
-                            onBlur={() => getSearchProducts({ params })}
                             onKeyDown={(event) => event.key === "Enter" && getSearchProducts({ params })}
                             onChange={(e) => dispatch(setSearchValue(e.target.value))} value={value}
                             className="w-full bg-transparent outline-none text-header" type="text" placeholder="Найти игру..."
@@ -67,15 +66,17 @@ export default function SearchPage() {
                             </svg>
                         </button>
                     </div>
-                    {!isLoading && data?.length > 0 ?
-                        <div className="w-full min-h-screen flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
-                            {data?.map((item: any, index: number) => <SearchItem key={index} item={item} />)}
-                        </div>
-                        :
-                        <div className="w-full h-screen flex justify-center flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
-                            <h1 className="text-header">Ничего не нашлось 😓</h1>
-                        </div>
-                    }
+                    <div className="min-h-screen">
+                        {!isLoading && data?.length > 0 ?
+                            <div className="w-full h-auto flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
+                                {data?.map((item: any, index: number) => <SearchItem key={index} item={item} />)}
+                            </div>
+                            :
+                            <div className="w-full h-screen flex justify-center flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
+                                <h1 className="text-header">Ничего не нашлось 😓</h1>
+                            </div>
+                        }
+                    </div>
                 </div>
             }
         </Container>

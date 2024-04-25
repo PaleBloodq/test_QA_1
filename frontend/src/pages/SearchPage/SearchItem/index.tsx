@@ -2,14 +2,13 @@ import { Link } from "react-router-dom"
 import Tag from "../../../components/common/Tag"
 import { replaceUrl } from "../../../helpers/replaceUrl"
 import { getDiscount } from "../../../hooks/getDiscount"
-import { SearchItemType } from "../../../types/searchItem"
 
 export default function SearchItem({ item }: { item: any }) {
 
     const baseLink = (() => {
         switch (item.product.type) {
             case "GAME":
-                return `/game/${item.product.id}`
+                return `/game/${item.product.id}/${item.id}`
             case "SUBSCRIPTION":
                 return `/subscription/${item.product.id}/${item.id}`
             case "DONATION":

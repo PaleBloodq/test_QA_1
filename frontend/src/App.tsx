@@ -30,7 +30,7 @@ export default function App() {
       <div className='w-full h-full bg-white dark:bg-[#1a1e22]'>
         <Routes location={item}>
           <Route path='/' element={<Home />} />
-          <Route path='/game/:gameId' element={<Game />} />
+          <Route path='/game/:gameId/:pubId' element={<Game />} />
           <Route path='/subscription/:subscriptionId/:id' element={<Subscription />} />
           <Route path='/donation/:id' element={<DonationPage />} />
           <Route path='/search' element={<SearchPage />} />
