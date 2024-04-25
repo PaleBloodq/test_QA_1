@@ -1,6 +1,11 @@
 export type FilterInitData = {
-  platforms: string[];
-  languages: string[];
-  lowPrice: number;
-  highPrice: number;
+  platforms: Objects[];
+  languages: Objects[];
+  minPrice: number;
+  maxPrice: number;
+};
+
+type Objects = {
+  id: string;
+  name: string;
 };

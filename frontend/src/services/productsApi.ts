@@ -15,7 +15,7 @@ export const productsApi = createApi({
       query: () => `/searchItems/`,
     }),
     getSearchFilters: builder.query({
-      query: () => `/filters`,
+      query: () => `/catalog/filters/?format=json`,
     }),
   }),
 });

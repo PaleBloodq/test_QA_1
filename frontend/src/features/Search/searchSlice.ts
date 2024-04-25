@@ -4,8 +4,8 @@ interface SearchState {
   value: string;
   platforms: string[];
   languages: string[];
-  lowPrice: number;
-  highPrice: number;
+  minPrice: number;
+  maxPrice: number;
   offset: number;
   limit: number;
 }
@@ -14,8 +14,8 @@ const initialState: SearchState = {
   value: "",
   platforms: [],
   languages: [],
-  lowPrice: 0,
-  highPrice: 0,
+  minPrice: 0,
+  maxPrice: 0,
   offset: 0,
   limit: 20,
 };
@@ -38,13 +38,20 @@ const searchSlice = createSlice({
         : [...state.languages, action.payload];
     },
     setSearchLowPrice: (state, action: PayloadAction<number>) => {
-      state.lowPrice = action.payload;
+      state.minPrice = action.payload;
     },
     setSearchHighPrice: (state, action: PayloadAction<number>) => {
-      state.highPrice = action.payload;
+      state.maxPrice = action.payload;
     },
     setSearchOffset: (state, action: PayloadAction<number>) => {
       state.offset = action.payload;
+    },
+    resetSearchSettings: (state, action) => {
+      state.value = "";
+      state.languages = [];
+      state.platforms = [];
+      state.minPrice = action.payload.minPrice;
+      state.maxPrice = action.payload.maxPrice;
     },
   },
 });
@@ -56,6 +63,7 @@ export const {
   setSearchLowPrice,
   setSearchHighPrice,
   setSearchOffset,
+  resetSearchSettings,
 } = searchSlice.actions;
 
 export default searchSlice.reducer;

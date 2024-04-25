@@ -15,45 +15,47 @@ export default function SearchPage() {
     const [showFilter, setShowFilter] = useState(false)
 
     const { data = [], isLoading } = useGetSearchProductsQuery({})
-    const filterData = useGetSearchFiltersQuery({})
+    const { data: filterData } = useGetSearchFiltersQuery({})
+
+    console.log(filterData)
 
 
-    const transformProducts = (products: any[]): SearchItemType[] => {
-        return products.flatMap(product => {
-            if (product.type === "game" || product.type === "subscription") {
-                return (product.publications || product.durationVariations).map(pub => ({
-                    id: pub.id,
-                    title: `${product.title}`,
-                    pubTitle: pub.title,
-                    type: product.type,
-                    previewImg: pub.previewImg,
-                    prices: pub.price,
-                    photoUrls: pub.photoUrls,
-                    includes: pub.includes,
-                    discount: pub.discount,
-                    psPlusDiscount: pub.psPlusDiscount,
-                    cashback: pub.cashback,
-                    description: pub.description
-                }));
-            } else if (product.type === "donation") {
-                return [{
-                    id: product.id,
-                    title: product.title,
-                    type: product.type,
-                    previewImg: product.previewImg,  // Правильно используем previewImg для изображения предпросмотра
-                    prices: [{ platform: product.platforms[0], price: product.unitPrice }],  // Цена за единицу
-                    photoUrls: product.photoUrls  // Используем массив URL из оригинального объекта
-                }];
-            }
-            return [];
-        });
-    };
+    // const transformProducts = (products: any[]): SearchItemType[] => {
+    //     return products.flatMap(product => {
+    //         if (product.type === "game" || product.type === "subscription") {
+    //             return (product.publications || product.durationVariations).map(pub => ({
+    //                 id: pub.id,
+    //                 title: `${product.title}`,
+    //                 pubTitle: pub.title,
+    //                 type: product.type,
+    //                 previewImg: pub.previewImg,
+    //                 prices: pub.price,
+    //                 photoUrls: pub.photoUrls,
+    //                 includes: pub.includes,
+    //                 discount: pub.discount,
+    //                 psPlusDiscount: pub.psPlusDiscount,
+    //                 cashback: pub.cashback,
+    //                 description: pub.description
+    //             }));
+    //         } else if (product.type === "donation") {
+    //             return [{
+    //                 id: product.id,
+    //                 title: product.title,
+    //                 type: product.type,
+    //                 previewImg: product.previewImg,  // Правильно используем previewImg для изображения предпросмотра
+    //                 prices: [{ platform: product.platforms[0], price: product.unitPrice }],  // Цена за единицу
+    //                 photoUrls: product.photoUrls  // Используем массив URL из оригинального объекта
+    //             }];
+    //         }
+    //         return [];
+    //     });
+    // };
 
-    const products = transformProducts(data);
+    // const products = transformProducts(data);
 
     return (
         <Container>
-            {showFilter && <Filter setShowFilter={setShowFilter} initData={filterData.data} />}
+            {showFilter && <Filter setShowFilter={setShowFilter} initData={filterData} />}
             {!showFilter &&
                 <div className="w-full flex flex-col">
                     <div className="w-full h-[38px] flex items-center justify-between">
@@ -79,11 +81,11 @@ export default function SearchPage() {
                             </svg>
                         </button>
                     </div>
-                    {!isLoading &&
+                    {/* {!isLoading &&
                         <div className="w-full flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
                             {products.map((item, index) => <SearchItem key={index} item={item} />)}
                         </div>
-                    }
+                    } */}
                 </div>
             }
         </Container>
