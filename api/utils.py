@@ -2,6 +2,8 @@ import os
 from datetime import datetime, timedelta
 import uuid
 from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework import status
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 import jwt
@@ -60,3 +62,14 @@ def decode_token(token: str) -> models.Profile | None:
                 return profile
     except:
         pass
+
+
+def auth_required(func):
+    def wrapped(self, request: Request):
+        if request.META.get('HTTP_AUTHORIZATION'):
+            token = request.META.get('HTTP_AUTHORIZATION').removeprefix('Bearer ')
+            profile = decode_token(token)
+            if profile:
+                return func(self, request, profile)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+    return wrapped

@@ -1,13 +1,13 @@
 import uuid
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
+from imagekit.models import ProcessedImageField
+
+percent_validator = MinValueValidator(0), MaxValueValidator(100)
 
 
 class BaseModel(models.Model):
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField('Создан в', auto_now_add=True)
     updated_at = models.DateTimeField('Обновлен в', auto_now=True)
     
@@ -47,6 +47,7 @@ class Product(BaseModel):
     type = models.CharField('Тип', max_length=32, choices=TypeChoices.choices)
     languages = models.ManyToManyField(Language, verbose_name='Языки')
     release_date = models.DateField('Дата релиза', )
+    ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True)
     
     def __str__(self) -> str:
         return self.title
@@ -64,16 +65,15 @@ class ProductPublication(BaseModel):
     duration = models.IntegerField('Длительность в месяцах', null=True)
     quantity = models.IntegerField('Количество игровой валюты', null=True)
     includes = models.TextField('Включает', null=True, blank=True)
-    preview = models.ImageField('Превью', null=True, blank=True)
-    photo = models.ImageField('Изображение', null=True, blank=True)
-    cashback = models.IntegerField('Кэшбек %', null=True, blank=True)
-    ps_plus_discount = models.IntegerField('Скидка PS Plus %', null=True, blank=True)
-    discount = models.IntegerField('Скидка %', null=True, blank=True)
+    preview = ProcessedImageField(verbose_name='Превью', format='WEBP', options={'quality': 40}, null=True, blank=True)
+    photo = ProcessedImageField(verbose_name='Изображение', format='WEBP', options={'quality': 100}, null=True, blank=True)
+    cashback = models.IntegerField('Кэшбек %', null=True, blank=True, validators=percent_validator)
+    ps_plus_discount = models.IntegerField('Скидка PS Plus %', null=True, blank=True, validators=percent_validator)
+    discount = models.IntegerField('Скидка %', null=True, blank=True, validators=percent_validator)
     discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
     
     def __str__(self) -> str:
-        models.RowRange
-        return f'{self.product}: {self.title} ({self.platforms})'
+        return f'{self.product}: {self.title}'
     
     class Meta:
         verbose_name = 'Издание'
@@ -124,7 +124,7 @@ class Order(BaseModel):
     status = models.CharField('Статус', choices=StatusChoices.choices, default=StatusChoices.OK)
     
     def __str__(self) -> str:
-        return f'{self.profile} от {self.date} ({self.amount})'
+        return f'{self.profile} от {self.date}'
     
     class Meta:
         verbose_name = 'Заказ'
@@ -133,6 +133,20 @@ class Order(BaseModel):
 
 class OrderProduct(BaseModel):
     order = models.ForeignKey(Order, verbose_name='Заказ', on_delete=models.CASCADE, related_name='order_products')
-    item = models.CharField('Позиция', max_length=255)
+    product = models.CharField('Позиция', max_length=255)
+    product_id = models.CharField('ID товара', max_length=255)
     description = models.CharField('Описание', max_length=255)
     price = models.IntegerField('Стоимость')
+
+
+class PromoCode(BaseModel):
+    promo_code = models.CharField('Промокод', max_length=255)
+    expiration = models.DateTimeField('Дата окончания')
+    discount = models.IntegerField('Скидка %', validators=percent_validator)
+    
+    def __str__(self) -> str:
+        return f'{self.discount}% {self.promo_code}'
+    
+    class Meta:
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоды'

@@ -27,6 +27,12 @@ ngrok.exe
 
 # Python
 __pycache__/
+run_django.py
+test.py
+
+# Django
+static/
+media/
 
 # Sensitive information
 *.pem
