@@ -22,7 +22,7 @@ export default function App() {
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo(0, 0);
-    }, 300)
+    }, 150)
   }, [location])
 
   return transitions((styles, item) => (
