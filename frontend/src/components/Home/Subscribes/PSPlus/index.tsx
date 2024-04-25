@@ -1,27 +1,37 @@
 import SubscriptionPeriodSelector from "../../../common/SubscriptionPeriodSelect"
-import { durationVariationsType, subscriptionType } from "../../../../types/subscriptionType";
 import { Link } from "react-router-dom";
 import useIsLoading from "../../../../hooks/useIsLoading";
 import { useSelector } from "react-redux";
 import { durationSelector } from "../../../../features/Subscription/subscriptionSelectors";
+import { ProductType } from "../../../../types/ProductType";
+import { Publication } from "../../../../types/PublicationType";
+import { replaceUrl } from "../../../../helpers/replaceUrl";
 
-export default function PSPlus({ data = [] }: { data: subscriptionType[] }) {
+export default function PSPlus({ data = [] }: { data: ProductType[] }) {
     const isLoading = useIsLoading(data[0])
     const duration = useSelector(durationSelector)
+
+    const groupedSubscriptions = data[0]?.publications.reduce((acc: any, sub: any) => {
+        if (!acc[sub.title]) {
+            acc[sub.title] = [];
+        }
+        acc[sub.title].push(sub);
+        return acc;
+    }, {});
+
 
     return (
         <div>
             <h1 className="text-header mb-[22px]">Подписки PS Plus</h1>
             <SubscriptionPeriodSelector selected={duration} />
             <div className="flex flex-col gap-2">
-                {!isLoading && data[0].durationVariations.map((subscription: durationVariationsType) => {
-                    const priceForSelectedDuration = subscription.price.find(variation => variation.duration === duration)?.price;
+                {!isLoading && groupedSubscriptions && Object.entries(groupedSubscriptions).map((subscription: any, index: number) => {
                     return (
-                        <Link to={`/subscription/${data[0].id}/${subscription.id}`} className="flex w-full px-2 py-2 custom-border justify-between items-center" key={'pssub-' + subscription.id}>
-                            <img src={subscription.previewImg} alt="preview" />
+                        <Link to={`/subscription/${data[0]?.id}/${subscription[1].find((pub: Publication) => pub.duration === duration)?.id}`} className="flex w-full px-2 py-2 custom-border justify-between items-center" key={'pssub-' + index}>
+                            <img src={replaceUrl(subscription[1]?.find((pub: Publication) => pub.duration === duration)?.preview)} alt="preview" />
                             <div className="flex flex-col gap-2 items-start">
-                                <h1 className="text-subtitle">{subscription.title}</h1>
-                                <h2 className="price-small">{priceForSelectedDuration} ₽</h2>
+                                <h1 className="text-subtitle">{subscription[0]}</h1>
+                                <h2 className="price-small">{subscription[1]?.find((pub: Publication) => pub.duration === duration)?.price} ₽</h2>
                             </div>
                             <div className="self-start">
                                 <svg className="fill-[#606D7B] dark:fill-[#606D7B]" width="23" height="23" viewBox="0 0 23 23" xmlns=" http://www.w3.org/2000/svg">

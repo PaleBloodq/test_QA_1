@@ -3,6 +3,7 @@ import Tag from "../../../components/common/Tag";
 import { getDiscount } from "../../../hooks/getDiscount";
 import { deleteFromCart } from "../../../features/Cart/cartSlice";
 import { CartItemType } from "../../../types/cartItem";
+import { replaceUrl } from "../../../helpers/replaceUrl";
 
 export default function CartItem({ item }: { item: CartItemType }) {
 
@@ -10,7 +11,7 @@ export default function CartItem({ item }: { item: CartItemType }) {
 
     return (
         <div className="custom-border p-2 flex w-full h-[90px]">
-            <img className="w-[111px] object-cover rounded-xl" src={item.img} alt="img" />
+            <img className="w-[111px] object-cover rounded-xl" src={replaceUrl(item.img)} alt="img" />
             <div className="flex flex-col justify-between items-start ml-6">
                 <h1 className="text-subtitle-info font-medium">{item.title}</h1>
                 <p className="text-subtitle text-[12px]">{item.publication} - {item.platform}</p>

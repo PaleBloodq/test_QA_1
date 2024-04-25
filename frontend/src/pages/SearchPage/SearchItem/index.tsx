@@ -4,7 +4,6 @@ import { SearchItemType } from "../../../types/searchItem"
 
 export default function SearchItem({ item }: { item: SearchItemType }) {
 
-    console.log(item)
 
 
     return (

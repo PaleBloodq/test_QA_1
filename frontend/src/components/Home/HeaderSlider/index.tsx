@@ -7,12 +7,14 @@ import 'swiper/css/pagination';
 
 import './headerSlider.css';
 import Tag from '../../common/Tag';
-import { GameType } from '../../../types/gameType';
 import { Link } from 'react-router-dom';
 import { isNew } from '../../../hooks/useIsNew';
 import useIsLoading from '../../../hooks/useIsLoading';
+import { ProductType } from '../../../types/ProductType';
+import { SectionType } from '../../../types/SectionType';
+import { replaceUrl } from '../../../helpers/replaceUrl';
 
-export default function HeaderSlider({ data }: { data: GameType[] }) {
+export default function HeaderSlider({ data }: { data: SectionType }) {
     const swiperRef = useRef(null);
     const isLoading = useIsLoading(data)
     useEffect(() => {
@@ -38,16 +40,16 @@ export default function HeaderSlider({ data }: { data: GameType[] }) {
                     className="headerSwiper"
                     ref={swiperRef}
                 >
-                    {data.map((game: GameType, index: number) => {
+                    {data.objects.map((game: ProductType, index: number) => {
                         return (
                             <SwiperSlide key={`header-${index}`}>
                                 <Link className="flex w-full h-full relative" to={"/game/" + game.id}>
-                                    <img className="rounded-xl" src={game.previewImg} alt="" />
+                                    <img className="rounded-xl" src={replaceUrl(game.publications[0].preview)} alt="" />
                                     <div className="absolute bottom-[50px] z-10 flex w-full items-center gap-2 flex-col justify-center">
-                                        <h1 className="text-white font-bold text-4xl">{game.publications[0].discount.percent && game.publications[0].discount.percent > 0 ? (getDiscount(game.publications[0].price[0].price, game.publications[0].discount.percent)) : (game.publications[0].price[0].price)} ₽</h1>
+                                        <h1 className="text-white font-bold text-4xl">{game.publications[0].discount && game.publications[0].discount > 0 ? (getDiscount(game.publications[0].price, game.publications[0].discount)) : (game.publications[0].price)} ₽</h1>
                                         <div className='w-16 flex gap-3 justify-center'>
-                                            {game.publications[0].discount.percent !== 0 && <Tag type="discount">-{game.publications[0].discount.percent}%</Tag>}
-                                            {isNew(game.releaseDate) && <Tag type="new">Новинка</Tag>}
+                                            {game.publications[0].discount !== null && <Tag type="discount">-{game.publications[0].discount}%</Tag>}
+                                            {isNew(game.release_date) && <Tag type="new">Новинка</Tag>}
                                         </div>
                                     </div>
                                 </Link>

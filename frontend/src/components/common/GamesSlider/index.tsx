@@ -4,21 +4,22 @@ import 'swiper/css/pagination';
 import './newGamesSlider.css';
 import { Pagination } from 'swiper/modules';
 import React from 'react';
-import { donationType } from '../../../types/donationType';
 import GameCard from '../GameCard';
-import { GameType } from '../../../types/gameType';
+import { ProductType } from '../../../types/ProductType';
 import DonationCard from '../DonationCard';
+import SubscriptionCard from '../SubscriptionCard';
 
-type GamesData = GameType[];
-type DonationsData = donationType[];
 
 type GamesSliderProps = {
-    data: GamesData | DonationsData;
+    data: ProductType[];
     isLoading: boolean;
-    type?: "game" | "donation";
+    type?: "GAME" | "DONATION" | "SUBSCRIPTION";
 }
 
+
 const GamesSlider = React.memo(({ data, isLoading, type }: GamesSliderProps) => {
+
+
     return (
         <>
             {!isLoading &&
@@ -31,11 +32,14 @@ const GamesSlider = React.memo(({ data, isLoading, type }: GamesSliderProps) => 
                 >
                     {data.map((item, index) => {
                         return <SwiperSlide key={index}>
-                            {type === "game" ? (
-                                <GameCard game={item as GameType} />
-                            ) : type === "donation" ? (
-                                <DonationCard donation={item as donationType} />
-                            ) : null}
+                            {/* {type === "GAME" ? (
+                                <GameCard game={item} />
+                            ) : type === "DONATION" ? (
+                                <DonationCard donation={item} />
+                            ) : null} */}
+                            {type === "GAME" && <GameCard game={item} />}
+                            {type === "DONATION" && <DonationCard donation={item} />}
+                            {type === "SUBSCRIPTION" && <SubscriptionCard subscription={item} />}
                         </SwiperSlide>
                     })}
                 </Swiper>

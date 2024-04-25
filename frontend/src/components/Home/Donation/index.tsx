@@ -1,11 +1,12 @@
 import gamepadIcon from "@icons/gamepad.svg";
 import GamesSlider from "../../common/GamesSlider";
 import useIsLoading from "../../../hooks/useIsLoading";
-import { donationType } from "../../../types/donationType";
+import { SectionType } from "../../../types/SectionType";
 
-export default function Donation({ data = [] }: { data: donationType[] }) {
+export default function Donation({ data }: { data: SectionType }) {
 
-    const isLoading = useIsLoading(data[0])
+    const isLoading = useIsLoading(data?.objects?.length);
+
 
     return (
         <div className="mt-7 pt-6 pb-3 px-4 custom-border flex flex-col">
@@ -13,7 +14,7 @@ export default function Donation({ data = [] }: { data: donationType[] }) {
                 <img src={gamepadIcon} alt="donation" />
                 <h1 className="text-header">Игровой донат</h1>
             </div>
-            <GamesSlider type="donation" data={data} isLoading={isLoading} />
+            <GamesSlider type="DONATION" data={data?.objects} isLoading={isLoading} />
         </div>
     )
 }

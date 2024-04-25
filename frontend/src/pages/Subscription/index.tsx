@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { useGetAnyProductQuery } from "../../services/productsApi";
 import { useDispatch, useSelector } from "react-redux";
 import SelectSubscription from "../../components/Subscription";
-import { SubscriptionPriceType, subscriptionType } from "../../types/subscriptionType";
 import { durationSelector, selectedSubscriptionSelector } from "../../features/Subscription/subscriptionSelectors";
 import { setSelectedSubscription } from "../../features/Subscription/subscriptionSlice";
 import Line from "../../components/common/Line";
 import { CartItemType } from "../../types/cartItem";
 import AddToCartButton from "../../components/common/AddToCartButton";
+import { Publication } from "../../types/PublicationType";
+import { replaceUrl } from "../../helpers/replaceUrl";
+import { ProductType } from "../../types/ProductType";
 
 
 export default function Subscription() {
@@ -24,64 +26,65 @@ export default function Subscription() {
 
 
     const { subscriptionId, id } = useParams<RouteParams>();
-    const { data = [], isLoading } = useGetAnyProductQuery(subscriptionId);
+    const { data = [] as ProductType, isLoading } = useGetAnyProductQuery(subscriptionId);
     const selectedSubscription = useSelector(selectedSubscriptionSelector);
     const currentDuration = useSelector(durationSelector);
-    const [currentSubscription, setCurrentSubscription] = useState(data.durationVariations?.find((sub: subscriptionType) => sub.id === id))
+    const [currentSubscription, setCurrentSubscription] = useState(data.publications?.find((sub: Publication) => sub.id === id))
     useEffect(() => {
-        setCurrentSubscription(data.durationVariations?.find((sub: subscriptionType) => sub.id === id))
-        dispatch(setSelectedSubscription(data.durationVariations?.find((sub: subscriptionType) => sub.id === id).id))
+        setCurrentSubscription(data.publications?.find((sub: Publication) => sub.id === id))
+        dispatch(setSelectedSubscription(data.publications?.find((sub: Publication) => sub.id === id).id))
     }, [data])
 
     useEffect(() => {
-        setCurrentSubscription(data.durationVariations?.find((sub: subscriptionType) => sub.id === selectedSubscription))
+        setCurrentSubscription(data.publications?.find((sub: Publication) => sub.id === selectedSubscription))
     }, [selectedSubscription])
 
-    const currentPrice = currentSubscription?.price.find((price: SubscriptionPriceType) => price.duration === currentDuration).price
+    const currentPrice = currentSubscription?.price
 
+    console.log(data)
+    console.log(currentSubscription)
 
     const cartItem: CartItemType = {
         id: currentSubscription?.id,
-        type: "subscription",
-        img: currentSubscription?.previewImg,
-        title: data?.title?.includes('PS') ? "PS Plus" : "EA Play",
-        publication: `${currentSubscription?.title} ${currentDuration} мес`,
+        type: "SUBSCRIPTION",
+        img: currentSubscription?.preview,
+        title: data?.title?.includes('PS') ? `PS Plus ${currentSubscription?.title}` : `EA Play ${currentSubscription?.title}`,
+        publication: `${currentDuration} мес`,
         platform: data?.title?.includes('PS') ? 'PS' : "EA",
         price: currentPrice,
-        discount: currentSubscription?.discount.percent,
+        discount: currentSubscription?.discount,
         cashback: currentSubscription?.cashback
     }
-
 
     return (
         <Container>
             <div className="flex flex-col items-center">
                 {!isLoading && currentSubscription !== undefined ? (
                     <div className="flex flex-col items-start">
-                        <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={currentSubscription.photoUrls[0]} alt="game image" />
+                        <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentSubscription.photo)} alt="subscription image" />
                         <h1 className="text-header mb-2">{data.title.includes('PS') ? 'PS Plus' : 'EA Play'} {currentSubscription.title}</h1>
                         <div className="flex items-center">
                             <h1 className="price-big">{currentPrice} ₽</h1>
                         </div>
-                        <SelectSubscription durations={data.durationVariations} />
+                        <SelectSubscription publications={data.publications} />
                         <div className="mt-8 w-full">
                             <p className="text-subtitle-info">
-                                {currentSubscription.description}
+                                {currentSubscription.includes}
                             </p>
                         </div>
                         <Line />
                         <div className='flex flex-col gap-2 w-full'>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Платформа:</p>
-                                <p className='text-title text-[14px]'>{data.platforms.map((platform: string[]) => platform).join(', ')}</p>
+                                <p className='text-title text-[14px]'>{currentSubscription.platforms.map((platform) => platform).join(', ')}</p>
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Язык:</p>
-                                <p className='text-title text-[14px]'>{data.languages.map((lang: string[]) => lang).join(', ')}</p>
+                                <p className='text-title text-[14px]'>{data.languages.map((lang) => lang).join(', ')}</p>
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Дата релиза:</p>
-                                <p className='text-title text-[14px]'>{data.releaseDate}</p>
+                                <p className='text-title text-[14px]'>{data?.release_date || 'Нет данных'}</p>
                             </div>
                         </div>
                         <AddToCartButton cartItem={cartItem} />
