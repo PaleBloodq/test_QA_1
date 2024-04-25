@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from imagekit.models import ProcessedImageField
 
 percent_validator = MinValueValidator(0), MaxValueValidator(100)
 
@@ -64,8 +65,8 @@ class ProductPublication(BaseModel):
     duration = models.IntegerField('Длительность в месяцах', null=True)
     quantity = models.IntegerField('Количество игровой валюты', null=True)
     includes = models.TextField('Включает', null=True, blank=True)
-    preview = models.ImageField('Превью', null=True, blank=True)
-    photo = models.ImageField('Изображение', null=True, blank=True)
+    preview = ProcessedImageField(verbose_name='Превью', format='WEBP', options={'quality': 40}, null=True, blank=True)
+    photo = ProcessedImageField(verbose_name='Изображение', format='WEBP', options={'quality': 100}, null=True, blank=True)
     cashback = models.IntegerField('Кэшбек %', null=True, blank=True, validators=percent_validator)
     ps_plus_discount = models.IntegerField('Скидка PS Plus %', null=True, blank=True, validators=percent_validator)
     discount = models.IntegerField('Скидка %', null=True, blank=True, validators=percent_validator)
