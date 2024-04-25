@@ -28,6 +28,9 @@ ngrok.exe
 # Python
 __pycache__/
 
+# Django
+static/
+
 # Sensitive information
 *.pem
 *.pub
