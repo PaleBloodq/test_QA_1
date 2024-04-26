@@ -174,4 +174,14 @@ class CreateOrder(APIView):
 
 class UpdateProductPublications(APIView):
     def post(self, request: Request, product_id: str):
-        return Response()
+        product = models.Product.objects.filter(id=product_id).first()
+        if product:
+            for publication in request.data.get('publications', []):
+                serializer = serializers.UpdateProductPublicationSerializer(
+                    data=publication,
+                    instance=None,
+                )
+                if serializer.is_valid():
+                    serializer.save(product)
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)

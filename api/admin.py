@@ -22,18 +22,17 @@ class ProductPublicationInline(admin.TabularInline):
     model = models.ProductPublication
     extra = 0
     ordering = ('title', )
+    exclude = ['hash']
     
     def get_exclude(self, request, product: models.Product):
         if product:
             match product.type:
                 case models.Product.TypeChoices.DONATION:
-                    return ('title', 'duration')
+                    self.exclude += ['title', 'duration']
                 case models.Product.TypeChoices.SUBSCRIPTION:
-                    return ('quantity', )
+                    self.exclude += ['quantity']
                 case models.Product.TypeChoices.GAME:
-                    return ('duration', 'quantity')
-                case _:
-                    pass
+                    self.exclude += ['duration', 'quantity']
         return super().get_exclude(request, product)
 
 

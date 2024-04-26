@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api import models
+from api import models, utils
 
 
 class EnumSerializer(serializers.RelatedField):
@@ -134,3 +134,47 @@ class OrderSerializer(serializers.ModelSerializer):
             'status',
             'order_products',
         )
+
+
+class UpdateProductPublicationSerializer(serializers.Serializer):
+    title = serializers.CharField(required=True)
+    platforms = serializers.ListField(required=True)
+    final_price = serializers.IntegerField(required=True)
+    original_price = serializers.IntegerField(required=True)
+    offer_ends = serializers.DateTimeField(allow_null=True)
+    discount = serializers.IntegerField(allow_null=True)
+    
+    def save(self, product: models.Product):
+        title = self.validated_data.get('title')
+        platforms = self.validated_data.get('platforms')
+        final_price = self.validated_data.get('final_price')
+        original_price = self.validated_data.get('original_price')
+        offer_ends = self.validated_data.get('offer_ends')
+        discount = self.validated_data.get('discount')
+        hash = utils.hash_product_publication(
+            product.id,
+            title,
+            [platform for platform in platforms]
+        )
+        publication = models.ProductPublication.objects.filter(hash=hash)
+        if publication:
+            publication = publication.first()
+            publication.final_price = final_price
+            publication.original_price = original_price
+            publication.discount_deadline = offer_ends
+            publication.discount = discount
+        else:
+            publication = models.ProductPublication(
+                product=product,
+                title=title,
+                final_price=final_price,
+                original_price=original_price,
+                discount_deadline=offer_ends,
+                discount=discount
+            )
+            publication.save()
+            for platform in platforms:
+                publication.platforms.add(models.Platform.objects.get_or_create(name=platform)[0])
+            publication.hash = hash
+        publication.save()
+        return publication

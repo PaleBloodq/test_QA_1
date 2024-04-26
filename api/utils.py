@@ -1,5 +1,6 @@
 import os
 from datetime import datetime, timedelta
+from hashlib import md5
 import uuid
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -73,3 +74,9 @@ def auth_required(func):
                 return func(self, request, profile)
         return Response(status=status.HTTP_403_FORBIDDEN)
     return wrapped
+
+
+def hash_product_publication(product_id: int, title: str, platforms: list[str]):
+    to_hash = f'{product_id} {title} {platforms}'
+    # to_hash = f'{product_id} {title}'
+    return md5(to_hash.encode('utf-8')).hexdigest()

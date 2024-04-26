@@ -61,17 +61,22 @@ class Product(BaseModel):
 class ProductPublication(BaseModel):
     product = models.ForeignKey(Product, verbose_name='Товар', on_delete=models.CASCADE, related_name='publications')
     platforms = models.ManyToManyField(Platform, verbose_name='Платформы')
-    price = models.IntegerField('Стоимость')
-    title = models.CharField('Заголовок', max_length=255, null=True)
-    duration = models.IntegerField('Длительность в месяцах', null=True)
-    quantity = models.IntegerField('Количество игровой валюты', null=True)
+    final_price = models.IntegerField('Конечная стоимость')
+    original_price = models.IntegerField('Полная стоимость')
+    hash = models.CharField('Хэш', max_length=255, null=True, blank=True)
+    title = models.CharField('Заголовок', max_length=255, null=True, blank=True)
+    duration = models.IntegerField('Длительность в месяцах', null=True, blank=True)
+    quantity = models.IntegerField('Количество игровой валюты', null=True, blank=True)
     includes = models.TextField('Включает', null=True, blank=True)
     preview = ProcessedImageField(verbose_name='Превью', format='WEBP', options={'quality': 40}, null=True, blank=True)
     photo = ProcessedImageField(verbose_name='Изображение', format='WEBP', options={'quality': 100}, null=True, blank=True)
-    cashback = models.IntegerField('Кэшбек %', null=True, blank=True, validators=percent_validator)
+    cashback = models.IntegerField('Кэшбек %', default=3, null=True, blank=True, validators=percent_validator)
     ps_plus_discount = models.IntegerField('Скидка PS Plus %', null=True, blank=True, validators=percent_validator)
     discount = models.IntegerField('Скидка %', null=True, blank=True, validators=percent_validator)
     discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
+    
+    def clean(self) -> None:
+        return super().clean()
     
     def __str__(self) -> str:
         return f'{self.product}: {self.title}'
