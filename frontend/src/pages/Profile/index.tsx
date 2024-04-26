@@ -5,8 +5,11 @@ import { useGetOrdersQuery, useGetUserQuery, useUpdateUserDataMutation } from ".
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import { OrderType } from "../../types/orderType";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../features/User/userSlice";
 
 export default function Profile() {
+    const dispatch = useDispatch()
 
     const { data: userData = [], isLoading: isUserLoading, status } = useGetUserQuery({})
     const { data: ordersData = [], isLoading: isOrdersLoading } = useGetOrdersQuery({})
@@ -23,11 +26,10 @@ export default function Profile() {
         setAccountMail(userData?.playstation_email)
         setBillMail(userData?.bill_email)
         setAccountPassword(userData?.playstation_password)
+        dispatch(setUserData(userData))
     }, [userData])
 
     const updatedData = {
-        id: 123981283,
-        username: billMail,
         psEmail: accountMail,
         psPassword: accountPassword,
         billEmail: billMail

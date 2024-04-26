@@ -20,6 +20,7 @@ import AddToCartButton from '../../components/common/AddToCartButton';
 import { Publication } from '../../types/PublicationType';
 import { replaceUrl } from '../../helpers/replaceUrl';
 import { ProductType } from '../../types/ProductType';
+import calcCashback from '../../helpers/calcCashback';
 
 export default function Game() {
     const dispatch = useDispatch();
@@ -72,7 +73,7 @@ export default function Game() {
 
     const includes = currentPublication?.includes?.split("\r\n") || []
 
-    console.log(cartItem)
+    console.log(currentPublication)
 
 
     return (
@@ -96,7 +97,7 @@ export default function Game() {
                             {currentPublication?.ps_plus_discount === null && currentPublication?.discount > 0 ? (
                                 <Tag type="discount">-{currentPublication.discount}%</Tag>
                             ) : null}
-                            {currentPublication?.cashback ? <Tag type="cashback">Кэшбэк: {currentPublication.cashback}₽</Tag> : null}
+                            {currentPublication?.cashback ? <Tag type="cashback">Кэшбэк: {calcCashback(currentPrice, currentPublication.cashback)} ₽</Tag> : null}
                         </div>
                     </div>
                     {currentPublication?.discount ? (

@@ -9,6 +9,7 @@ import Tag from "../../components/common/Tag";
 import CheckBox from "../../components/common/CheckBox";
 import { userSelector } from "../../features/User/userSelectors";
 import Order from "./Order";
+import calcCashback from "../../helpers/calcCashback";
 
 export default function Cart() {
 
@@ -24,7 +25,7 @@ export default function Cart() {
     function calculateTotalCashback(cartItems: CartItemType[]): number {
         let totalCashback = 0;
         for (const item of cartItems) {
-            const cashback = item.cashback;
+            const cashback = calcCashback(item.price, item.cashback);
             totalCashback += cashback;
         }
         return totalCashback;
@@ -72,7 +73,7 @@ export default function Cart() {
                     </div>
                 </div>
             </div>
-            <Order />
+            <Order useCashback={useCashback} />
         </Container>
     )
 }

@@ -2,10 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   userData: {
-    accountEmail: "mazafaka@gmail.com",
-    accountPassword: "zxcqwe",
-    billEmai: "papafaka@mail.ru",
-    cashback: 50,
+    playstation_email: "",
+    playstation_password: "",
+    bill_email: "",
+    cashback: 0,
   },
 };
 
