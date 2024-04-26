@@ -59,7 +59,7 @@ export default function Subscription() {
     useEffect(() => {
         dispatch(setDuration(data?.publications?.find((pub) => pub.id === id).duration))
         dispatch(setSelectedSubscription(data?.publications?.find((pub) => pub.id === id).id))
-    }, [isLoading])
+    }, [isLoading, dispatch, id])
 
     console.log(selectedSubscription)
 

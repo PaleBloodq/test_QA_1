@@ -13,9 +13,9 @@ export default function SelectSubscription({ publications }: { publications: Pub
 
   const filteredPublications = publications?.filter((pub) => pub.duration === currentDuration)
 
-  useEffect(() => {
-    dispatch(setSelectedSubscription(filteredPublications.find((item) => item.duration === currentDuration)?.id))
-  }, [currentDuration])
+  // useEffect(() => {
+  //   dispatch(setSelectedSubscription(filteredPublications.find((item) => item.duration === currentDuration)?.id))
+  // }, [currentDuration])
 
   return (
     <div className="flex flex-col mt-2">
