@@ -41,8 +41,6 @@ export default function Subscription() {
 
     const currentPrice = currentSubscription?.price
 
-    console.log(currentDuration)
-    console.log(currentSubscription)
 
 
     const cartItem: CartItemType = {
@@ -61,7 +59,6 @@ export default function Subscription() {
         dispatch(setSelectedSubscription(data?.publications?.find((pub) => pub.id === id).id))
     }, [isLoading, dispatch, id])
 
-    console.log(selectedSubscription)
 
     return (
         <Container>

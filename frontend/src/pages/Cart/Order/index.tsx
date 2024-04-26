@@ -37,7 +37,6 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
         makeOrder(orderObject)
     }
 
-    console.log(data, isLoading, error, status)
 
 
     return (

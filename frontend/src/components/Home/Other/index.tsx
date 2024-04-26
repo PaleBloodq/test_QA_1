@@ -3,7 +3,6 @@ import GamesSlider from '../../common/GamesSlider'
 import useIsLoading from '../../../hooks/useIsLoading';
 
 export default function Other({ data }: { data: SectionType[] }) {
-    console.log(data)
     const isLoading = useIsLoading(data[0]?.objects);
     return (
         <div className='flex flex-col'>

@@ -28,9 +28,6 @@ export default function SearchPage() {
         getSearchProducts({ params })
     }, [])
 
-    console.log(data)
-
-
 
     return (
         <Container>

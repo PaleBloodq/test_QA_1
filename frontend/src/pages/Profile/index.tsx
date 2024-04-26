@@ -20,7 +20,6 @@ export default function Profile() {
 
     const [updateUserData, { data, isLoading, error }] = useUpdateUserDataMutation();
 
-    console.log(ordersData)
 
     useEffect(() => {
         setAccountMail(userData?.playstation_email)
@@ -39,7 +38,6 @@ export default function Profile() {
         updateUserData({ updatedData })
     }
 
-    console.log(updatedData)
     return (
         <Container>
             <div className="w-full h-[100px] custom-border px-6 flex items-center justify-start">

@@ -73,7 +73,6 @@ export default function Game() {
 
     const includes = currentPublication?.includes?.split("\r\n") || []
 
-    console.log(currentPublication)
 
 
     return (
