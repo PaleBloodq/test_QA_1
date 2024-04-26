@@ -17,6 +17,8 @@ export default function Profile() {
 
     const [updateUserData, { data, isLoading, error }] = useUpdateUserDataMutation();
 
+    console.log(ordersData)
+
     useEffect(() => {
         setAccountMail(userData?.playstation_email)
         setBillMail(userData?.bill_email)
@@ -80,20 +82,20 @@ export default function Profile() {
                             <div className="flex w-full justify-between mb-6">
                                 <h1 className="text-title">Заказ от {order.date}</h1>
                                 <div className="flex gap-2 items-center">
-                                    <h2 className="text-title">{order.totalCost} ₽</h2>
+                                    <h2 className="text-title">{order.amount} ₽</h2>
                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M8 0C12.4183 0 16 3.58172 16 8C16 12.4183 12.4183 16 8 16C3.58172 16 0 12.4183 0 8C0 3.58172 3.58172 0 8 0ZM10.4636 5.6636L6.9 9.22721L5.5364 7.8636C5.18492 7.51213 4.61508 7.51213 4.2636 7.8636C3.91213 8.21508 3.91213 8.78492 4.2636 9.1364L6.2636 11.1364C6.61508 11.4879 7.18492 11.4879 7.5364 11.1364L11.7364 6.9364C12.0879 6.58492 12.0879 6.01508 11.7364 5.6636C11.3849 5.31213 10.8151 5.31213 10.4636 5.6636Z" fill="#46A027" />
                                     </svg>
                                 </div>
                             </div>
                             <div className="w-full flex flex-col">
-                                {order.cart.map((cartItem, index: number) => <React.Fragment key={index} >
+                                {order.order_products.map((cartItem, index: number) => <React.Fragment key={index} >
                                     <div className="flex flex-col gap-1">
-                                        <h1 className="text-title-sm">{cartItem.name}</h1>
+                                        <h1 className="text-title-sm">{cartItem.item}</h1>
                                         <p className="text-subtitle">{cartItem.description}</p>
                                         <h2 className="text-title">{cartItem.price} ₽</h2>
                                     </div>
-                                    {index !== order.cart.length - 1 && <div className="w-full h-[1px] bg-[#E7E7E8] dark:bg-[#FFFFFF0D] my-6"></div>}
+                                    {index !== order.order_products.length - 1 && <div className="w-full h-[1px] bg-[#E7E7E8] dark:bg-[#FFFFFF0D] my-6"></div>}
                                 </React.Fragment>
                                 )}
                             </div>

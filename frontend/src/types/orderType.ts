@@ -1,11 +1,11 @@
 export type OrderType = {
   date: string;
-  totalCost: number;
-  cart: OrderCartType[];
+  amount: number;
+  order_products: OrderCartType[];
 };
 
 type OrderCartType = {
-  name: string;
+  item: string;
   description: string;
   price: number;
 };
