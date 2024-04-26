@@ -5,43 +5,27 @@ import { useGetOrdersQuery, useGetUserQuery, useUpdateUserDataMutation } from ".
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import { OrderType } from "../../types/orderType";
-import { useDispatch } from "react-redux";
-import { setUserData } from "../../features/User/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserData, updateAccountMail, updateAccountPassword, updateBillMail } from "../../features/User/userSlice";
+import { userSelector } from "../../features/User/userSelectors";
 
 export default function Profile() {
-    const dispatch = useDispatch()
 
-    const { data: userData = [], isLoading: isUserLoading, status } = useGetUserQuery({})
     const { data: ordersData = [], isLoading: isOrdersLoading } = useGetOrdersQuery({})
     const [showOrderHistory, setShowOrderHistory] = useState(false)
-    const [accountPassword, setAccountPassword] = useState(userData?.playstation_password)
-    const [accountMail, setAccountMail] = useState(userData?.playstation_email)
-    const [billMail, setBillMail] = useState(userData?.bill_email)
-
-    const [updateUserData, { data, isLoading, error }] = useUpdateUserDataMutation();
-
-
-    useEffect(() => {
-        setAccountMail(userData?.playstation_email)
-        setBillMail(userData?.bill_email)
-        setAccountPassword(userData?.playstation_password)
-        dispatch(setUserData(userData))
-    }, [userData])
-
-    const updatedData = {
-        psEmail: accountMail,
-        psPassword: accountPassword,
-        billEmail: billMail
-    }
+    const { userData, updateData } = useSelector(userSelector)
+    const [updateUserData, { error, status }] = useUpdateUserDataMutation();
 
     function handleUpdateUserData() {
-        updateUserData({ updatedData })
+        updateUserData({ updateData })
+        console.log(updateData)
+        console.log(error, status)
     }
 
     return (
         <Container>
             <div className="w-full h-[100px] custom-border px-6 flex items-center justify-start">
-                {!isUserLoading &&
+                {!isOrdersLoading &&
                     <>
                         <div className="w-14 h-14 rounded-full bg-blue-400 mr-6"></div>
                         <div className="flex flex-col gap-[10px]">
@@ -66,11 +50,11 @@ export default function Profile() {
                 ?
                 <div className="w-full flex flex-col mt-7">
                     <p className="text-subtitle mb-3">E-mail от аккаунта PlayStation:</p>
-                    <Input localValue={true} hardlyEditable={true} placeholder="E-Mail" type="email" value={accountMail} setValue={setAccountMail} />
+                    <Input localValue={false} hardlyEditable={true} placeholder="E-Mail" type="email" value={updateData.psEmail} setValue={updateAccountMail} />
                     <p className="text-subtitle mb-3">Пароль от аккаунта PlayStation:</p>
-                    <Input localValue={true} hardlyEditable={true} placeholder="Пароль" type="password" value={accountPassword} setValue={setAccountPassword} />
+                    <Input localValue={false} hardlyEditable={true} placeholder="Пароль" type="password" value={updateData.psPassword} setValue={updateAccountPassword} />
                     <p className="text-subtitle mb-3">E-mail для чеков:</p>
-                    <Input localValue={true} hardlyEditable={true} placeholder="E-Mail" type="email" value={billMail} setValue={setBillMail} />
+                    <Input localValue={false} hardlyEditable={true} placeholder="E-Mail" type="email" value={updateData.billEmail} setValue={updateBillMail} />
                     <span className="mt-36">
                         <Button onClick={handleUpdateUserData}>Сохранить изменения</Button>
                     </span>

@@ -8,9 +8,13 @@ import { useEffect } from 'react';
 import DonationPage from './pages/DonationPage';
 import SearchPage from './pages/SearchPage';
 import Profile from './pages/Profile';
+import { useGetUserQuery } from './services/userApi';
+import { setUpdateData, setUserData } from './features/User/userSlice';
+import { useDispatch } from 'react-redux';
 
 export default function App() {
 
+  const dispatch = useDispatch();
   const location = useLocation();
   const transitions = useTransition(location, {
     from: { opacity: 0 },
@@ -24,6 +28,16 @@ export default function App() {
       window.scrollTo(0, 0);
     }, 150)
   }, [location])
+
+  const { data: userData } = useGetUserQuery({});
+  useEffect(() => {
+    dispatch(setUserData(userData))
+    dispatch(setUpdateData({
+      psEmail: userData?.playstation_email,
+      psPassword: userData?.playstation_password,
+      billEmail: userData?.bill_email,
+    }))
+  }, [userData])
 
   return transitions((styles, item) => (
     <animated.div style={styles} className="animated-page">
