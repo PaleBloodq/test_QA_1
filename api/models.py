@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from imagekit.models import ProcessedImageField
+from django.contrib.auth.models import User
 
 percent_validator = MinValueValidator(0), MaxValueValidator(100)
 
@@ -150,3 +151,9 @@ class PromoCode(BaseModel):
     class Meta:
         verbose_name = 'Промокод'
         verbose_name_plural = 'Промокоды'
+
+
+class ChatMessage(BaseModel):
+    order = models.ForeignKey(Order, verbose_name='Сообщение', on_delete=models.CASCADE, related_name='chat_message')
+    manager = models.ForeignKey(User, verbose_name='Менеджер', on_delete=models.CASCADE, null=True, blank=True)
+    text = models.TextField('Текст сообщения')

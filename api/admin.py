@@ -1,4 +1,8 @@
+from typing import Any
 from django.contrib import admin
+from django.http import HttpRequest
+from django.utils.safestring import mark_safe
+from django.forms.formsets import BaseFormSet
 from api import models
 
 
@@ -48,9 +52,26 @@ class OrderProductInline(admin.TabularInline):
     extra = 0
 
 
+class ChatMessageInline(admin.TabularInline):
+    model = models.ChatMessage
+    extra = 1
+    ordering = ('created_at', )
+    fields = ('created_at', 'sender', 'text', )
+    readonly_fields = ('created_at', 'sender', )
+    show_change_link = True
+    
+    def sender(self, obj: models.ChatMessage):
+        if obj.manager:
+            return mark_safe(f'<a href="/admin/auth/user/{obj.manager.pk}/change/">{obj.manager}</a>')
+        return 'Клиент'
+    
+    def has_change_permission(self, request: HttpRequest, obj) -> bool:
+        return False
+
+
 @admin.register(models.Order, site=admin.site)
 class OrderAdmin(admin.ModelAdmin):
-    inlines = [OrderProductInline]
+    inlines = [OrderProductInline, ChatMessageInline]
     list_display = ['date', 'status', 'profile', 'amount']
     list_filter = ['date', 'status', 'profile', 'amount']
 
