@@ -96,7 +96,7 @@ class Tag(EnumBaseModel):
 
 
 class Profile(BaseModel):
-    telegram_id = models.IntegerField('Телеграм ID', unique=True)
+    telegram_id = models.BigIntegerField('Телеграм ID', unique=True)
     playstation_email = models.EmailField('E-mail от аккаунта PlayStation', null=True, blank=True)
     playstation_password = models.CharField('Пароль от аккаунта PlayStation', null=True, blank=True)
     bill_email = models.EmailField('E-mail для чеков', null=True, blank=True)
@@ -162,3 +162,6 @@ class ChatMessage(BaseModel):
     order = models.ForeignKey(Order, verbose_name='Сообщение', on_delete=models.CASCADE, related_name='chat_message')
     manager = models.ForeignKey(User, verbose_name='Менеджер', on_delete=models.CASCADE, null=True, blank=True)
     text = models.TextField('Текст сообщения')
+    
+    class Meta:
+        ordering = ['-created_at']

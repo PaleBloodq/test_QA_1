@@ -5,7 +5,6 @@ from rest_framework.views import APIView
 from rest_framework import status
 from api import models, serializers, utils
 
-
 class GetCategories(APIView):
     def get(self, request: Request):
         response = [
@@ -183,5 +182,19 @@ class UpdateProductPublications(APIView):
                 )
                 if serializer.is_valid():
                     serializer.save(product)
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class ChatMessages(APIView):
+    def post(self, request: Request):
+        order_id = request.data.get('order_id')
+        text = request.data.get('text')
+        if order_id and text:
+            order = models.Order.objects.get(id=order_id)
+            models.ChatMessage.objects.create(
+                order=order,
+                text=text
+            )
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)

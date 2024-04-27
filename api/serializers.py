@@ -179,3 +179,8 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
             publication.hash = hash
         publication.save()
         return publication
+
+
+class ChatMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ChatMessage
