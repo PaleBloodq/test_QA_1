@@ -32,7 +32,8 @@ class ProductPublicationSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'title',
-            'price',
+            'final_price',
+            'original_price',
             'duration',
             'quantity',
             'includes',

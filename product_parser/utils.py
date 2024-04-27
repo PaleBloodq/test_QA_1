@@ -1,6 +1,7 @@
 import os
 from dataclasses import dataclass
 import re
+import asyncio
 import aiohttp.client_exceptions
 from pydantic import BaseModel, HttpUrl, UUID4
 from datetime import datetime
@@ -65,7 +66,11 @@ async def send_publications(session: aiohttp.ClientSession, product_id: str, edi
             } for edition in editions
         ]
     }
-    await session.post(url, json=data)
+    for i in range(3):
+        async with session.post(url, json=data) as response:
+            if response.status == 200:
+                break
+            await asyncio.sleep(1)
 
 
 async def parse_product(data: Data):
