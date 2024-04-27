@@ -8,7 +8,7 @@ const initialState = {
     bill_email: "",
     cashback: 0,
   },
-  updateData: {
+  updatedData: {
     psEmail: "",
     psPassword: "",
     billEmail: "",
@@ -23,16 +23,16 @@ const userSlice = createSlice({
       state.userData = action.payload;
     },
     setUpdateData: (state, action) => {
-      state.updateData = action.payload;
+      state.updatedData = action.payload;
     },
     updateAccountMail: (state, action) => {
-      state.updateData.psEmail = action.payload;
+      state.updatedData.psEmail = action.payload;
     },
     updateAccountPassword: (state, action) => {
-      state.updateData.psPassword = action.payload;
+      state.updatedData.psPassword = action.payload;
     },
     updateBillMail: (state, action) => {
-      state.updateData.billEmail = action.payload;
+      state.updatedData.billEmail = action.payload;
     },
   },
 });

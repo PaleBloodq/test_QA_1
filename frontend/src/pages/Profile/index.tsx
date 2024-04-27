@@ -13,13 +13,11 @@ export default function Profile() {
 
     const { data: ordersData = [], isLoading: isOrdersLoading } = useGetOrdersQuery({})
     const [showOrderHistory, setShowOrderHistory] = useState(false)
-    const { userData, updateData } = useSelector(userSelector)
+    const { userData, updatedData } = useSelector(userSelector)
     const [updateUserData, { error, status }] = useUpdateUserDataMutation();
 
     function handleUpdateUserData() {
-        updateUserData({ updateData })
-        console.log(updateData)
-        console.log(error, status)
+        updateUserData({ updatedData })
     }
 
     function orderStatusIcon(status: "PAID" | "ERROR" | "OK"): React.ReactNode {
@@ -63,11 +61,11 @@ export default function Profile() {
                 ?
                 <div className="w-full flex flex-col mt-7">
                     <p className="text-subtitle mb-3">E-mail от аккаунта PlayStation:</p>
-                    <Input localValue={false} hardlyEditable={true} placeholder="E-Mail" type="email" value={updateData.psEmail} setValue={updateAccountMail} />
+                    <Input localValue={false} hardlyEditable={true} placeholder="E-Mail" type="email" value={updatedData.psEmail} setValue={updateAccountMail} />
                     <p className="text-subtitle mb-3">Пароль от аккаунта PlayStation:</p>
-                    <Input localValue={false} hardlyEditable={true} placeholder="Пароль" type="password" value={updateData.psPassword} setValue={updateAccountPassword} />
+                    <Input localValue={false} hardlyEditable={true} placeholder="Пароль" type="password" value={updatedData.psPassword} setValue={updateAccountPassword} />
                     <p className="text-subtitle mb-3">E-mail для чеков:</p>
-                    <Input localValue={false} hardlyEditable={true} placeholder="E-Mail" type="email" value={updateData.billEmail} setValue={updateBillMail} />
+                    <Input localValue={false} hardlyEditable={true} placeholder="E-Mail" type="email" value={updatedData.billEmail} setValue={updateBillMail} />
                     <span className="mt-36">
                         <Button onClick={handleUpdateUserData}>Сохранить изменения</Button>
                     </span>
