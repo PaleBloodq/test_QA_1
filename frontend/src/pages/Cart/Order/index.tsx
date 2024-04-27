@@ -6,17 +6,43 @@ import { setAccountEmail, setAccountPassword, setHasAccount, setPromocode, setRe
 import CheckBox from "../../../components/common/CheckBox";
 import { useEffect, useState } from "react";
 import Button from "../../../components/common/Button";
+import { userSelector } from "../../../features/User/userSelectors";
+import { useMakeOrderMutation } from "../../../services/userApi";
 
-export default function Order() {
+export default function Order({ useCashback }: { useCashback: boolean }) {
 
 
-    const { hasAccount, accountEmail, accountPassword, reciptEmail, rememberData, promocode } = useSelector(cartSelector)
+    const { hasAccount, accountEmail, accountPassword, reciptEmail, rememberData, promocode, items } = useSelector(cartSelector)
+    const [makeOrder, { data, isLoading, error, status }] = useMakeOrderMutation();
+    // const [checkPromocode, { data: promoData }] = useMakeOrderMutation(); PROMOCODE
+    const { billEmail } = useSelector(userSelector)
     const [sameEmail, setSameEmail] = useState(false)
+    // const [validPromo, setValidPromo] = useState('') PROMOCODE
     const dispatch = useDispatch()
 
     useEffect(() => {
         sameEmail ? dispatch(setReciptEmail(accountEmail)) : dispatch(setReciptEmail(""))
     }, [sameEmail])
+
+    const orderObject = {
+        cart: items?.map((item) => item.id),
+        spendCashback: useCashback,
+        hasAccount: hasAccount,
+        accountEmail: hasAccount ? accountEmail : '',
+        accountPassword: hasAccount ? accountPassword : '',
+        billEmail: reciptEmail,
+        promocode: promocode,
+        rememberAccount: rememberData
+    }
+
+    function handleOrder() {
+        makeOrder(orderObject)
+    }
+
+    // function checkIsValidPromo() {
+    //     checkPromocode(promocode)
+    // } PROMOCODE
+
 
     return (
         <div className="mt-8">
@@ -48,7 +74,7 @@ export default function Order() {
                         </svg>
                     </button>
                 </div>
-                <Button onClick={() => console.log('Оформление заказа')}>Оформить заказ</Button>
+                <Button onClick={handleOrder}>Оформить заказ</Button>
             </div>
         </div>
     )

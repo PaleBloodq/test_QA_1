@@ -7,7 +7,6 @@ export default function EAPlay({ data = [] }: { data: ProductType[] }) {
 
     const isLoading = useIsLoading(data[0])
 
-    console.log(data)
 
     return (
         <div>

@@ -2,63 +2,48 @@ import { useDispatch, useSelector } from "react-redux";
 import Container from "../../components/common/Container";
 import { searchSelector } from "../../features/Search/searchSelectors";
 import { setSearchValue } from "../../features/Search/searchSlice";
-import { useGetSearchFiltersQuery, useGetSearchProductsQuery } from "../../services/productsApi";
-import { useState } from "react";
+import { useGetSearchFiltersQuery, useGetSearchProductsMutation } from "../../services/productsApi";
+import { useEffect, useState } from "react";
 import Filter from "./Filter";
 import SearchItem from "./SearchItem";
-import { SearchItemType } from "../../types/searchItem";
 
 export default function SearchPage() {
 
     const dispatch = useDispatch();
-    const { value } = useSelector(searchSelector);
+    const { value, languages, limit, maxPrice, minPrice, offset, platforms } = useSelector(searchSelector);
     const [showFilter, setShowFilter] = useState(false)
 
-    const { data = [], isLoading } = useGetSearchProductsQuery({})
-    const filterData = useGetSearchFiltersQuery({})
+    const [getSearchProducts, { data, isLoading, error }] = useGetSearchProductsMutation();
+    const { data: filterData } = useGetSearchFiltersQuery({})
+    const params = {
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        platforms: platforms,
+        languages: languages,
+        limit: limit,
+        q: value,
+        offset: offset,
+    }
+    useEffect(() => {
+        getSearchProducts({ params })
+    }, [])
 
-
-    const transformProducts = (products: any[]): SearchItemType[] => {
-        return products.flatMap(product => {
-            if (product.type === "game" || product.type === "subscription") {
-                return (product.publications || product.durationVariations).map(pub => ({
-                    id: pub.id,
-                    title: `${product.title}`,
-                    pubTitle: pub.title,
-                    type: product.type,
-                    previewImg: pub.previewImg,
-                    prices: pub.price,
-                    photoUrls: pub.photoUrls,
-                    includes: pub.includes,
-                    discount: pub.discount,
-                    psPlusDiscount: pub.psPlusDiscount,
-                    cashback: pub.cashback,
-                    description: pub.description
-                }));
-            } else if (product.type === "donation") {
-                return [{
-                    id: product.id,
-                    title: product.title,
-                    type: product.type,
-                    previewImg: product.previewImg,  // Правильно используем previewImg для изображения предпросмотра
-                    prices: [{ platform: product.platforms[0], price: product.unitPrice }],  // Цена за единицу
-                    photoUrls: product.photoUrls  // Используем массив URL из оригинального объекта
-                }];
-            }
-            return [];
-        });
-    };
-
-    const products = transformProducts(data);
 
     return (
         <Container>
-            {showFilter && <Filter setShowFilter={setShowFilter} initData={filterData.data} />}
+            {showFilter && <Filter getSearchProducts={getSearchProducts} setShowFilter={setShowFilter} initData={filterData} />}
             {!showFilter &&
                 <div className="w-full flex flex-col">
                     <div className="w-full h-[38px] flex items-center justify-between">
-                        <input onChange={(e) => dispatch(setSearchValue(e.target.value))} value={value} className="w-full bg-transparent outline-none text-header" type="text" placeholder="Найти игру..." />
-                        <button className="w-[38px] h-[38px] rounded-xl bg-[#f6f7fa] border border-[#e7e7e8] dark:border-none dark:bg-[#FFFFFF0D] flex flex-shrink-0 items-center justify-center mx-2">
+                        <input
+                            onKeyDown={(event) => event.key === "Enter" && getSearchProducts({ params })}
+                            onChange={(e) => dispatch(setSearchValue(e.target.value))} value={value}
+                            className="w-full bg-transparent outline-none text-header" type="text" placeholder="Найти игру..."
+                        />
+                        <button
+                            onClick={() => getSearchProducts({ params })}
+                            className="w-[38px] h-[38px] rounded-xl bg-[#f6f7fa] border border-[#e7e7e8] dark:border-none dark:bg-[#FFFFFF0D] flex flex-shrink-0 items-center justify-center mx-2"
+                        >
                             <svg
                                 width={24}
                                 height={24}
@@ -79,11 +64,17 @@ export default function SearchPage() {
                             </svg>
                         </button>
                     </div>
-                    {!isLoading &&
-                        <div className="w-full flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
-                            {products.map((item, index) => <SearchItem key={index} item={item} />)}
-                        </div>
-                    }
+                    <div className="min-h-screen">
+                        {!isLoading && data?.length > 0 ?
+                            <div className="w-full h-auto flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
+                                {data?.map((item: any, index: number) => <SearchItem key={index} item={item} />)}
+                            </div>
+                            :
+                            <div className="w-full h-screen flex justify-center flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
+                                <h1 className="text-header">Ничего не нашлось 😓</h1>
+                            </div>
+                        }
+                    </div>
                 </div>
             }
         </Container>

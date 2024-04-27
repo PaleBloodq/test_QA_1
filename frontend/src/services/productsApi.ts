@@ -11,11 +11,15 @@ export const productsApi = createApi({
     getAnyProduct: builder.query<ProductType, string>({
       query: (id) => `/product/${id}`,
     }),
-    getSearchProducts: builder.query({
-      query: () => `/searchItems/`,
+    getSearchProducts: builder.mutation({
+      query: ({ params }) => ({
+        url: `/catalog/search/list/`,
+        method: "POST",
+        body: params,
+      }),
     }),
     getSearchFilters: builder.query({
-      query: () => `/filters`,
+      query: () => `/catalog/filters/?format=json`,
     }),
   }),
 });
@@ -23,6 +27,6 @@ export const productsApi = createApi({
 export const {
   useGetCategoryProductsQuery,
   useGetAnyProductQuery,
-  useGetSearchProductsQuery,
+  useGetSearchProductsMutation,
   useGetSearchFiltersQuery,
 } = productsApi;
