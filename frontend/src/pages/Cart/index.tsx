@@ -45,6 +45,10 @@ export default function Cart() {
     }, [items])
 
     useEffect(() => {
+        if (useCashback === true && totalPrice - userData.cashback < 0) {
+            setTotalPrice(0)
+            return
+        }
         useCashback === true && items.length > 0 && totalPrice !== 0 ? setTotalPrice(totalPrice - userData.cashback) : setTotalPrice(calculateTotalPrice(items))
     }, [useCashback])
 
