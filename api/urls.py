@@ -10,6 +10,7 @@ urlpatterns = [
     path('catalog/search/list/', views.SearchProducts.as_view()),
     path('order/buy/', views.CreateOrder.as_view()),
     path('order/promocode/check/', views.CheckPromoCode.as_view()),
+    path('order/chat/', views.ChatMessages.as_view()),
     path('profile/update/', views.UpdateProfile.as_view()),
     path('profile/orders/', views.Orders.as_view()),
     path('profile/', views.Profile.as_view()),

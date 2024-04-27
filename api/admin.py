@@ -1,8 +1,6 @@
-from typing import Any
 from django.contrib import admin
 from django.http import HttpRequest
 from django.utils.safestring import mark_safe
-from django.forms.formsets import BaseFormSet
 from api import models
 
 
@@ -53,16 +51,16 @@ class OrderProductInline(admin.TabularInline):
 
 class ChatMessageInline(admin.TabularInline):
     model = models.ChatMessage
-    extra = 1
-    ordering = ('created_at', )
+    extra = 0
+    ordering = ('-created_at', )
     fields = ('created_at', 'sender', 'text', )
-    readonly_fields = ('created_at', 'sender', )
+    readonly_fields = ('created_at', 'sender', 'text', )
     show_change_link = True
     
     def sender(self, obj: models.ChatMessage):
         if obj.manager:
-            return mark_safe(f'<a href="/admin/auth/user/{obj.manager.pk}/change/">{obj.manager}</a>')
-        return 'Клиент'
+            return mark_safe(f'<a href="/admin/auth/user/{obj.manager.pk}/">Менеджер {obj.manager}</a>')
+        return mark_safe(f'<a href="/admin/api/profile/{obj.order.profile.id}/">Клиент {obj.order.profile.telegram_id}</a>')
     
     def has_change_permission(self, request: HttpRequest, obj) -> bool:
         return False
@@ -71,8 +69,12 @@ class ChatMessageInline(admin.TabularInline):
 @admin.register(models.Order, site=admin.site)
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderProductInline, ChatMessageInline]
-    list_display = ['date', 'status', 'profile', 'amount']
+    list_display = ['date', 'status', 'profile', 'amount', 'chat']
     list_filter = ['date', 'status', 'profile', 'amount']
+    
+    @admin.display(description='Чат')
+    def chat(self, obj: models.Order):
+        return mark_safe(f'<a href="/admin/chat/{obj.id}/">Открыть чат</a>')
 
 
 @admin.register(models.PromoCode, site=admin.site)

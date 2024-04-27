@@ -8,7 +8,7 @@ import api
 
 class AnalyticsModule(modules.DashboardModule):
     title = 'Экран аналитики'
-    template = 'api/analytics.html'
+    template = 'admin/analytics.html'
     
     def init_with_context(self, context):
         queryset = api.models.Order.objects \
@@ -26,7 +26,7 @@ class AnalyticsModule(modules.DashboardModule):
 
 class PopularProductsModule(modules.DashboardModule):
     title = 'Популярные товары'
-    template = 'api/popular_products.html'
+    template = 'admin/popular_products.html'
     
     def init_with_context(self, context):
         self.children = {
@@ -52,7 +52,7 @@ class CustomIndexDashboard(Dashboard):
         ))
 
         self.children.append(modules.AppList(
-            'Административные настройки',
+            'Администрирование',
             models=('django.contrib.*',),
         ))
 

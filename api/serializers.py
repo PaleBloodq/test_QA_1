@@ -32,7 +32,8 @@ class ProductPublicationSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'title',
-            'price',
+            'final_price',
+            'original_price',
             'duration',
             'quantity',
             'includes',
@@ -178,3 +179,8 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
             publication.hash = hash
         publication.save()
         return publication
+
+
+class ChatMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ChatMessage
