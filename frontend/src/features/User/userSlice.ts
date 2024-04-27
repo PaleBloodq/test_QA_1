@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { act } from "react-dom/test-utils";
 
 const initialState = {
+  username: "",
   userData: {
     playstation_email: "",
     playstation_password: "",
@@ -34,6 +35,9 @@ const userSlice = createSlice({
     updateBillMail: (state, action) => {
       state.updatedData.billEmail = action.payload;
     },
+    setUserName: (state, action) => {
+      state.username = action.payload;
+    },
   },
 });
 
@@ -43,6 +47,7 @@ export const {
   updateAccountPassword,
   updateBillMail,
   setUpdateData,
+  setUserName,
 } = userSlice.actions;
 
 export default userSlice.reducer;

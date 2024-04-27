@@ -6,19 +6,23 @@ import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import { OrderType } from "../../types/orderType";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserData, updateAccountMail, updateAccountPassword, updateBillMail } from "../../features/User/userSlice";
+import { setUserData, setUserName, updateAccountMail, updateAccountPassword, updateBillMail } from "../../features/User/userSlice";
 import { userSelector } from "../../features/User/userSelectors";
 
 export default function Profile() {
-
+    const dispatch = useDispatch()
     const { data: ordersData = [], isLoading: isOrdersLoading } = useGetOrdersQuery({})
     const [showOrderHistory, setShowOrderHistory] = useState(false)
-    const { userData, updatedData } = useSelector(userSelector)
+    const { userData, updatedData, username } = useSelector(userSelector)
     const [updateUserData, { error, status }] = useUpdateUserDataMutation();
 
     function handleUpdateUserData() {
         updateUserData({ updatedData })
     }
+
+    useEffect(() => {
+        dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
+    }, [])
 
     function orderStatusIcon(status: "PAID" | "ERROR" | "OK"): React.ReactNode {
         switch (status) {
@@ -40,7 +44,7 @@ export default function Profile() {
                     <>
                         <div className="w-14 h-14 rounded-full bg-blue-400 mr-6"></div>
                         <div className="flex flex-col gap-[10px]">
-                            <h1 className="text-title-xl">{userData?.bill_email}</h1>
+                            <h1 className="text-title-xl">{username}</h1>
                             <div className="flex gap-4">
                                 <p className="text-subtitle">Баллы:</p>
                                 <Tag type="discount">{userData?.cashback} ₽</Tag>
@@ -50,10 +54,10 @@ export default function Profile() {
                 }
             </div>
             <div className="w-full flex gap-3 mt-6">
-                <button onClick={() => setShowOrderHistory(false)} className={`w-full h-[33px] text-[14px] ${!showOrderHistory ? "rounded-lg red-gradient font-bold text-white" : "rounded-lg border dark:border-[#FFFFFF1A] text-[#606D7B] dark:text-[#FFFFFF99]"}`} >
+                <button onClick={() => setShowOrderHistory(false)} className={`w - full h - [33px] text - [14px] ${!showOrderHistory ? "rounded-lg red-gradient font-bold text-white" : "rounded-lg border dark:border-[#FFFFFF1A] text-[#606D7B] dark:text-[#FFFFFF99]"} `} >
                     Данные покупателя
                 </button>
-                <button onClick={() => setShowOrderHistory(true)} className={`w-full h-[33px] text-[14px] ${showOrderHistory ? "rounded-lg red-gradient font-bold text-white" : "rounded-lg border dark:border-[#FFFFFF1A] text-[#606D7B] dark:text-[#FFFFFF99]"}`} >
+                <button onClick={() => setShowOrderHistory(true)} className={`w - full h - [33px] text - [14px] ${showOrderHistory ? "rounded-lg red-gradient font-bold text-white" : "rounded-lg border dark:border-[#FFFFFF1A] text-[#606D7B] dark:text-[#FFFFFF99]"} `} >
                     История заказов
                 </button>
             </div>

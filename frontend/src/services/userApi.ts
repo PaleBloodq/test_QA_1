@@ -29,6 +29,13 @@ export const userApi = createApi({
         body: updatedData,
       }),
     }),
+    checkPromocode: builder.mutation({
+      query: ({ promoCode }) => ({
+        url: `order/promocode/check/`,
+        method: "POST",
+        body: { promoCode },
+      }),
+    }),
   }),
 });
 
@@ -37,4 +44,5 @@ export const {
   useGetOrdersQuery,
   useUpdateUserDataMutation,
   useMakeOrderMutation,
+  useCheckPromocodeMutation,
 } = userApi;

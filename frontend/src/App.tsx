@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useTransition, animated } from 'react-spring';
 import Home from './pages/Home';
 import Game from './pages/Game';
@@ -7,6 +7,7 @@ import Cart from './pages/Cart';
 import { useEffect } from 'react';
 import DonationPage from './pages/DonationPage';
 import SearchPage from './pages/SearchPage';
+import { useSwipeable } from 'react-swipeable';
 import Profile from './pages/Profile';
 import { useGetUserQuery } from './services/userApi';
 import { setUpdateData, setUserData } from './features/User/userSlice';
@@ -20,13 +21,13 @@ export default function App() {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
-    config: { duration: 300 }
+    config: { duration: 400 }
   });
 
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo(0, 0);
-    }, 150)
+    }, 200)
   }, [location])
 
   const { data: userData } = useGetUserQuery({});
@@ -39,9 +40,17 @@ export default function App() {
     }))
   }, [userData])
 
+  console.log(window.Telegram.WebApp.initDataUnsafe.user)
+  const navigate = useNavigate();
+
+  const handlers = useSwipeable({
+    onSwipedRight: () => navigate(-1),
+  });
+
+
   return transitions((styles, item) => (
     <animated.div style={styles} className="animated-page">
-      <div className='w-full h-full bg-white dark:bg-[#1a1e22]'>
+      <div {...handlers} className='w-full h-full bg-white dark:bg-[#1a1e22]'>
         <Routes location={item}>
           <Route path='/' element={<Home />} />
           <Route path='/game/:gameId/:pubId' element={<Game />} />
