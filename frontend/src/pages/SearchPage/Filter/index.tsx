@@ -18,7 +18,7 @@ export default function Filter({ initData, setShowFilter, getSearchProducts }: F
 
     const dispatch = useDispatch();
 
-    const { platforms, languages, limit, maxPrice, minPrice, offset, value } = useSelector(searchSelector)
+    const { platforms, languages, limit, maxPrice, minPrice, value } = useSelector(searchSelector)
 
     function resetFilter() {
         dispatch(resetSearchSettings(initData))

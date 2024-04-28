@@ -13,7 +13,6 @@ export default function SelectPlatform({ publications }: SelectPlatformType) {
     const dispatch = useDispatch()
 
     const selectedPlatform = useSelector(selectedPlatformSelector)
-    const selectedPublication = useSelector(selectedPublicationSelector)
 
 
     const platforms: string[] = []

@@ -26,7 +26,7 @@ export default function Subscription() {
 
 
     const { subscriptionId, id } = useParams<RouteParams>();
-    const { data = [] as ProductType, isLoading } = useGetAnyProductQuery(subscriptionId);
+    const { data = {} as ProductType, isLoading } = useGetAnyProductQuery(subscriptionId);
     const selectedSubscription = useSelector(selectedSubscriptionSelector);
     const currentDuration = useSelector(durationSelector);
     const [currentSubscription, setCurrentSubscription] = useState(data.publications?.find((sub: Publication) => sub.id === id))

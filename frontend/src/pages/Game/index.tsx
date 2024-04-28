@@ -25,7 +25,7 @@ import calcCashback from '../../helpers/calcCashback';
 export default function Game() {
     const dispatch = useDispatch();
     const { gameId, pubId } = useParams();
-    const { data = [] as ProductType, isLoading } = useGetAnyProductQuery(gameId);
+    const { data = {} as ProductType, isLoading } = useGetAnyProductQuery(gameId);
     const selectedPublication = useSelector(selectedPublicationSelector);
     const selectedPlatform = useSelector(selectedPlatformSelector);
     const currentPrice = useSelector(currentPriceSelector);
