@@ -31,7 +31,7 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
         accountEmail: hasAccount ? accountEmail : '',
         accountPassword: hasAccount ? accountPassword : '',
         billEmail: reciptEmail,
-        promocode: promocode,
+        promoCode: promocode,
         rememberAccount: rememberData
     }
 
@@ -53,8 +53,8 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
                     ? (
                         <>
                             <h1 className="text-title-xl mb-5">Оформление заказа:</h1>
-                            <Input value={accountEmail} setValue={setAccountEmail} placeholder="Введите E-mail" type="email" />
-                            <Input value={accountPassword} setValue={setAccountPassword} placeholder="Введите пароль" type="password" />
+                            <Input value={accountEmail} setValue={setAccountEmail} placeholder="Введите E-mail от аккаунта" type="email" />
+                            <Input value={accountPassword} setValue={setAccountPassword} placeholder="Введите пароль от аккаунта" type="password" />
                             <div className="mt-6 mb-4">
                                 <CheckBox onClick={() => setSameEmail(!sameEmail)} checked={sameEmail}>E-mail для чека такой же, как логин</CheckBox>
                             </div>
