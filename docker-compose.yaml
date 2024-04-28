@@ -10,16 +10,58 @@ services:
       - postgres_data:/var/lib/postgresql/data
   
   backend:
-    build: .
+    build: ./backend
     depends_on:
       - postgres
     env_file:
       - ./local.env
+    environment:
+      - PRODUCT_PARSER_HOST=product_parser
+      - POSTGRES_HOST=postgres
     volumes:
-      - .:/app
-    command: [ "sh", "start.sh" ]
+      - ./backend:/backend
+      - ./rsa:/backend/rsa
+    command: [ "python", "start_service.py" ]
     ports:
-      - "8000:8000"
+      - "8080:8080"
+  
+  product_parser:
+    build: ./product_parser
+    depends_on:
+      - postgres
+      - backend
+    env_file:
+      - ./local.env
+    environment:
+      - BACKEND_HOST=backend
+    volumes:
+      - ./product_parser:/product_parser
+    command: [ "python", "main.py" ]
+    ports:
+      - "8090:8090"
+
+  payments:
+    build: ./payments
+    depends_on:
+      - postgres
+      - backend
+    env_file:
+      - ./local.env
+    volumes:
+      - ./payments:/payments
+    command: [ "python", "main.py" ]
+    ports:
+      - "8086:8086"
+  
+  # frontend:
+  #   build: ./frontend
+  #   env_file:
+  #     - ./local.env
+  #   volumes:
+  #     - ./frontend:/frontend
+  #   command: [ "serve", "-s", "dist", "-l", "8050" ]
+  #   ports:
+  #     - "8050:8050"
 
 volumes:
   postgres_data:

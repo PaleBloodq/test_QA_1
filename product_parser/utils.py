@@ -1,10 +1,17 @@
 import os
 from dataclasses import dataclass
+import re
+import asyncio
 import aiohttp.client_exceptions
 from pydantic import BaseModel, HttpUrl, UUID4
 from datetime import datetime
 import aiohttp
 from bs4 import BeautifulSoup
+
+
+BACKEND_URL = f'{os.environ.get("BACKEND_SCHEMA")}://{os.environ.get("BACKEND_HOST")}'
+if os.environ.get("BACKEND_PORT"):
+    BACKEND_URL += f':{os.environ.get("BACKEND_PORT")}'
 
 
 class Product(BaseModel):
@@ -20,7 +27,7 @@ class Data(BaseModel):
 class Edition:
     title: str
     final_price: int
-    offer: list = None
+    platforms: list[str]
     original_price: int = None
     offer_ends: datetime = None
     discount: int = None
@@ -42,20 +49,21 @@ class Edition:
     
     def __post_init__(self):
         self.final_price = self.normalize_price(self.final_price)
-        if self.offer:
-            self.original_price = self.normalize_price(self.offer[0].text)
-            self.offer_ends = datetime.strptime(self.offer[1].text, r'Offer ends %d/%m/%Y %I:%M %p %Z')
+        if self.original_price and self.offer_ends:
+            self.original_price = self.normalize_price(self.original_price)
+            self.offer_ends = datetime.strptime(self.offer_ends, r'Offer ends %d/%m/%Y %I:%M %p %Z')
             self.discount = int(round(self.original_price / self.final_price * 100 - 100, 0))
         else:
             self.original_price = self.final_price
 
 
 async def send_publications(session: aiohttp.ClientSession, product_id: str, editions: list[Edition]):
-    url = f'{os.environ.get("BACKEND_HOST")}/api/product/{product_id}/publications/update/'
+    url = f'{BACKEND_URL}/api/product/{product_id}/publications/update/'
     data = {
         'publications': [
             {
                 'title': edition.title,
+                'platforms': edition.platforms,
                 'final_price': edition.final_price,
                 'original_price': edition.original_price,
                 'offer_ends': edition.offer_ends.isoformat() if edition.offer_ends else None,
@@ -63,7 +71,11 @@ async def send_publications(session: aiohttp.ClientSession, product_id: str, edi
             } for edition in editions
         ]
     }
-    await session.post(url, data=data)
+    for i in range(3):
+        async with session.post(url, json=data) as response:
+            if response.status == 200:
+                break
+            await asyncio.sleep(1)
 
 
 async def parse_product(data: Data):
@@ -76,12 +88,18 @@ async def parse_product(data: Data):
                         continue
                     text = await response.text()
                     soup = BeautifulSoup(text, 'html.parser')
+                    product_platforms = soup.find('dd', {'data-qa': re.compile('platform-value')}).text.split(', ')
                     for soup_edition in soup.find_all('article'):
-                        title = soup_edition.find('h3').text
-                        final_price = soup_edition.find('span', {'class': 'psw-t-title-m'}).text
+                        title = soup_edition.find('h3', {'data-qa': re.compile('editionName')}).text
+                        final_price = soup_edition.find('span', {'data-qa': re.compile('finalPrice')}).text
                         if final_price == 'Free':
                             continue
-                        editions.append(Edition(title, final_price, soup_edition.find_all('span', {'class': 'psw-c-t-2'})))
+                        platforms = [soup_platform.text for soup_platform in soup_edition.find_all('span', {'data-qa': re.compile('productTag')})] or product_platforms
+                        original_price = soup_edition.find('span', {'data-qa': re.compile('originalPrice')})
+                        original_price = original_price.text if original_price else None
+                        offer_ends = soup_edition.find('span', {'data-qa': re.compile('discountDescriptor')})
+                        offer_ends = offer_ends.text if offer_ends else None
+                        editions.append(Edition(title, final_price, platforms, original_price, offer_ends))
                     if editions:
                         await send_publications(session, str(product.product_id), editions)
             except aiohttp.client_exceptions.ClientConnectionError:

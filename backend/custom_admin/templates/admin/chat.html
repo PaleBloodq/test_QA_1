@@ -1,0 +1,51 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">Главная</a>
+  &rsaquo; <a href="/admin/chat/">Чаты</a>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if order %}
+<div class="order-info">
+    <span class="telegram-id">{{ order.profile.telegram_id }}</span>
+    <span class="order-date">{{ order.date }}</span>
+    <span class="order-amount">{{ order.amount }}</span>
+    <span class="order-status">{{ order.status }}</span>
+</div>
+<div class="chat">
+    <form action="" method="POST" id="send-chat-message-form">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Отправить">
+    </form>
+    <a href="/admin/chat/{{ order.id }}">Обновить чат</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Время</th>
+                <th>Отправитель</th>
+                <th>Текст</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in order.chat_message.all %}
+            <tr>
+                <td>{{ message.created_at }}</td>
+                <td>
+                {% if message.manager %}
+                    <a href="/admin/auth/user/{{ message.manager.id }}/">Менеджер {{ message.manager }}</a>
+                {% else %}
+                    <a href="/admin/api/profile/{{ order.profile.id }}/">Клиент {{ order.profile.telegram_id }}</a>
+                {% endif %}
+                </td>
+                <td>{{ message.text }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock content %}
