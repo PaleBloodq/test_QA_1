@@ -78,5 +78,4 @@ def auth_required(func):
 
 def hash_product_publication(product_id: int, title: str, platforms: list[str]):
     to_hash = f'{product_id} {title} {platforms}'
-    # to_hash = f'{product_id} {title}'
     return md5(to_hash.encode('utf-8')).hexdigest()

@@ -9,6 +9,11 @@ import aiohttp
 from bs4 import BeautifulSoup
 
 
+BACKEND_URL = f'{os.environ.get("BACKEND_SCHEMA")}://{os.environ.get("BACKEND_HOST")}'
+if os.environ.get("BACKEND_PORT"):
+    BACKEND_URL += f':{os.environ.get("BACKEND_PORT")}'
+
+
 class Product(BaseModel):
     product_id: UUID4
     url: HttpUrl
@@ -53,7 +58,7 @@ class Edition:
 
 
 async def send_publications(session: aiohttp.ClientSession, product_id: str, editions: list[Edition]):
-    url = f'{os.environ.get("BACKEND_HOST")}/api/product/{product_id}/publications/update/'
+    url = f'{BACKEND_URL}/api/product/{product_id}/publications/update/'
     data = {
         'publications': [
             {
