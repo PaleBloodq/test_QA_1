@@ -3,6 +3,7 @@ import { act } from "react-dom/test-utils";
 
 const initialState = {
   username: "",
+  isLoggined: false,
   userData: {
     playstation_email: "",
     playstation_password: "",
@@ -38,6 +39,9 @@ const userSlice = createSlice({
     setUserName: (state, action) => {
       state.username = action.payload;
     },
+    setIsLoggined: (state, action) => {
+      state.isLoggined = action.payload;
+    },
   },
 });
 
@@ -48,6 +52,7 @@ export const {
   updateBillMail,
   setUpdateData,
   setUserName,
+  setIsLoggined,
 } = userSlice.actions;
 
 export default userSlice.reducer;

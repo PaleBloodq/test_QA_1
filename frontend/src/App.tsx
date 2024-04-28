@@ -10,7 +10,7 @@ import SearchPage from './pages/SearchPage';
 import { useSwipeable } from 'react-swipeable';
 import Profile from './pages/Profile';
 import { useGetUserQuery } from './services/userApi';
-import { setUpdateData, setUserData } from './features/User/userSlice';
+import { setIsLoggined, setUpdateData, setUserData } from './features/User/userSlice';
 import { useDispatch } from 'react-redux';
 
 export default function App() {
@@ -38,6 +38,11 @@ export default function App() {
       psPassword: userData?.playstation_password,
       billEmail: userData?.bill_email,
     }))
+    if (userData !== undefined) {
+      dispatch(setIsLoggined((true)))
+    } else {
+      dispatch(setIsLoggined((false)))
+    }
   }, [userData])
 
   console.log(window.Telegram.WebApp.initDataUnsafe.user)
