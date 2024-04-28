@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -112,48 +113,65 @@ class VerifyToken(APIView):
 
 
 class Profile(APIView):
-    def get(self, request: Request):
-        if request.META.get('HTTP_AUTHORIZATION'):
-            token = request.META.get('HTTP_AUTHORIZATION').removeprefix('Bearer ')
-            profile = utils.decode_token(token)
-            if profile:
-                response = serializers.ProfileSerializer(profile).data
-                return Response(response)
-        return Response(status=status.HTTP_403_FORBIDDEN)
+    @utils.auth_required
+    def get(self, request: Request, profile: models.Profile):
+        response = serializers.ProfileSerializer(profile).data
+        return Response(response)
 
 
 class UpdateProfile(APIView):
-    def post(self, request: Request):
-        if request.META.get('HTTP_AUTHORIZATION'):
-            token = request.META.get('HTTP_AUTHORIZATION').removeprefix('Bearer ')
-            profile = utils.decode_token(token)
-            if profile:
-                if request.data.get('psEmail'):
-                    profile.playstation_email = request.data.get('psEmail')
-                if request.data.get('psPassword'):
-                    profile.playstation_password = request.data.get('psPassword')
-                if request.data.get('billEmail'):
-                    profile.bill_email = request.data.get('billEmail')
-                try:
-                    profile.save()
-                except:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
-                response = serializers.ProfileSerializer(profile).data
-                return Response(response)
-        return Response(status=status.HTTP_403_FORBIDDEN)
+    @utils.auth_required
+    def post(self, request: Request, profile: models.Profile):
+        if request.data.get('psEmail'):
+            profile.playstation_email = request.data.get('psEmail')
+        if request.data.get('psPassword'):
+            profile.playstation_password = request.data.get('psPassword')
+        if request.data.get('billEmail'):
+            profile.bill_email = request.data.get('billEmail')
+        try:
+            profile.save()
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        response = serializers.ProfileSerializer(profile).data
+        return Response(response)
 
 
 class Orders(APIView):
-    def get(self, request: Request):
-        if request.META.get('HTTP_AUTHORIZATION').removeprefix('Bearer '):
-            token = request.META.get('HTTP_AUTHORIZATION').removeprefix('Bearer ')
-            profile = utils.decode_token(token)
-            if profile:
-                offset = request.data.get('offset', 0)
-                limit = request.data.get('limit', 20)
-                response = serializers.OrderSerializer(
-                    models.Order.objects.filter(profile=profile).distinct().order_by('-date')[offset:limit],
-                    many=True,
-                ).data
-                return Response(response)
-        return Response(status=status.HTTP_403_FORBIDDEN)
+    @utils.auth_required
+    def get(self, request: Request, profile: models.Profile):
+        offset = request.data.get('offset', 0)
+        limit = request.data.get('limit', 20)
+        response = serializers.OrderSerializer(
+            models.Order.objects.filter(profile=profile).distinct().order_by('-date')[offset:limit],
+            many=True,
+        ).data
+        return Response(response)
+
+
+class CheckPromoCode(APIView):
+    @utils.auth_required
+    def post(self, request: Request, profile: models.Profile):
+        promo_code = request.data.get('promoCode')
+        if promo_code:
+            promo_code = models.PromoCode.objects.filter(
+                promo_code=promo_code,
+                expiration__gte=datetime.now()
+            )
+            if promo_code:
+                return Response({
+                    'result': True,
+                    'discount': promo_code.get().discount
+                })
+            return Response({'result': False})
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateOrder(APIView):
+    @utils.auth_required
+    def post(self, request: Request, profile: models.Profile):
+        return Response(status=status.HTTP_200_OK)
+
+
+class UpdateProductPublications(APIView):
+    def post(self, request: Request, product_id: str):
+        return Response()
