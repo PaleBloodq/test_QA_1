@@ -184,3 +184,15 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
 class ChatMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ChatMessage
+
+
+class ProductToParseSerializer(serializers.ModelSerializer):
+    product_id = serializers.UUIDField(source='id')
+    url = serializers.CharField(source='ps_store_url')
+    
+    class Meta:
+        model = models.Product
+        fields = (
+            'product_id',
+            'url',
+        )
