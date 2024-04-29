@@ -3,6 +3,7 @@ import SubscriptionPeriodSelector from "../common/SubscriptionPeriodSelect";
 import { durationSelector, selectedSubscriptionSelector } from "../../features/Subscription/subscriptionSelectors";
 import { setSelectedSubscription } from "../../features/Subscription/subscriptionSlice";
 import { Publication } from "../../types/PublicationType";
+import { useEffect } from "react";
 
 export default function SelectSubscription({ publications }: { publications: Publication[] }) {
 
@@ -12,9 +13,9 @@ export default function SelectSubscription({ publications }: { publications: Pub
 
   const filteredPublications = publications?.filter((pub) => pub.duration === currentDuration)
 
-  // useEffect(() => {
-  //   dispatch(setSelectedSubscription(filteredPublications.find((item) => item.duration === currentDuration)?.id))
-  // }, [currentDuration])
+  useEffect(() => {
+    dispatch(setSelectedSubscription(filteredPublications.find((item) => item.duration === currentDuration)?.id))
+  }, [currentDuration])
 
   return (
     <div className="flex flex-col mt-2">
