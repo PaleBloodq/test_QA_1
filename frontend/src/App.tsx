@@ -45,7 +45,6 @@ export default function App() {
     }
   }, [userData])
 
-  console.log(window.Telegram.WebApp.initDataUnsafe.user)
   const navigate = useNavigate();
 
   const handlers = useSwipeable({

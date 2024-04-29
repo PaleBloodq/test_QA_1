@@ -43,7 +43,6 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
     //     checkPromocode({promoCode:promocode})
     // } PROMOCODE
 
-    console.log(orderObject)
 
 
     return (
