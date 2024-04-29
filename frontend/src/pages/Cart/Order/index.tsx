@@ -40,8 +40,10 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
     }
 
     // function checkIsValidPromo() {
-    //     checkPromocode(promocode)
+    //     checkPromocode({promoCode:promocode})
     // } PROMOCODE
+
+    console.log(orderObject)
 
 
     return (

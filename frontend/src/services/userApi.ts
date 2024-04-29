@@ -5,7 +5,7 @@ export const userApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_DATABASE_URL,
     headers: {
-      Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbV9pZCI6MTIzOTgxMjgzLCJ0b2tlbl9leHBpcmF0b24iOiIyMDI0LTA0LTI4VDEyOjM0OjE3LjkwMTk5MyIsInRva2VuX3NlZWQiOiI4YjA3N2ZjMWQ3Zjc0OTc0Yjk3MzIwOThlM2MwZTU4NSJ9.oWAKw0NffeiK5XfBon3FbHmjr0ZipSbNggPMe-9P0zKiy5R-DToqH0TIhKaG-XsjM6dLtZ2O1g9FfQux28I1hhKOUgyDSvUU9lFQtkC6KwXQaFi_ch3z68oXZ_mpuhg0u4mYL0NcGJLqySaYA_PfBhfwZt6Vjq5GckuzboNUGpKmX-e6beYCdcp3f-ftzrsPHWujH0GGclQW_eTKZq9bOBbBnB7RKf-wKtkQE9FLoOuhNLaq6nXHPCt8m3EB3HeiFgbCIqG6N_Ik1Lri1qt9DceQhjHkcMbrJ7a3y7Uautxv5z5DgUo4IR9J8utek27s8OFqCKKsAyXVYBelYTX0BA`,
+      Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZWxlZ3JhbV9pZCI6MTIzOTgxMjgzLCJ0b2tlbl9leHBpcmF0b24iOiIyMDI0LTA0LTI5VDIxOjMzOjUzLjUxMjAxOSIsInRva2VuX3NlZWQiOiI1ZDRmOWUxMGI5ODI0ZjQ0YTcwNWMyZGFlNzQwYTE2ZCJ9.FmN4_ZYniAncitgMQZwtTnj9JhEWrtJUVpkBuHDAistrNXYEBNIWzh6PuYuMYalxX_AepJqEyL8O11ODImoZsJFX2z_zXt0H5aBzaiXEI6CiWTaHVnK7UnU8fo4wzNPsMGAPfrD8QrJBVv7QsYqXpF2XT1SgAopZCRx_4NodSc-8RnbVP2G-SIMhgzFq9qvMS1SvRrxEaEgLXdOgbSCFm4O5yyzy7GfCiFG9ct1AV48QVXA0CRgS4-_NMOSr83PQzHNq-5Lk8sKAKgyYhcsjZr28r_2v8QXkHG-aZclXgj4bPvCXei10XFaQRpmRYmJcnxDVrJTlw6gbZ-7u5fquMg`,
     },
   }),
   endpoints: (builder) => ({
@@ -33,7 +33,7 @@ export const userApi = createApi({
       query: ({ promoCode }) => ({
         url: `order/promocode/check/`,
         method: "POST",
-        body: { promoCode },
+        body: promoCode,
       }),
     }),
   }),
