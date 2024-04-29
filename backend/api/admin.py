@@ -10,6 +10,7 @@ import requests
 PRODUCT_PARSER_URL = f'{os.environ.get("PRODUCT_PARSER_SCHEMA")}://{os.environ.get("PRODUCT_PARSER_HOST")}'
 if os.environ.get("PRODUCT_PARSER_PORT"):
     PRODUCT_PARSER_URL += f':{os.environ.get("PRODUCT_PARSER_PORT")}'
+PRODUCT_PARSER_URL += '/parse'
 
 
 admin.site.register(models.Platform)

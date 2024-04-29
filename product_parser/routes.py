@@ -10,5 +10,5 @@ async def parse(request: web.Request):
         data = utils.Data(**data)
     except (JSONDecodeError, ValidationError):
         return web.Response(status=400)
-    await asyncio.create_task(utils.parse_product(data))
+    asyncio.create_task(utils.parse_product(data))
     return web.Response()
