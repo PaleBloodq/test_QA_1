@@ -90,6 +90,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderProductInline, ChatMessageInline]
     list_display = ['date', 'status', 'profile', 'amount', 'chat']
     list_filter = ['date', 'status', 'profile', 'amount']
+    readonly_fields = ['id']
     
     @admin.display(description='Чат')
     def chat(self, obj: models.Order):
