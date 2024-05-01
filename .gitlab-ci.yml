@@ -39,10 +39,6 @@ build:
         docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
         docker push $CI_REGISTRY_IMAGE/frontend
       fi
-    - tar -czf $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz .
-  artifacts:
-    paths:
-      - $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz
   only:
     changes:
       - backend/**/*
@@ -54,13 +50,14 @@ deploy:
   tags:
   - dev
   stage: deploy
+  before_script:
+  - mkdir -p /root/CICD/$CI_PROJECT_NAME
+  - sudo chmod 777 /root/CICD/$CI_PROJECT_NAME 
   script:
-    - pwd
-    - ls -l
-    - cp -a ./* $DOCKER_COMPOSE_PATH/
+    - cp -a ./* /root/CICD/$CI_PROJECT_NAME/
+    - cd /root/CICD/$CI_PROJECT_NAME
     - envsubst < .env > local.env
     - if [ ! -d "rsa" ]; then mkdir -p rsa && openssl genpkey -algorithm RSA -out rsa/private.pem -aes256 -pass pass:yourpassword && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem -passin pass:yourpassword; fi
-    - cp $CI_PROJECT_DIR/docker-compose.yml docker-compose.yml
     - docker-compose pull
     - docker-compose up -d
   dependencies:
