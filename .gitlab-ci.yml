@@ -53,8 +53,10 @@ build:
 deploy:
   stage: deploy
   script:
-    - cp -r ./* $DOCKER_COMPOSE_PATH
+    - cp -a ./. $DOCKER_COMPOSE_PATH
+    - ls -l
     - cd $DOCKER_COMPOSE_PATH
+    - ls -l
     - envsubst < .env > local.env
     - if [ ! -d "rsa" ]; then mkdir -p rsa && openssl genpkey -algorithm RSA -out rsa/private.pem -aes256 -pass pass:yourpassword && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem -passin pass:yourpassword; fi
     - cp $CI_PROJECT_DIR/docker-compose.yml docker-compose.yml
