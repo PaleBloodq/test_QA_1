@@ -1,11 +1,11 @@
-FROM node:latest
+FROM node:alpine
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 WORKDIR /frontend
 
-COPY . frontend/
+COPY . .
 
-RUN npm --prefix frontend/ install
+RUN npm install
 
 RUN npx vite build
 
