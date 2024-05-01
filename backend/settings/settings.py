@@ -114,3 +114,5 @@ ADMIN_TOOLS_MENU = 'custom_admin.menu.CustomMenu'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT.mkdir(exist_ok=True)
+STATIC_ROOT.mkdir(exist_ok=True)
