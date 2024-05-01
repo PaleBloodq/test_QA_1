@@ -52,7 +52,7 @@ build:
 deploy:
   stage: deploy
   script:
-    - cp $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz $DOCKER_COMPOSE_PATH
+    - cp $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz $DOCKER_COMPOSE_PATH/$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz
 
     # Переходим в целевую директорию и разархивируем архив
     - cd $DOCKER_COMPOSE_PATH
