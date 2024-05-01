@@ -54,6 +54,7 @@ deploy:
   - mkdir -p /root/CICD/$CI_PROJECT_NAME
   - sudo chmod 777 /root/CICD/$CI_PROJECT_NAME 
   script:
+    - export CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - cp -a ./* /root/CICD/$CI_PROJECT_NAME/
     - cd /root/CICD/$CI_PROJECT_NAME
