@@ -7,29 +7,53 @@ build:
   image: docker:latest
   services:
     - docker:dind
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+      - /cache/docker
   before_script:
     - docker info
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE/backend ./backend
-    - docker build -t $CI_REGISTRY_IMAGE/product_parser ./product_parser
-    - docker build -t $CI_REGISTRY_IMAGE/payments ./payments
-    - docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
-    - docker push $CI_REGISTRY_IMAGE/backend
-    - docker push $CI_REGISTRY_IMAGE/product_parser
-    - docker push $CI_REGISTRY_IMAGE/payments
-    - docker push $CI_REGISTRY_IMAGE/frontend
-  artifacts:
-    paths:
-      - .
+    # Проверяем наличие кэша Docker и используем его, если есть
+    - docker pull $CI_REGISTRY_IMAGE/backend:latest || true
+    - docker pull $CI_REGISTRY_IMAGE/product_parser:latest || true
+    - docker pull $CI_REGISTRY_IMAGE/payments:latest || true
+    - docker pull $CI_REGISTRY_IMAGE/frontend:latest || true
+    # Сборка и отправка образов в Docker Registry только для измененных директорий
+    - |
+      if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA backend/) ]]; then
+        docker build -t $CI_REGISTRY_IMAGE/backend ./backend
+        docker push $CI_REGISTRY_IMAGE/backend
+      fi
+    - |
+      if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA product_parser/) ]]; then
+        docker build -t $CI_REGISTRY_IMAGE/product_parser ./product_parser
+        docker push $CI_REGISTRY_IMAGE/product_parser
+      fi
+    - |
+      if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA payments/) ]]; then
+        docker build -t $CI_REGISTRY_IMAGE/payments ./payments
+        docker push $CI_REGISTRY_IMAGE/payments
+      fi
+    - |
+      if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA frontend/) ]]; then
+        docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
+        docker push $CI_REGISTRY_IMAGE/frontend
+      fi
   only:
     - dev
+    - changes:
+        - backend/**/*
+        - product_parser/**/*
+        - payments/**/*
+        - frontend/**/*
 
 
 deploy:
   stage: deploy
   script:
-    - tar xf $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz -С $DOCKER_COMPOSE_PATH
+    - tar xf $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz -C $DOCKER_COMPOSE_PATH
     - envsubst < .env > local.env
     - if [ ! -d "$DOCKER_COMPOSE_PATH/rsa" ]; then mkdir -p $DOCKER_COMPOSE_PATH/rsa && openssl genpkey -algorithm RSA -out $DOCKER_COMPOSE_PATH/rsa/private.pem -aes256 -pass pass:yourpassword && openssl rsa -pubout -in $DOCKER_COMPOSE_PATH/rsa/     private.pem -out $DOCKER_COMPOSE_PATH/rsa/public.pem -passin pass:yourpassword; fi
     - cp $CI_PROJECT_DIR/docker-compose.yml $DOCKER_COMPOSE_PATH/docker-compose.yml
