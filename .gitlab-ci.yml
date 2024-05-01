@@ -61,7 +61,7 @@ deploy:
     - envsubst < example.env > local.env
     - envsubst < docker-compose.yaml > docker-compose.processed.yaml
     - mv docker-compose.processed.yaml docker-compose.yaml
-    - if [ ! -d "rsa" ]; then mkdir -p rsa && openssl genpkey -algorithm RSA -out rsa/private.pem -aes256 && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem -passin pass:yourpassword; fi
+    - if [ ! -d "rsa" ]; then mkdir -p rsa && openssl genpkey -algorithm RSA -out rsa/private.pem && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem; fi
     - docker compose pull
     - docker compose up -d
   dependencies:
