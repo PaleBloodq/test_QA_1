@@ -51,6 +51,17 @@ export default function App() {
     onSwipedRight: () => navigate(-1),
   });
 
+  const telegramThemeColor = window?.Telegram?.WebApp.headerColor
+
+  useEffect(() => {
+    if (telegramThemeColor === '#ffffff') {
+      document.getElementById('webapp-root-body').classList.value = 'light'
+    } else {
+      document.getElementById('webapp-root-body').classList.value = 'dark'
+    }
+
+  }, [telegramThemeColor])
+
 
   return transitions((styles, item) => (
     <animated.div style={styles} className="animated-page">
