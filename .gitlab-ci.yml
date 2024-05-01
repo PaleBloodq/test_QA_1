@@ -19,6 +19,9 @@ build:
     - docker push $CI_REGISTRY_IMAGE/product_parser
     - docker push $CI_REGISTRY_IMAGE/payments
     - docker push $CI_REGISTRY_IMAGE/frontend
+  artifacts:
+    paths:
+      - .
   only:
     - dev
 
@@ -26,6 +29,7 @@ build:
 deploy:
   stage: deploy
   script:
+    - tar xf $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz -С $DOCKER_COMPOSE_PATH
     - envsubst < .env > local.env
     - if [ ! -d "$DOCKER_COMPOSE_PATH/rsa" ]; then mkdir -p $DOCKER_COMPOSE_PATH/rsa && openssl genpkey -algorithm RSA -out $DOCKER_COMPOSE_PATH/rsa/private.pem -aes256 -pass pass:yourpassword && openssl rsa -pubout -in $DOCKER_COMPOSE_PATH/rsa/     private.pem -out $DOCKER_COMPOSE_PATH/rsa/public.pem -passin pass:yourpassword; fi
     - cp $CI_PROJECT_DIR/docker-compose.yml $DOCKER_COMPOSE_PATH/docker-compose.yml

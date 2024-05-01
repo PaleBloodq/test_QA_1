@@ -2,6 +2,6 @@ FROM python:3.10-slim
 
 WORKDIR /product_parser
 
-COPY . product_parser/
+COPY . .
 
-RUN pip install -r ./product_parser/requirements.txt
+RUN pip install -r requirements.txt
