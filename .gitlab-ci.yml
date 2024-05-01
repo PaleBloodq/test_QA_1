@@ -2,11 +2,13 @@ stages:
   - build
   - deploy
 
-build_job:
+build:
   stage: build
   image: docker:latest
   services:
     - docker:dind
+  before_script:
+    - docker info
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $CI_REGISTRY_IMAGE/postgres ./postgres
@@ -20,7 +22,8 @@ build_job:
   only:
     - dev
 
-deploy_job:
+
+deploy:
   stage: deploy
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
