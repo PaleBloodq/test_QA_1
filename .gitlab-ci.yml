@@ -14,9 +14,11 @@ build:
     - docker build -t $CI_REGISTRY_IMAGE/backend ./backend
     - docker build -t $CI_REGISTRY_IMAGE/product_parser ./product_parser
     - docker build -t $CI_REGISTRY_IMAGE/payments ./payments
+    - docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
     - docker push $CI_REGISTRY_IMAGE/backend
     - docker push $CI_REGISTRY_IMAGE/product_parser
     - docker push $CI_REGISTRY_IMAGE/payments
+    - docker push $CI_REGISTRY_IMAGE/frontend
   only:
     - dev
 
