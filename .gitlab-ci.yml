@@ -53,8 +53,12 @@ build:
 deploy:
   stage: deploy
   script:
-    - whoami
+    - pwd
     - ls -ld /root/CICD /root/CICD/aokibot
+    - echo "DOCKER_COMPOSE_PATH is set to '$DOCKER_COMPOSE_PATH'"
+    - ls -la /root/CICD
+    - ls -la $DOCKER_COMPOSE_PATH
+    - mkdir -p /root/CICD/aokibot  # Убедитесь, что это не вызывает ошибку
     - cp -a ./* $DOCKER_COMPOSE_PATH/
     - ls -l
     - envsubst < .env > local.env
