@@ -3,7 +3,7 @@ import { ProductType } from "../types/ProductType";
 
 export const productsApi = createApi({
   reducerPath: "productsApi",
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_DATABASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL}),
   endpoints: (builder) => ({
     getCategoryProducts: builder.query({
       query: () => `/catalog/category/?format=json`,
