@@ -1,16 +1,25 @@
 version: '3.1'
 services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - product_parser
+      - payments
+      
   postgres:
     image: postgres:14-alpine3.17
-    ports:
-      - "5533:5432"
     env_file:
       - ./local.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  
+
   backend:
-    build: ./backend
+    image: $CI_REGISTRY_IMAGE/backend
     depends_on:
       - postgres
     env_file:
@@ -24,9 +33,9 @@ services:
     command: [ "python", "start_service.py" ]
     ports:
       - "8080:8080"
-  
+
   product_parser:
-    build: ./product_parser
+    image: $CI_REGISTRY_IMAGE/product_parser
     depends_on:
       - postgres
       - backend
@@ -34,34 +43,27 @@ services:
       - ./local.env
     environment:
       - BACKEND_HOST=backend
-    volumes:
-      - ./product_parser:/product_parser
     command: [ "python", "main.py" ]
     ports:
       - "8090:8090"
 
   payments:
-    build: ./payments
+    image: $CI_REGISTRY_IMAGE/payments
     depends_on:
       - postgres
       - backend
     env_file:
       - ./local.env
-    volumes:
-      - ./payments:/payments
     command: [ "python", "main.py" ]
     ports:
       - "8086:8086"
   
-  # frontend:
-  #   build: ./frontend
-  #   env_file:
-  #     - ./local.env
-  #   volumes:
-  #     - ./frontend:/frontend
-  #   command: [ "serve", "-s", "dist", "-l", "8050" ]
-  #   ports:
-  #     - "8050:8050"
-
-volumes:
-  postgres_data:
+  frontend:
+    image: $CI_REGISTRY_IMAGE/frontend
+    env_file:
+      - ./local.env
+    volumes:
+      - ./frontend:/frontend
+    command: [ "serve", "-s", "dist", "-l", "8050" ]
+    ports:
+      - "8050:8050"
