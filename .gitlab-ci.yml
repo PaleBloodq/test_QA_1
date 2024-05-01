@@ -23,16 +23,11 @@ build:
 
 deploy:
   stage: deploy
-  before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - ssh-keyscan $DEPLOY_SERVER >> ~/.ssh/known_hosts
   script:
-    - envsubst < template.env > local.env
-    - scp $CI_PROJECT_DIR/docker-compose.yml $DEPLOY_USER@$DEPLOY_SERVER:$DOCKER_COMPOSE_PATH/docker-compose.yml
-    - ssh $DEPLOY_USER@$DEPLOY_SERVER 'cd $DOCKER_COMPOSE_PATH && docker-compose pull && docker-compose up -d'
+    - envsubst < .env > local.env
+    - if [ ! -d "$DOCKER_COMPOSE_PATH/rsa" ]; then mkdir -p $DOCKER_COMPOSE_PATH/rsa && openssl genpkey -algorithm RSA -out $DOCKER_COMPOSE_PATH/rsa/private.pem -aes256 -pass pass:yourpassword && openssl rsa -pubout -in $DOCKER_COMPOSE_PATH/rsa/     private.pem -out $DOCKER_COMPOSE_PATH/rsa/public.pem -passin pass:yourpassword; fi
+    - cp $CI_PROJECT_DIR/docker-compose.yml $DOCKER_COMPOSE_PATH/docker-compose.yml
+    - cd $DOCKER_COMPOSE_PATH && docker-compose pull && docker-compose up -d
   only:
     - dev
+
