@@ -60,7 +60,9 @@ deploy:
     - cd /root/CICD/$CI_PROJECT_NAME
     - envsubst < example.env > local.env
     - envsubst < docker-compose.yaml > docker-compose.processed.yaml
+    - envsubst < nginx.conf > nginx.processed.conf
     - mv docker-compose.processed.yaml docker-compose.yaml
+    - mv nginx.processed.conf nginx.conf
     - if [ ! -d "rsa" ]; then mkdir -p rsa && openssl genpkey -algorithm RSA -out rsa/private.pem && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem; fi
     - docker compose pull
     - docker compose up -d
