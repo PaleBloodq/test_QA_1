@@ -56,7 +56,7 @@ deploy:
   script:
     - cp -a ./* /root/CICD/$CI_PROJECT_NAME/
     - cd /root/CICD/$CI_PROJECT_NAME
-    - envsubst < .env > local.env
+    - envsubst < example.env > local.env
     - if [ ! -d "rsa" ]; then mkdir -p rsa && openssl genpkey -algorithm RSA -out rsa/private.pem -aes256 -pass pass:yourpassword && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem -passin pass:yourpassword; fi
     - docker-compose pull
     - docker-compose up -d
