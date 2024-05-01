@@ -6,16 +6,15 @@ import { setAccountEmail, setAccountPassword, setHasAccount, setPromocode, setRe
 import CheckBox from "../../../components/common/CheckBox";
 import { useEffect, useState } from "react";
 import Button from "../../../components/common/Button";
-import { userSelector } from "../../../features/User/userSelectors";
 import { useMakeOrderMutation } from "../../../services/userApi";
 
 export default function Order({ useCashback }: { useCashback: boolean }) {
 
 
     const { hasAccount, accountEmail, accountPassword, reciptEmail, rememberData, promocode, items } = useSelector(cartSelector)
-    const [makeOrder, { data, isLoading, error, status }] = useMakeOrderMutation();
+    const [makeOrder] = useMakeOrderMutation();
     // const [checkPromocode, { data: promoData }] = useMakeOrderMutation(); PROMOCODE
-    const { billEmail } = useSelector(userSelector)
+    // const { billEmail } = useSelector(userSelector)
     const [sameEmail, setSameEmail] = useState(false)
     // const [validPromo, setValidPromo] = useState('') PROMOCODE
     const dispatch = useDispatch()

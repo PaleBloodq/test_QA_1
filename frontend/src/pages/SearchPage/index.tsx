@@ -13,7 +13,7 @@ export default function SearchPage() {
     const { value, languages, limit, maxPrice, minPrice, offset, platforms } = useSelector(searchSelector);
     const [showFilter, setShowFilter] = useState(false)
 
-    const [getSearchProducts, { data, isLoading, error }] = useGetSearchProductsMutation();
+    const [getSearchProducts, { data, isLoading }] = useGetSearchProductsMutation();
     const { data: filterData } = useGetSearchFiltersQuery({})
     const params = {
         minPrice: minPrice,

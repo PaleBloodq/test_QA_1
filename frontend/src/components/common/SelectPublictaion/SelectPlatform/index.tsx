@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Publication } from "../../../../types/PublicationType"
-import { selectedPlatformSelector, selectedPublicationSelector } from "../../../../features/Game/publicationSelectors"
+import { selectedPlatformSelector } from "../../../../features/Game/publicationSelectors"
 import { setSelectedPlatform } from "../../../../features/Game/publicationSlice"
 import { useEffect } from "react"
 
