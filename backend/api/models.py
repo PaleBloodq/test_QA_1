@@ -131,7 +131,7 @@ class Order(BaseModel):
     amount = models.IntegerField('Сумма заказа')
     email = models.EmailField('E-mail')
     password = models.CharField('Пароль', max_length=255)
-    bill_email = models.EmailField('E-mail')
+    bill_email = models.EmailField('E-mail для чека')
     spend_cashback = models.BooleanField('Списать баллы')
     status = models.CharField('Статус', choices=StatusChoices.choices, default=StatusChoices.CREATED)
     cashback = models.IntegerField('Кэшбек', default=0)

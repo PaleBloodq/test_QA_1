@@ -92,6 +92,8 @@ class CreateOrder(APIView):
                         original_price=publication.original_price,
                         final_price=publication.final_price,
                     )
+                if order.promo_code_discount:
+                    order.cashback -= order.cashback * promo_code_discount / 100
                 payment = serializers.PaymentSerializer(
                     data=requests.post(f'{PAYMENTS_URL}/create_payment', json={
                         'order_id': str(order.id),
