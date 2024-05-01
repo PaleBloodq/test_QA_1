@@ -53,7 +53,7 @@ build:
 deploy:
   stage: deploy
   script:
-    - cp -a ./. $DOCKER_COMPOSE_PATH
+    - cp -a ./* $DOCKER_COMPOSE_PATH
     - ls -l
     - cd $DOCKER_COMPOSE_PATH
     - ls -l
