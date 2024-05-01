@@ -53,6 +53,10 @@ build:
 deploy:
   stage: deploy
   script:
+    - ls -l
+    - echo "Creating archive..."
+    - tar -czf $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz .
+    - ls -l 
     - cp $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz $DOCKER_COMPOSE_PATH/$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz
     - cd $DOCKER_COMPOSE_PATH
     - tar -xzf $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz
