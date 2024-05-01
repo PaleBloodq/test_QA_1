@@ -137,6 +137,8 @@ class Order(BaseModel):
     cashback = models.IntegerField('Кэшбек', default=0)
     promo_code = models.CharField('Промокод', max_length=255, null=True, blank=True)
     promo_code_discount = models.IntegerField('Скидка по промокоду', null=True, blank=True)
+    payment_id = models.CharField('ID платежа', null=True, blank=True)
+    payment_url = models.URLField('Ссылка на оплату', null=True, blank=True)
     
     def __str__(self) -> str:
         return f'{self.profile} от {self.date}'

@@ -1,14 +1,14 @@
 import os
 import hashlib
 import aiohttp
-from pydantic import BaseModel, UUID4, NonNegativeFloat
+from pydantic import BaseModel, UUID4, NonNegativeFloat, Field, field_serializer
 
 
 TERMINAL_KEY = os.environ.get('TINKOFF_TERMINAL_KEY')
 SECRET_KEY = os.environ.get('TINKOFF_SECRET_KEY')
 if not (TERMINAL_KEY and SECRET_KEY):
     raise
-API_URL = 'https://securepay.tinkoff.ru/v2/Init'
+API_URL = 'https://securepay.tinkoff.ru/v2/'
 
 
 class Order(BaseModel):
@@ -16,6 +16,19 @@ class Order(BaseModel):
     amount: NonNegativeFloat
     description: str
     customer_telegram_id: int
+
+
+class Payment(BaseModel):
+    terminal_key: str = Field(alias='TerminalKey')
+    amount: int = Field(alias='Amount')
+    order_id: UUID4 = Field(alias='OrderId')
+    success: bool = Field(alias='Success')
+    status: str = Field(alias='Status')
+    payment_id: str = Field(alias='PaymentId')
+    error_code: str = Field(alias='ErrorCode')
+    payment_url: str = Field(alias='PaymentURL', default=None)
+    message: str = Field(alias='Message', default=None)
+    details: str = Field(alias='Details', default=None)
 
 
 async def get_token(payment_data: dict):
@@ -27,7 +40,7 @@ async def get_token(payment_data: dict):
     return hashlib.sha256(token.encode('utf-8')).hexdigest()
 
 
-async def get_url(order: Order) -> str:
+async def create_payment(order: Order) -> Payment | None:
     payment_data = {
         'TerminalKey': TERMINAL_KEY,
         'OrderId': str(order.order_id),
@@ -40,6 +53,20 @@ async def get_url(order: Order) -> str:
     }
     payment_data['Token'] = await get_token(payment_data)
     async with aiohttp.ClientSession() as session:
-        async with session.post(API_URL, json=payment_data) as response:
-            data = await response.json()
-            return data.get('PaymentURL')
+        try:
+            async with session.post(API_URL+'Init', json=payment_data) as response:
+                data = await response.json()
+                return Payment(**data)
+        except:
+            pass
+
+
+async def get_payment(payment_id: str) -> dict:
+    payment_data = {
+        'TerminalKey': TERMINAL_KEY,
+        'PaymentId': payment_id,
+    }
+    payment_data['Token'] = await get_token(payment_data)
+    async with aiohttp.ClientSession() as session:
+        async with session.post(API_URL+'GetState', json=payment_data) as response:
+            return await response.json()

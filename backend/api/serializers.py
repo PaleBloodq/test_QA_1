@@ -197,3 +197,16 @@ class ProductToParseSerializer(serializers.ModelSerializer):
             'product_id',
             'url',
         )
+
+
+class PaymentSerializer(serializers.Serializer):
+    terminal_key = serializers.CharField()
+    amount = serializers.IntegerField()
+    order_id = serializers.UUIDField()
+    success = serializers.BooleanField()
+    status = serializers.CharField()
+    payment_id = serializers.CharField()
+    error_code = serializers.CharField()
+    payment_url = serializers.URLField()
+    message = serializers.CharField(allow_null=True)
+    details = serializers.CharField(allow_null=True)
