@@ -54,13 +54,8 @@ deploy:
   stage: deploy
   script:
     - pwd
-    - ls -ld /root/CICD /root/CICD/aokibot
-    - echo "DOCKER_COMPOSE_PATH is set to '$DOCKER_COMPOSE_PATH'"
-    - ls -la /root/CICD
-    - ls -la $DOCKER_COMPOSE_PATH
-    - mkdir -p /root/CICD/aokibot  # Убедитесь, что это не вызывает ошибку
-    - cp -a ./* $DOCKER_COMPOSE_PATH/
     - ls -l
+    - cp -a ./* $DOCKER_COMPOSE_PATH/
     - envsubst < .env > local.env
     - if [ ! -d "rsa" ]; then mkdir -p rsa && openssl genpkey -algorithm RSA -out rsa/private.pem -aes256 -pass pass:yourpassword && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem -passin pass:yourpassword; fi
     - cp $CI_PROJECT_DIR/docker-compose.yml docker-compose.yml
