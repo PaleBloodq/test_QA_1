@@ -11,6 +11,7 @@ def main():
     app = web.Application()
     app.router.add_post('/create_payment', routes.create_payment)
     app.router.add_post('/get_payment', routes.get_payment)
+    app.router.add_post('/check_token', routes.check_token)
     try:
         web.run_app(app, host=HOST, port=PORT)
     except KeyboardInterrupt:
