@@ -15,12 +15,10 @@ build:
     - docker info
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    # Проверяем наличие кэша Docker и используем его, если есть
     - docker pull $CI_REGISTRY_IMAGE/backend:latest || true
     - docker pull $CI_REGISTRY_IMAGE/product_parser:latest || true
     - docker pull $CI_REGISTRY_IMAGE/payments:latest || true
     - docker pull $CI_REGISTRY_IMAGE/frontend:latest || true
-    # Сборка и отправка образов в Docker Registry только для измененных директорий
     - |
       if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA backend/) ]]; then
         docker build -t $CI_REGISTRY_IMAGE/backend ./backend
@@ -41,6 +39,10 @@ build:
         docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
         docker push $CI_REGISTRY_IMAGE/frontend
       fi
+    - tar -czf $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz .
+  artifacts:
+    paths:
+      - $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz
   only:
     changes:
       - backend/**/*
@@ -48,25 +50,18 @@ build:
       - payments/**/*
       - frontend/**/*
 
-
 deploy:
   stage: deploy
   script:
     - cp $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz $DOCKER_COMPOSE_PATH/$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz
-
-    # Переходим в целевую директорию и разархивируем архив
     - cd $DOCKER_COMPOSE_PATH
-    - tar xzf $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz
-
-    # Проводим остальные операции развертывания
+    - tar -xzf $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz
     - envsubst < .env > local.env
     - if [ ! -d "rsa" ]; then mkdir -p rsa && openssl genpkey -algorithm RSA -out rsa/private.pem -aes256 -pass pass:yourpassword && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem -passin pass:yourpassword; fi
     - cp $CI_PROJECT_DIR/docker-compose.yml docker-compose.yml
-    - docker-compose pull && docker-compose up -d
+    - docker-compose pull
+    - docker-compose up -d
   dependencies:
     - build
-  artifacts:
-    paths:
-      - $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.tar.gz
   only:
     - dev
