@@ -51,6 +51,8 @@ build:
       - frontend/**/*
 
 deploy:
+  tags:
+  - dev
   stage: deploy
   script:
     - pwd
