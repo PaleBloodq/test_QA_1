@@ -42,12 +42,11 @@ build:
         docker push $CI_REGISTRY_IMAGE/frontend
       fi
   only:
-    - dev
-    - changes:
-        - backend/**/*
-        - product_parser/**/*
-        - payments/**/*
-        - frontend/**/*
+    changes:
+      - backend/**/*
+      - product_parser/**/*
+      - payments/**/*
+      - frontend/**/*
 
 
 deploy:
