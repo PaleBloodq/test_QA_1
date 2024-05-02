@@ -102,5 +102,9 @@ async def parse_product(data: Data):
                         editions.append(Edition(title, final_price, platforms, original_price, offer_ends))
                     if editions:
                         await send_publications(session, str(product.product_id), editions)
-            except aiohttp.client_exceptions.ClientConnectionError:
+            except (
+                aiohttp.client_exceptions.ClientConnectionError,
+                AttributeError,
+                ValueError
+            ):
                 pass

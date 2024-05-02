@@ -1,7 +1,16 @@
+import os
 from django.contrib import admin
 from django.http import HttpRequest
 from django.utils.safestring import mark_safe
-from api import models
+from django.db.models import QuerySet
+from api import models, serializers
+import requests
+
+
+PRODUCT_PARSER_URL = f'{os.environ.get("PRODUCT_PARSER_SCHEMA")}://{os.environ.get("PRODUCT_PARSER_HOST")}'
+if os.environ.get("PRODUCT_PARSER_PORT"):
+    PRODUCT_PARSER_URL += f':{os.environ.get("PRODUCT_PARSER_PORT")}'
+PRODUCT_PARSER_URL += '/parse'
 
 
 admin.site.register(models.Platform)
@@ -40,8 +49,18 @@ class ProductAdmin(admin.ModelAdmin):
     def count_publications(self, obj: models.Product):
         return obj.publications.count()
     
+    def parse_product_publications(self, request, queryset: QuerySet[models.Product]):
+        requests.post(
+            PRODUCT_PARSER_URL,
+            json={
+                'data': serializers.ProductToParseSerializer(queryset, many=True).data
+            }
+        )
+    parse_product_publications.short_description = 'Спарсить издания'
+    
     inlines = [ProductPublicationInline]
     list_display = ['title', 'type', 'release_date', 'count_publications']
+    actions = [parse_product_publications]
 
 
 class OrderProductInline(admin.TabularInline):
@@ -71,6 +90,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderProductInline, ChatMessageInline]
     list_display = ['date', 'status', 'profile', 'amount', 'chat']
     list_filter = ['date', 'status', 'profile', 'amount']
+    readonly_fields = ['id']
     
     @admin.display(description='Чат')
     def chat(self, obj: models.Order):

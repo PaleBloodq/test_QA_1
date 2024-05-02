@@ -120,14 +120,25 @@ class Profile(BaseModel):
 
 class Order(BaseModel):
     class StatusChoices(models.TextChoices):
-        OK = 'OK', 'Ок'
+        CREATED = 'CREATED', 'Создан'
         PAID = 'PAID', 'Оплачен'
         ERROR = 'ERROR', 'Ошибка'
+        IN_PROGRESS = 'IN_PROGRESS', 'В работе'
+        COMPLETED = 'COMPLETED', 'Выполнен'
     
     profile = models.ForeignKey(Profile, verbose_name='Пользователь', on_delete=models.CASCADE, related_name='order')
     date = models.DateField('Дата заказа')
     amount = models.IntegerField('Сумма заказа')
-    status = models.CharField('Статус', choices=StatusChoices.choices, default=StatusChoices.OK)
+    email = models.EmailField('E-mail')
+    password = models.CharField('Пароль', max_length=255)
+    bill_email = models.EmailField('E-mail для чека')
+    spend_cashback = models.BooleanField('Списать баллы')
+    status = models.CharField('Статус', choices=StatusChoices.choices, default=StatusChoices.CREATED)
+    cashback = models.IntegerField('Кэшбек', default=0)
+    promo_code = models.CharField('Промокод', max_length=255, null=True, blank=True)
+    promo_code_discount = models.IntegerField('Скидка по промокоду', null=True, blank=True)
+    payment_id = models.CharField('ID платежа', null=True, blank=True)
+    payment_url = models.URLField('Ссылка на оплату', null=True, blank=True)
     
     def __str__(self) -> str:
         return f'{self.profile} от {self.date}'
@@ -142,7 +153,8 @@ class OrderProduct(BaseModel):
     product = models.CharField('Позиция', max_length=255)
     product_id = models.CharField('ID товара', max_length=255)
     description = models.CharField('Описание', max_length=255)
-    price = models.IntegerField('Стоимость')
+    original_price = models.IntegerField('Полная стоимость')
+    final_price = models.IntegerField('Конечная стоимость')
 
 
 class PromoCode(BaseModel):

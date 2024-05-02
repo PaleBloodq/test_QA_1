@@ -20,7 +20,7 @@ class CacheProxy:
     atter_connection = '_memoize_signals_connected'
 
     @classmethod
-    def memoize(cls, timeout=300, args_sensitivity=True, depend_models=None, use_dynamic_ttl=False, tags=None):
+    def memoize(cls, timeout=300, args_sensitivity=False, depend_models=None, use_dynamic_ttl=False, tags=None):
         """
         Декоратор для кэширования результатов функций с опциональным автоматическим управлением TTL,
         зависимостями от моделей и тегированием кэшированных данных.

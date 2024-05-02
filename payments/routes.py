@@ -3,11 +3,24 @@ from pydantic import ValidationError
 from aiohttp import web
 import utils
 
-async def get_url(request: web.Request):
+
+async def create_payment(request: web.Request):
     try:
         data = await request.json()
         data = utils.Order(**data)
     except (JSONDecodeError, ValidationError):
         return web.Response(status=400)
-    payment_url = await utils.get_url(data)
-    return web.json_response({'payment_url': payment_url})
+    payment = await utils.create_payment(data)
+    if payment:
+        return web.json_response(payment.model_dump(mode='json'))
+
+
+async def get_payment(request: web.Request):
+    try:
+        data = await request.json()
+        payment_id = data.get('PaymentId')
+    except (JSONDecodeError, ValidationError):
+        return web.Response(status=400)
+    status = await utils.get_payment(payment_id)
+    if status:
+        return web.json_response(status)
