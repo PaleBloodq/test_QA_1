@@ -4,11 +4,12 @@ import uvicorn
 
 
 async def start():
-    STAGE = os.environ.get('STAGE', 'test')
-    HOST = 'localhost' if STAGE == 'test' else '0.0.0.0'
-    PORT = int(os.environ.get('BACKEND_PORT'))
-    
-    config = uvicorn.Config("settings.asgi:app", host=HOST, port=PORT, log_level="info")
+    config = uvicorn.Config(
+        "settings.asgi:app",
+        host=os.environ.get('BACKEND_HOST'),
+        port=os.environ.get('BACKEND_PORT'),
+        log_level="info",
+    )
     server = uvicorn.Server(config)
     await server.serve()
 
