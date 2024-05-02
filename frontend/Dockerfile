@@ -4,7 +4,7 @@ ENV NODE_OPTIONS="--max-old-space-size=4096"
 COPY /local.env /frontend/.env.production
 WORKDIR /frontend
 
-COPY frontend .
+COPY . .
 
 RUN npm install
 RUN npx vite build
