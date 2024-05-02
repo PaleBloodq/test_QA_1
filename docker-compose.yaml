@@ -32,7 +32,7 @@ services:
     volumes:
       - ./backend:/backend
       - ./rsa:/backend/rsa
-    command: [ "python", "start_service.py" ]
+    command: sh -c "manage.sh && python start_service.py"
 
 
   product_parser:
