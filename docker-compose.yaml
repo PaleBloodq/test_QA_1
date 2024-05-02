@@ -24,6 +24,7 @@ services:
     image: $CI_REGISTRY_IMAGE/backend
     depends_on:
       - postgres
+      - redis
     env_file:
       - ./local.env
     environment:
@@ -62,5 +63,11 @@ services:
     env_file:
       - ./local.env
     command: [ "serve", "-s", "dist", "-l", "8050" ]
+
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
 volumes:
   postgres_data:

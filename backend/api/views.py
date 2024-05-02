@@ -3,11 +3,17 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from api import models, serializers, utils
+from . import models, serializers, utils
+from .cache_api import CacheProxy
+
 
 class GetCategories(APIView):
     def get(self, request: Request):
-        response = [
+        return Response(self.getter())
+
+    @CacheProxy.memoize(timeout=3600, depend_models=[models.Product, models.Tag])
+    def getter(self):
+        return [
             {
                 'tag': tag.database_name,
                 'name': tag.name,
@@ -16,8 +22,6 @@ class GetCategories(APIView):
                     many=True,
                 ).data,
             } for tag in models.Tag.objects.all()]
-        return Response(response)
-
 
 class GetProduct(APIView):
     def get(self, request: Request, product_id: str):
@@ -37,7 +41,11 @@ class GetPublication(APIView):
 
 class GetFilters(APIView):
     def get(self, request: Request):
-        response = {
+        return Response(self.getter())
+
+    @CacheProxy.memoize(timeout=3600, depend_models=[models.Platform, models.Language, models.ProductPublication])
+    def getter(self):
+        return {
             'platforms': serializers.PlatformSerializer(
                 models.Platform.objects.all(),
                 many=True,
@@ -49,33 +57,35 @@ class GetFilters(APIView):
             'minPrice': models.ProductPublication.objects.latest('-price').price,
             'maxPrice': models.ProductPublication.objects.latest('price').price,
         }
-        return Response(response)
 
 
 class SearchProducts(APIView):
     def post(self, request: Request):
-        offset = request.data.get('offset', 0)
-        limit = request.data.get('limit', 20)
+        return Response(self.getter(request.data))
+
+    @CacheProxy.memoize(timeout=3600,depend_models=[models.Platform, models.Language, models.Product])
+    def getter(self, data):
+        offset = data.get('offset', 0)
+        limit = data.get('limit', 20)
         query = {}
-        if request.data.get('minPrice'):
-            query['price__gte'] = request.data.get('minPrice')
-        if request.data.get('maxPrice'):
-            query['price__lte'] = request.data.get('maxPrice')
-        if request.data.get('platforms'):
-            query['platforms__in'] = request.data.get('platforms')
-        if request.data.get('languages'):
-            query['product__languages__in'] = request.data.get('languages')
-        if request.data.get('q'):
-            query['product__title__iregex'] = request.data.get('q')
+        if data.get('minPrice'):
+            query['price__gte'] = data.get('minPrice')
+        if data.get('maxPrice'):
+            query['price__lte'] = data.get('maxPrice')
+        if data.get('platforms'):
+            query['platforms__in'] = data.get('platforms')
+        if data.get('languages'):
+            query['product__languages__in'] = data.get('languages')
+        if data.get('q'):
+            query['product__title__iregex'] = data.get('q')
         if query:
             instance = models.ProductPublication.objects.filter(**query).distinct()[offset:limit]
         else:
             instance = models.ProductPublication.objects.all()[offset:limit]
-        response = serializers.SingleProductPublicationSerializer(
+        return serializers.SingleProductPublicationSerializer(
             instance,
             many=True,
         ).data
-        return Response(response)
 
 
 class GetToken(APIView):
