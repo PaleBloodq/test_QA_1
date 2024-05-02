@@ -117,6 +117,7 @@ ADMIN_TOOLS_INDEX_DASHBOARD = 'custom_admin.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'custom_admin.dashboard.CustomAppIndexDashboard'
 ADMIN_TOOLS_MENU = 'custom_admin.menu.CustomMenu'
 
+FORCE_SCRIPT_NAME = os.environ.get('DJANGO_BASE_URL', '/')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_ROOT.mkdir(exist_ok=True)
