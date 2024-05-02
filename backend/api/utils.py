@@ -79,3 +79,13 @@ def auth_required(func):
 def hash_product_publication(product_id: int, title: str, platforms: list[str]):
     to_hash = f'{product_id} {title} {platforms}'
     return md5(to_hash.encode('utf-8')).hexdigest()
+
+
+def check_promo_code(promo_code: str | None) -> int | None:
+    if promo_code:
+        promo = models.PromoCode.objects.filter(
+            promo_code=promo_code,
+            expiration__gte=datetime.now()
+        ).first()
+        if promo:
+            return promo.discount

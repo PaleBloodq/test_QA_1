@@ -78,7 +78,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://6379/1",
+        "LOCATION": f"redis://redis/1",
     }
 }
 AUTH_PASSWORD_VALIDATORS = [

@@ -9,7 +9,8 @@ def main():
     PORT = int(os.environ.get('PAYMENTS_PORT'))
     
     app = web.Application()
-    app.router.add_post('/get_url', routes.get_url)
+    app.router.add_post('/create_payment', routes.create_payment)
+    app.router.add_post('/get_payment', routes.get_payment)
     try:
         web.run_app(app, host=HOST, port=PORT)
     except KeyboardInterrupt:
