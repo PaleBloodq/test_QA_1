@@ -33,7 +33,7 @@ services:
     volumes:
       - ./backend:/backend
       - ./rsa:/backend/rsa
-    command: sh -c "manage.sh && python start_service.py"
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py createsuperuser --username admin --email admin@mail.ru --noinput && python manage.py collectstatic --noinput && python start_service.py"
 
 
   product_parser:
