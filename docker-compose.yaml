@@ -61,8 +61,6 @@ services:
     image: $CI_REGISTRY_IMAGE/frontend
     env_file:
       - ./local.env
-    volumes:
-      - ./frontend:/frontend
     command: [ "serve", "-s", "dist", "-l", "8050" ]
 volumes:
   postgres_data:
