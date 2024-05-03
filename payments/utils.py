@@ -1,15 +1,19 @@
 import os
 import hashlib
 import aiohttp
-from pydantic import BaseModel, UUID4, NonNegativeFloat, Field, field_serializer
+from pydantic import BaseModel, UUID4, NonNegativeFloat, Field
 
 
 TERMINAL_KEY = os.environ.get('TINKOFF_TERMINAL_KEY')
 SECRET_KEY = os.environ.get('TINKOFF_SECRET_KEY')
 if not (TERMINAL_KEY and SECRET_KEY):
     raise
+
 API_URL = 'https://securepay.tinkoff.ru/v2/'
 
+BACKEND_URL = f'{os.environ.get("BACKEND_SCHEMA")}://{os.environ.get("BACKEND_HOST")}'
+if os.environ.get("BACKEND_PORT"):
+    BACKEND_URL += f':{os.environ.get("BACKEND_PORT")}'
 
 class Order(BaseModel):
     order_id: UUID4
@@ -36,6 +40,10 @@ async def get_token(payment_data: dict):
     for key in payment_data:
         if isinstance(payment_data[key], str):
             token_dict[key] = payment_data[key]
+        elif isinstance(payment_data[key], bool):
+            token_dict[key] = 'true' if payment_data[key] else 'false'
+        elif isinstance(payment_data[key], int):
+            token_dict[key] = str(payment_data[key])
     token = ''.join(token_dict[key] for key in sorted(token_dict))
     return hashlib.sha256(token.encode('utf-8')).hexdigest()
 
@@ -50,6 +58,7 @@ async def create_payment(order: Order) -> Payment | None:
         'PayType': 'O',
         'Recurrent': 'N',
         'CustomerKey': str(order.customer_telegram_id),
+        'NotificationURL': f'{BACKEND_URL}/api/order/update_status/',
     }
     payment_data['Token'] = await get_token(payment_data)
     async with aiohttp.ClientSession() as session:
@@ -70,3 +79,11 @@ async def get_payment(payment_id: str) -> dict:
     async with aiohttp.ClientSession() as session:
         async with session.post(API_URL+'GetState', json=payment_data) as response:
             return await response.json()
+
+
+async def check_token(data: dict) -> bool:
+    token = data.pop('Token', None)
+    if token:
+        expected_token = await get_token(data)
+        return expected_token == token
+    return False

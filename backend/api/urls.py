@@ -27,7 +27,8 @@ urlpatterns = [
             path('check/', views.CheckPromoCode.as_view()),
         ])),
         path('buy/', views.CreateOrder.as_view()),
-        path('chat/', views.ChatMessages.as_view()), 
+        path('chat/', views.ChatMessages.as_view()),
+        path('update_status/', views.UpdateOrderStatus.as_view()),
     ])),
     path('profile/', include([
         path('update/', views.UpdateProfile.as_view()),

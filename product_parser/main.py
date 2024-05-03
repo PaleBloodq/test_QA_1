@@ -4,14 +4,14 @@ import routes
 
 
 def main():
-    STAGE = os.environ.get('STAGE', 'test')
-    HOST = 'localhost' if STAGE == 'test' else '0.0.0.0'
-    PORT = int(os.environ.get('PRODUCT_PARSER_PORT'))
-    
     app = web.Application()
     app.router.add_post('/parse', routes.parse)
     try:
-        web.run_app(app, host=HOST, port=PORT)
+        web.run_app(
+            app,
+            host=os.environ.get('PRODUCT_PARSER_HOST'),
+            port=os.environ.get('PRODUCT_PARSER_PORT'),
+        )
     except KeyboardInterrupt:
         pass
 

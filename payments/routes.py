@@ -24,3 +24,11 @@ async def get_payment(request: web.Request):
     status = await utils.get_payment(payment_id)
     if status:
         return web.json_response(status)
+
+async def check_token(request: web.Request):
+    try:
+        data = await request.json()
+    except JSONDecodeError:
+        return web.Response(status=400)
+    token_correct = await utils.check_token(data)
+    return web.json_response({'TokenCorrect': token_correct})
