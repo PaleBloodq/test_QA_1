@@ -36,7 +36,6 @@ export default function DonationPage() {
     }
 
 
-    console.log(data)
 
     return (
         <Container>

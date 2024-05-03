@@ -3,19 +3,23 @@ import { ProductType } from "../types/ProductType";
 
 export const productsApi = createApi({
   reducerPath: "productsApi",
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_DATABASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
   endpoints: (builder) => ({
     getCategoryProducts: builder.query({
-      query: () => `/catalog/category/?format=json`,
+      query: () => `/catalog/category/`,
     }),
     getAnyProduct: builder.query<ProductType, string>({
       query: (id) => `/product/${id}`,
     }),
-    getSearchProducts: builder.query({
-      query: () => `/searchItems/`,
+    getSearchProducts: builder.mutation({
+      query: ({ params }) => ({
+        url: `/catalog/search/list/`,
+        method: "POST",
+        body: params,
+      }),
     }),
     getSearchFilters: builder.query({
-      query: () => `/filters`,
+      query: () => `/catalog/filters/`,
     }),
   }),
 });
@@ -23,6 +27,6 @@ export const productsApi = createApi({
 export const {
   useGetCategoryProductsQuery,
   useGetAnyProductQuery,
-  useGetSearchProductsQuery,
+  useGetSearchProductsMutation,
   useGetSearchFiltersQuery,
 } = productsApi;

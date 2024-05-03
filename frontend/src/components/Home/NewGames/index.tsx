@@ -2,7 +2,6 @@ import lightningIcon from "@icons/lightning.svg";
 import GamesSlider from "../../common/GamesSlider";
 import useIsLoading from "../../../hooks/useIsLoading";
 import { SectionType } from "../../../types/SectionType";
-import { replaceUrl } from "../../../helpers/replaceUrl";
 
 export default function NewGames({ data }: { data: SectionType }) {
 

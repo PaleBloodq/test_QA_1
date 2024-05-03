@@ -7,7 +7,7 @@ import SelectPrice from '../../components/common/SelectPrice';
 import Tag from '../../components/common/Tag';
 import { currentPriceSelector } from '../../features/Game/currentPriceSelectors';
 import { setCurrentPrice } from '../../features/Game/currentPriceSlice';
-import { setSelectedPublication } from '../../features/Game/publicationSlice';
+import { setSelectedPlatform, setSelectedPublication } from '../../features/Game/publicationSlice';
 import { selectedPlatformSelector, selectedPublicationSelector } from '../../features/Game/publicationSelectors';
 import { isNew } from '../../hooks/useIsNew';
 import { getDiscount } from '../../hooks/getDiscount';
@@ -20,11 +20,12 @@ import AddToCartButton from '../../components/common/AddToCartButton';
 import { Publication } from '../../types/PublicationType';
 import { replaceUrl } from '../../helpers/replaceUrl';
 import { ProductType } from '../../types/ProductType';
+import calcCashback from '../../helpers/calcCashback';
 
 export default function Game() {
     const dispatch = useDispatch();
-    const { gameId } = useParams();
-    const { data = [] as ProductType, isLoading } = useGetAnyProductQuery(gameId);
+    const { gameId, pubId } = useParams();
+    const { data = {} as ProductType, isLoading } = useGetAnyProductQuery(gameId);
     const selectedPublication = useSelector(selectedPublicationSelector);
     const selectedPlatform = useSelector(selectedPlatformSelector);
     const currentPrice = useSelector(currentPriceSelector);
@@ -35,6 +36,11 @@ export default function Game() {
             dispatch(setSelectedPublication(data.publications[0].id));
         }
     }, [data, dispatch]);
+
+    useEffect(() => {
+        dispatch(setSelectedPublication(pubId))
+        dispatch(setSelectedPlatform(data?.publications?.find((pub) => pub.id === pubId).platforms[0]));
+    }, [isLoading])
 
     useEffect(() => {
         const publication = data?.publications?.find((pub: Publication) => pub.id === selectedPublication);
@@ -67,7 +73,6 @@ export default function Game() {
 
     const includes = currentPublication?.includes?.split("\r\n") || []
 
-    console.log(cartItem)
 
 
     return (
@@ -91,7 +96,7 @@ export default function Game() {
                             {currentPublication?.ps_plus_discount === null && currentPublication?.discount > 0 ? (
                                 <Tag type="discount">-{currentPublication.discount}%</Tag>
                             ) : null}
-                            {currentPublication?.cashback ? <Tag type="cashback">Кэшбэк: {currentPublication.cashback}₽</Tag> : null}
+                            {currentPublication?.cashback ? <Tag type="cashback">Кэшбэк: {calcCashback(currentPrice, currentPublication.cashback)} ₽</Tag> : null}
                         </div>
                     </div>
                     {currentPublication?.discount ? (

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Publication } from "../../../../types/PublicationType"
-import { selectedPlatformSelector, selectedPublicationSelector } from "../../../../features/Game/publicationSelectors"
+import { selectedPlatformSelector } from "../../../../features/Game/publicationSelectors"
 import { setSelectedPlatform } from "../../../../features/Game/publicationSlice"
 import { useEffect } from "react"
 
@@ -13,7 +13,6 @@ export default function SelectPlatform({ publications }: SelectPlatformType) {
     const dispatch = useDispatch()
 
     const selectedPlatform = useSelector(selectedPlatformSelector)
-    const selectedPublication = useSelector(selectedPublicationSelector)
 
 
     const platforms: string[] = []

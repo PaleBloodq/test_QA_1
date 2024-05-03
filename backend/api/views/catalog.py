@@ -5,11 +5,17 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.db.models import Sum
 from api import models, serializers, utils
+from api.cache_api import CacheProxy
 
 
 class GetCategories(APIView):
     def get(self, request: Request):
-        response = [
+        return Response(self.get_categorys())
+
+    @staticmethod
+    @CacheProxy.memoize(timeout=3600, depend_models=[models.Product, models.Tag])
+    def get_categorys():
+        return [
             {
                 'tag': tag.database_name,
                 'name': tag.name,
@@ -18,7 +24,6 @@ class GetCategories(APIView):
                     many=True,
                 ).data,
             } for tag in models.Tag.objects.all()]
-        return Response(response)
 
 
 class GetProduct(APIView):
@@ -39,7 +44,12 @@ class GetPublication(APIView):
 
 class GetFilters(APIView):
     def get(self, request: Request):
-        response = {
+        return Response(self.get_filters())
+
+    @staticmethod
+    @CacheProxy.memoize(timeout=3600, depend_models=[models.Platform, models.Language, models.ProductPublication])
+    def get_filters():
+        return {
             'platforms': serializers.PlatformSerializer(
                 models.Platform.objects.all(),
                 many=True,
@@ -51,7 +61,6 @@ class GetFilters(APIView):
             'minPrice': models.ProductPublication.objects.latest('-price').price,
             'maxPrice': models.ProductPublication.objects.latest('price').price,
         }
-        return Response(response)
 
 
 class SearchProducts(APIView):

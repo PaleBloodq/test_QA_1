@@ -2,6 +2,6 @@ FROM python:3.10-slim
 
 WORKDIR /payments
 
-COPY . payments/
+COPY . .
 
-RUN pip install -r ./payments/requirements.txt
+RUN pip install -r requirements.txt

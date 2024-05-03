@@ -7,8 +7,10 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 DEBUG = True if os.environ['DJANGO_DEBUG'] == '1' else False
 
-ALLOWED_HOSTS = [host for host in os.environ['DJANGO_ALLOWED_HOSTS'].split(',')]
-
+ALLOWED_HOSTS = [host for host in os.environ.get('DJANGO_ALLOWED_HOSTS', []).split(',')]
+CSRF_TRUSTED_ORIGINS = [host for host in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', []).split(',')]
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
 INSTALLED_APPS = [
     'admin_tools',
     'admin_tools.menu',
@@ -22,11 +24,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "corsheaders",
     'rest_framework',
     'api',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,14 +68,19 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['POSTGRES_NAME'],
+        'NAME': os.environ['POSTGRES_DB'],
         'USER': os.environ['POSTGRES_USER'],
         'PASSWORD': os.environ['POSTGRES_PASSWORD'],
         'HOST': os.environ['POSTGRES_HOST'],
         'PORT': os.environ['POSTGRES_PORT'],
     }
 }
-
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://redis/1",
+    }
+}
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -100,7 +109,6 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
@@ -109,5 +117,8 @@ ADMIN_TOOLS_INDEX_DASHBOARD = 'custom_admin.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'custom_admin.dashboard.CustomAppIndexDashboard'
 ADMIN_TOOLS_MENU = 'custom_admin.menu.CustomMenu'
 
-MEDIA_URL='/media/'
+FORCE_SCRIPT_NAME = os.environ.get('DJANGO_BASE_URL', '/')
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT.mkdir(exist_ok=True)
+STATIC_ROOT.mkdir(exist_ok=True)

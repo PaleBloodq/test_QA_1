@@ -15,7 +15,7 @@ export default function CheckBox({ children, checked, onClick }: Props) {
                     <rect x="0.5" y="0.5" width="20" height="20" rx="5.5" fill="none" />
                 </svg>
             }
-            <p className="text-subtitle-info">{children}</p>
+            <p className="text-subtitle-info cursor-pointer select-none">{children}</p>
         </div>
     )
 }
