@@ -12,7 +12,7 @@ def main():
         web.run_app(
             app,
             host=os.environ.get('PAYMENTS_HOST'),
-            port=os.environ.get('PAYMENTS_PORT'),
+            port=int(os.environ.get('PAYMENTS_PORT')),
         )
     except KeyboardInterrupt:
         pass

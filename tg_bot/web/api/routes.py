@@ -3,7 +3,7 @@ from aiohttp.abc import Request
 from aiohttp.web_response import Response
 
 from tg_bot import bootstrap
-from tg_bot.web.api.models import NewMessage, NewPayment
+from .models import NewMessage, NewPayment
 
 bot = bootstrap.MyBot().getInstance()
 

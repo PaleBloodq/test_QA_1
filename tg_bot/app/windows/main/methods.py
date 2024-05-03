@@ -1,6 +1,6 @@
 from aiogram_dialog import DialogManager
 
-from tg_bot import bootstrap
+import bootstrap
 
 
 async def getter_token(dialog_manager: DialogManager, **kwargs):

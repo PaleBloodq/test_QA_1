@@ -4,8 +4,8 @@ from aiogram.dispatcher.event.bases import UNHANDLED
 from aiogram_dialog import Dialog, LaunchMode
 from aiogram_dialog.api.exceptions import UnknownIntent
 
-from tg_bot import bootstrap
-from tg_bot.app.windows.main.menu import MainMenuWin
+import bootstrap
+from .windows.main.menu import MainMenuWin
 
 bot = bootstrap.MyBot().getInstance()
 

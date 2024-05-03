@@ -2,8 +2,8 @@ from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import WebApp
 from aiogram_dialog.widgets.text import Const, Format
 
-from tg_bot.app.windows.main.methods import getter_token
-from tg_bot.states.states import MainSG
+from .methods import getter_token
+from states.states import MainSG
 
 MainMenuWin = [
     Window(
