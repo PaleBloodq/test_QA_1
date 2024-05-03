@@ -80,7 +80,7 @@ class ApiWrapper:
 
     @classmethod
     async def get_token(cls, user_id: int) -> Union[bool, dict]:
-        data = {'user_id': user_id}
+        data = {'telegram_id': user_id}
         return await cls._make_request('POST', '/api/token/get/', data=data)
 
     @classmethod

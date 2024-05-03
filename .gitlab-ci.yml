@@ -42,8 +42,6 @@
         fi
       - |
         if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA frontend/) ]]; then
-          echo "Current VITE_BASE_URL: $VITE_BASE_URL"
-          echo "Current VITE_API_URL: $VITE_API_URL"
           echo "VITE_BASE_URL=$VITE_BASE_URL" > ./frontend/.env.production
           echo "VITE_API_URL=$VITE_API_URL" >> ./frontend/.env.production
           docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
@@ -56,6 +54,8 @@
         - payments/**/*
         - frontend/**/*
         - tg_bot/**/*
+    rules:
+      - if: '$CI_COMMIT_BRANCH == "dev"'
 
   deploy:
     tags:
