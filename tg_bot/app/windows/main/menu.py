@@ -7,7 +7,7 @@ from states.states import MainSG
 
 MainMenuWin = [
     Window(
-        WebApp(url=Format('https://chatlabs.site/aokibot/frontend?token={token}'), text=Const('Магазин')),
+        WebApp(url=Format('https://chatlabs.site/aokibot/frontend/?token={token}'), text=Const('Магазин')),
         Const('Перейдите в магазин'),
         getter=getter_token,
         state=MainSG.main_menu,
