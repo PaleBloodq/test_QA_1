@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom"
 import Tag from "../../../components/common/Tag"
 import { replaceUrl } from "../../../helpers/replaceUrl"
-import { getDiscount } from "../../../hooks/getDiscount"
 
 export default function SearchItem({ item }: { item: any }) {
 
@@ -27,11 +26,11 @@ export default function SearchItem({ item }: { item: any }) {
             {
                 item?.discount ? (
                     <div className="flex gap-2">
-                        <h3 className="price-small">{getDiscount((item?.price), (item?.discount))} ₽</h3>
+                        <h3 className="price-small">{item.final_price || item.original_price} ₽</h3>
                         <Tag type="discount">-{item?.discount}%</Tag>
                     </div>
                 ) : (
-                    <h3 className="price-small">{item?.price} ₽</h3>
+                    <h3 className="price-small">{item?.original_price} ₽</h3>
                 )
             }
         </Link>

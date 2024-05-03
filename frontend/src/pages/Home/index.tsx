@@ -8,10 +8,13 @@ import Container from "../../components/common/Container";
 import Navigation from "../../components/common/Navigation";
 import { useGetCategoryProductsQuery } from "../../services/productsApi";
 import { SectionType } from "../../types/SectionType";
+import cookie from 'cookiejs';
 
 export default function Home() {
 
     const { data = [] } = useGetCategoryProductsQuery({})
+
+    cookie.set('token', new URL(window.location.href).searchParams.get('token'))
 
     return (
         <Container>

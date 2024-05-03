@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { replaceUrl } from '../../../helpers/replaceUrl'
-import { getDiscount } from '../../../hooks/getDiscount'
 import { ProductType } from '../../../types/ProductType'
 import Tag from '../Tag'
 
@@ -13,8 +12,8 @@ export default function SubscriptionCard({ subscription }: { subscription: Produ
             <div className='flex gap-2'>
                 <h3 className='price-small'>
                     {subscription.publications[0].discount
-                        ? getDiscount(subscription.publications[0].price, subscription.publications[0].discount)
-                        : subscription.publications[0].price} ₽
+                        ? subscription.publications[0].final_price
+                        : subscription.publications[0].original_price} ₽
                 </h3>
                 {subscription.publications[0].discount !== null && <Tag type="discount">-{subscription.publications[0].discount}%</Tag>}
             </div>

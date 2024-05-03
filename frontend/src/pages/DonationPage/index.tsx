@@ -21,7 +21,7 @@ export default function DonationPage() {
     useEffect(() => {
         setCurrentSubscription(data?.publications?.find((item) => item.quantity === selectedQuantity))
     }, [selectedQuantity])
-    const currentPrice = currentPublicaton?.price || 0
+    const currentPrice = currentPublicaton?.original_price || 0
 
     const cartItem: CartItemType = {
         id: currentPublicaton?.id,

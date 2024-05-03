@@ -39,7 +39,7 @@ export default function Subscription() {
         setCurrentSubscription(data.publications?.find((sub: Publication) => sub.id === selectedSubscription))
     }, [selectedSubscription])
 
-    const currentPrice = currentSubscription?.price
+    const currentPrice = currentSubscription?.original_price
 
 
 

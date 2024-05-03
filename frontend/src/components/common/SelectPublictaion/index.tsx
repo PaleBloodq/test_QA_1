@@ -3,7 +3,6 @@ import SelectPlatform from "./SelectPlatform"
 import { useDispatch, useSelector } from "react-redux"
 import { selectedPlatformSelector, selectedPublicationSelector } from "../../../features/Game/publicationSelectors"
 import { setSelectedPublication } from "../../../features/Game/publicationSlice"
-import { getDiscount } from "../../../hooks/getDiscount"
 
 type SelectPublicationType = {
     publications: Publication[],
@@ -40,7 +39,7 @@ export default function SelectPublication({ publications }: SelectPublicationTyp
                         >
                             <h1 className="text-subtitle">{publication.title}</h1>
                             <h2 className="price-small">
-                                {getDiscount(publication.price, publication.discount)}₽
+                                {publication.final_price}₽
                             </h2>
                         </button>
                     ))}

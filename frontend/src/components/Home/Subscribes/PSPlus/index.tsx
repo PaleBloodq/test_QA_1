@@ -31,7 +31,7 @@ export default function PSPlus({ data = [] }: { data: ProductType[] }) {
                             <img src={replaceUrl(subscription[1]?.find((pub: Publication) => pub.duration === duration)?.preview)} alt="preview" />
                             <div className="flex flex-col gap-2 items-start">
                                 <h1 className="text-subtitle">{subscription[0]}</h1>
-                                <h2 className="price-small">{subscription[1]?.find((pub: Publication) => pub.duration === duration)?.price} ₽</h2>
+                                <h2 className="price-small">{subscription[1]?.find((pub: Publication) => pub.duration === duration)?.original_price} ₽</h2>
                             </div>
                             <div className="self-start">
                                 <svg className="fill-[#606D7B] dark:fill-[#606D7B]" width="23" height="23" viewBox="0 0 23 23" xmlns=" http://www.w3.org/2000/svg">
