@@ -45,7 +45,7 @@ class MyDispatcher(metaclass=MetaSingleton):
 
 class ApiWrapper:
     session: ClientSession = None
-    api_root_url: str = f"http://{os.environ.get('BACKEND_HOST','')}:{os.environ.get('BACKEND_PORT', '')}"
+    api_root_url: str = f"http://{os.environ.get('BACKEND_HOST')}:{os.environ.get('BACKEND_PORT')}"
     timeout: int = 10
 
     @classmethod
