@@ -23,6 +23,7 @@ export default function Profile() {
         updateUserData({ updatedData })
     }
 
+
     useEffect(() => {
         dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
     }, [])
@@ -80,7 +81,7 @@ export default function Profile() {
                     </div>
                     :
                     <div className="w-full flex flex-col mt-7 gap-[13px]">
-                        {!isOrdersLoading && ordersData?.map((order: OrderType, index: number) =>
+                        {ordersData.length > 0 ? ordersData?.map((order: OrderType, index: number) =>
                             <div key={index} className="w-full custom-border p-5 flex flex-col">
                                 <div className="flex w-full justify-between mb-6">
                                     <h1 className="text-title">Заказ от {order.date}</h1>
@@ -101,7 +102,10 @@ export default function Profile() {
                                     )}
                                 </div>
                             </div>
-                        )}
+                        ) :
+                            (<div className="h-96 flex justify-center">
+                                <h1 className="text-title">Тут будут ваши заказаы</h1>
+                            </div>)}
                     </div>
                 }
             </> : <>
@@ -110,7 +114,8 @@ export default function Profile() {
                     <h1 className="text-header text-center">Профиль появится автоматически после вашего первого заказа</h1>
                     <Button onClick={() => navigate(-1)}>Вернуться к каталогу</Button>
                 </div>
-            </>}
-        </Container>
+            </>
+            }
+        </Container >
     )
 }

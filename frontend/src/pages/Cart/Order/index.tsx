@@ -12,7 +12,7 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
 
 
     const { hasAccount, accountEmail, accountPassword, reciptEmail, rememberData, promocode, items } = useSelector(cartSelector)
-    const [makeOrder] = useMakeOrderMutation();
+    const [makeOrder, { data: orderData }] = useMakeOrderMutation();
     const [checkPromocode, { data: promoData }] = useCheckPromocodeMutation();
     // const { billEmail } = useSelector(userSelector)
     const [sameEmail, setSameEmail] = useState(false)
@@ -27,8 +27,8 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
         cart: items?.map((item) => item.id),
         spendCashback: useCashback,
         hasAccount: hasAccount,
-        accountEmail: hasAccount ? accountEmail : '',
-        accountPassword: hasAccount ? accountPassword : '',
+        accountEmail: hasAccount ? accountEmail : null,
+        accountPassword: hasAccount ? accountPassword : null,
         billEmail: reciptEmail,
         promoCode: promocode,
         rememberAccount: rememberData
@@ -38,10 +38,18 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
         makeOrder(orderObject)
     }
 
+    console.log(orderData)
+
     function checkIsValidPromo() {
         console.log({ promoCode: promocode })
         checkPromocode({ promoCode: promocode })
     }
+
+    useEffect(() => {
+        if (orderData?.PaymentUrl) {
+            window.location.href = orderData?.PaymentUrl
+        }
+    }, [orderData])
 
     console.log(promoData)
 
