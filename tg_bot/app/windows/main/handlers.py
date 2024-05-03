@@ -3,8 +3,8 @@ import re
 from aiogram import types
 from aiogram_dialog import DialogManager
 
-from tg_bot import bootstrap
-from tg_bot.states.states import MainSG
+import bootstrap
+from states.states import MainSG
 
 
 async def start(message: types.Message, dialog_manager: DialogManager | None = None):

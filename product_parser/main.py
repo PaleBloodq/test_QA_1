@@ -10,7 +10,7 @@ def main():
         web.run_app(
             app,
             host=os.environ.get('PRODUCT_PARSER_HOST'),
-            port=os.environ.get('PRODUCT_PARSER_PORT'),
+            port=int(os.environ.get('PRODUCT_PARSER_PORT')),
         )
     except KeyboardInterrupt:
         pass
