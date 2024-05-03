@@ -7,8 +7,8 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 DEBUG = True if os.environ['DJANGO_DEBUG'] == '1' else False
 
-ALLOWED_HOSTS = [host for host in os.environ.get('DJANGO_ALLOWED_HOSTS', []).split(',')]
-CSRF_TRUSTED_ORIGINS = [host for host in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', []).split(',')]
+ALLOWED_HOSTS = [host for host in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')]
+CSRF_TRUSTED_ORIGINS = [host for host in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', '').split(',')]
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
 INSTALLED_APPS = [
