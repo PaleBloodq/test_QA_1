@@ -6,6 +6,7 @@ from django.db.models import QuerySet
 from api import models, serializers
 import requests
 
+from settings import settings
 
 PRODUCT_PARSER_URL = f'{os.environ.get("PRODUCT_PARSER_SCHEMA")}://{os.environ.get("PRODUCT_PARSER_HOST")}'
 if os.environ.get("PRODUCT_PARSER_PORT"):
@@ -78,8 +79,8 @@ class ChatMessageInline(admin.TabularInline):
     
     def sender(self, obj: models.ChatMessage):
         if obj.manager:
-            return mark_safe(f'<a href="/admin/auth/user/{obj.manager.pk}/">Менеджер {obj.manager}</a>')
-        return mark_safe(f'<a href="/admin/api/profile/{obj.order.profile.id}/">Клиент {obj.order.profile.telegram_id}</a>')
+            return mark_safe(f'<a href="{settings.FORCE_SCRIPT_NAME}/admin/auth/user/{obj.manager.pk}/">Менеджер {obj.manager}</a>')
+        return mark_safe(f'<a href="{settings.FORCE_SCRIPT_NAME}/backend/admin/api/profile/{obj.order.profile.id}/">Клиент {obj.order.profile.telegram_id}</a>')
     
     def has_change_permission(self, request: HttpRequest, obj) -> bool:
         return False
@@ -94,7 +95,7 @@ class OrderAdmin(admin.ModelAdmin):
     
     @admin.display(description='Чат')
     def chat(self, obj: models.Order):
-        return mark_safe(f'<a href="/admin/chat/{obj.id}/">Открыть чат</a>')
+        return mark_safe(f'<a href="{settings.FORCE_SCRIPT_NAME}/admin/chat/{obj.id}/">Открыть чат</a>')
 
 
 @admin.register(models.PromoCode, site=admin.site)

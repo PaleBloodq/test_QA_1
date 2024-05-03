@@ -1,15 +1,19 @@
 import os
 import hashlib
 import aiohttp
-from pydantic import BaseModel, UUID4, NonNegativeFloat, Field, field_serializer
+from pydantic import BaseModel, UUID4, NonNegativeFloat, Field
 
 
 TERMINAL_KEY = os.environ.get('TINKOFF_TERMINAL_KEY')
 SECRET_KEY = os.environ.get('TINKOFF_SECRET_KEY')
 if not (TERMINAL_KEY and SECRET_KEY):
     raise
+
 API_URL = 'https://securepay.tinkoff.ru/v2/'
 
+BACKEND_URL = f'{os.environ.get("BACKEND_SCHEMA")}://{os.environ.get("BACKEND_HOST")}'
+if os.environ.get("BACKEND_PORT"):
+    BACKEND_URL += f':{os.environ.get("BACKEND_PORT")}'
 
 class Order(BaseModel):
     order_id: UUID4

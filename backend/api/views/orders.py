@@ -125,3 +125,21 @@ class ChatMessages(APIView):
             )
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateOrderStatus(APIView):
+    def post(self, request: Request):
+        check_token = requests.post(PAYMENTS_URL+'/check_token', json=request.data).json()
+        if check_token.get('TokenCorrect'):
+            order = models.Order.objects.filter(id=request.data.get('OrderId')).first()
+            if order:
+                if request.data.get('Status') == 'CONFIRMED':
+                    order.status = models.Order.StatusChoices.PAID
+                    bot_url = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/payment/access/'
+                    requests.post(bot_url, data={'user_id': order.profile_id,
+                                                 'order_id': order.id})
+                else:
+                    order.status = models.Order.StatusChoices.ERROR
+                order.save()
+            return Response('OK')
+        return Response(status=status.HTTP_400_BAD_REQUEST)
