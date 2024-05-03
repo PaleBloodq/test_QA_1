@@ -44,7 +44,7 @@ export default function Game() {
 
     useEffect(() => {
         const publication = data?.publications?.find((pub: Publication) => pub.id === selectedPublication);
-        const price = publication?.price
+        const price = publication?.original_price
         dispatch(setCurrentPrice(price));
     }, [selectedPublication, selectedPlatform, data]);
 

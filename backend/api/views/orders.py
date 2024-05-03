@@ -135,6 +135,9 @@ class UpdateOrderStatus(APIView):
             if order:
                 if request.data.get('Status') == 'CONFIRMED':
                     order.status = models.Order.StatusChoices.PAID
+                    bot_url = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/payment/access/'
+                    requests.post(bot_url, data={'user_id': order.profile_id,
+                                                 'order_id': order.id})
                 else:
                     order.status = models.Order.StatusChoices.ERROR
                 order.save()

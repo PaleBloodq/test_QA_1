@@ -1,7 +1,8 @@
 export type Publication = {
   id: string;
   title: string;
-  price: number;
+  original_price: number;
+  final_price: number;
   duration: number;
   quantity: number;
   includes: string;

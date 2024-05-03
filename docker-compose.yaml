@@ -62,7 +62,15 @@ services:
     image: $CI_REGISTRY_IMAGE/frontend
     env_file:
       - ./local.env
+    ports:
+      - "8050:8050"
     command: [ "serve", "-s", "dist", "-l", "8050" ]
+
+  tg_bot:
+    image: $CI_REGISTRY_IMAGE/tg_bot
+    env_file:
+      - ./local.env
+    command: [ "python", "main.py" ]
 
   redis:
     image: redis:7.2-alpine

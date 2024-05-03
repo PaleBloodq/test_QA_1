@@ -11,7 +11,7 @@ if not (TERMINAL_KEY and SECRET_KEY):
 
 API_URL = 'https://securepay.tinkoff.ru/v2/'
 
-BACKEND_URL = f'{os.environ.get("BACKEND_SCHEMA")}://{os.environ.get("BACKEND_HOST")}'
+BACKEND_URL = f'{os.environ.get("SERVER_URL")}/{os.environ.get("BACKEND_HOST")}'
 if os.environ.get("BACKEND_PORT"):
     BACKEND_URL += f':{os.environ.get("BACKEND_PORT")}'
 

@@ -1,51 +1,172 @@
 {% extends "admin/base_site.html" %}
 
+{% block extrahead %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<style>
+
+    .input {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    }
+    .input textarea{
+        height: 2em !important;
+    }
+    .chat {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        height: 38rem;
+        z-index: 2;
+        box-sizing: border-box;
+        border-radius: 1rem;
+        background: var(--body-bg);
+        box-shadow: 0 0 8rem 0 rgba(0, 0, 0, 0.1), 0rem 2rem 4rem -3rem rgba(0, 0, 0, 0.5);
+    }
+
+    .chat .messages {
+        padding: 1rem;
+        background: #f7f7f7;
+        background: var(--body-bg);
+        flex-shrink: 2;
+        overflow-y: auto;
+        box-shadow: inset 0 2rem 2rem -2rem rgba(0, 0, 0, 0.05), inset 0 -2rem 2rem -2rem rgba(0, 0, 0, 0.05);
+    }
+
+    .chat .messages .time {
+        font-size: 0.8rem;
+        background: var(--body-fg);
+        padding: 0.25rem 1rem;
+        border-radius: 2rem;
+        color: var(--body-bg);
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    .chat .messages .message {
+        box-sizing: border-box;
+        padding: 0.5rem 1rem;
+        margin: 1rem;
+        background: #fff;
+        border-radius: 1.125rem 1.125rem 1.125rem 0;
+        min-height: 2.25rem;
+        width: -webkit-fit-content;
+        width: -moz-fit-content;
+        width: fit-content;
+        max-width: 66%;
+        box-shadow: 0 0 2rem rgba(0, 0, 0, 0.075), 0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.1);
+        word-wrap: break-word; /* Позволяет словам переноситься на новую строку */
+        white-space: normal; /* Убедитесь, что white-space не наследует nowrap где-то из родительских элементов */
+    }
+
+    .chat .messages .message.manager {
+        margin: 1rem 1rem 1rem auto;
+        border-radius: 1.125rem 1.125rem 0 1.125rem;
+        background: #333;
+        color: white;
+    }
+    .chat .messages .message.client {
+        margin: auto 1rem 1rem 1rem;
+        border-radius: 1.125rem  1.125rem  1.125rem 0;
+        background: var(--secondary);
+        color: white;
+    }
+
+    .chat .input {
+        box-sizing: border-box;
+        flex-basis: 4rem;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        padding: 0 0.5rem 0 1.5rem;
+    }
+
+    .chat .input input {
+        border: none;
+        background-image: none;
+        background-color: white;
+        padding: 0.5rem 1rem;
+        margin-right: 1rem;
+        border-radius: 1.125rem;
+        flex-grow: 2;
+        box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1), 0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.2);
+        font-family: "Red hat Display", sans-serif;
+        font-weight: 400;
+        letter-spacing: 0.025em;
+        color: #333;
+        outline: none;
+    }
+
+    .chat .input input::placeholder {
+        color: #999;
+    }
+</style>
+{% endblock %}
 {% block breadcrumbs %}
 <div class="breadcrumbs">
-  <a href="{% url 'admin:index' %}">Главная</a>
-  &rsaquo; <a href="/admin/chat/">Чаты</a>
+    <a href="{% url 'admin:index' %}">Главная</a>
+    &rsaquo; <a href="/admin/chat/">Чаты</a>
 </div>
 {% endblock %}
 
 {% block content %}
 {% if order %}
-<div class="order-info">
-    <span class="telegram-id">{{ order.profile.telegram_id }}</span>
-    <span class="order-date">{{ order.date }}</span>
-    <span class="order-amount">{{ order.amount }}</span>
-    <span class="order-status">{{ order.status }}</span>
-</div>
-<div class="chat">
-    <form action="" method="POST" id="send-chat-message-form">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Отправить">
-    </form>
-    <a href="/admin/chat/{{ order.id }}">Обновить чат</a>
-    <table>
-        <thead>
-            <tr>
-                <th>Время</th>
-                <th>Отправитель</th>
-                <th>Текст</th>
-            </tr>
-        </thead>
-        <tbody>
+<div class="center">
+    <div class="chat">
+        <div class="messages" id="chat">
             {% for message in order.chat_message.all %}
-            <tr>
-                <td>{{ message.created_at }}</td>
-                <td>
-                {% if message.manager %}
-                    <a href="/admin/auth/user/{{ message.manager.id }}/">Менеджер {{ message.manager }}</a>
-                {% else %}
-                    <a href="/admin/api/profile/{{ order.profile.id }}/">Клиент {{ order.profile.telegram_id }}</a>
-                {% endif %}
-                </td>
-                <td>{{ message.text }}</td>
-            </tr>
+            {% ifchanged message.created_at|date:"Y-m-d" %}
+            <div class="time">
+                {{ message.created_at|date:"M d, Y" }}
+            </div>
+            {% endifchanged %}
+            {% if message.manager %}
+            <div class="message manager">
+                {{ message.text }}
+            </div>
+            {% else %}
+            <div class="message client">
+                {{ message.text }}
+            </div>
+            {% endif %}
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+        <div class="input">
+            <form action="" method="POST" id="send-chat-message-form">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" value="Отправить">
+            </form>
+        </div>
+    </div>
 </div>
 {% endif %}
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#send-chat-message-form').on('submit', function (e) {
+            e.preventDefault(); // Отменяем стандартную отправку формы
+            var formData = $(this).serialize(); // Сериализуем данные формы
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'), // или укажите URL, куда отправлять запрос
+                data: formData,
+                success: function (response) {
+                    // Обработка успешного получения ответа
+                    alert('Сообщение отправлено!');
+                    // Добавьте код для добавления сообщения в чат без перезагрузки страницы
+                },
+                error: function () {
+                    alert('Ошибка при отправке сообщения.');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
