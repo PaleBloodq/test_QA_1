@@ -6,20 +6,20 @@ export const productsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
   endpoints: (builder) => ({
     getCategoryProducts: builder.query({
-      query: () => `/catalog/category/`,
+      query: () => `api/catalog/category/`,
     }),
     getAnyProduct: builder.query<ProductType, string>({
-      query: (id) => `/product/${id}`,
+      query: (id) => `api/product/${id}`,
     }),
     getSearchProducts: builder.mutation({
       query: ({ params }) => ({
-        url: `/catalog/search/list/`,
+        url: `api/catalog/search/list/`,
         method: "POST",
         body: params,
       }),
     }),
     getSearchFilters: builder.query({
-      query: () => `/catalog/filters/`,
+      query: () => `api/catalog/filters/`,
     }),
   }),
 });
