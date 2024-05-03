@@ -1,8 +1,7 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiohttp.abc import Request
 from aiohttp.web_response import Response
 
-from tg_bot import bootstrap
+import bootstrap
 from .models import NewMessage, NewPayment
 
 bot = bootstrap.MyBot().getInstance()

@@ -6,11 +6,11 @@ from aiogram_dialog import setup_dialogs
 from aiohttp import web
 
 import bootstrap
-from .app import register_dialogs
-from .app.dialogs import error_handler
-from .app.routes import register_routes
+from app import register_dialogs
+from app.dialogs import error_handler
+from app.routes import register_routes
 
-from .web.api.routes import send_message_manager, send_message_payment
+from web.api.routes import send_message_manager, send_message_payment
 
 app = web.Application()
 app.add_routes([web.post('/api/order/message/send/', send_message_manager),
