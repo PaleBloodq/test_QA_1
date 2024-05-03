@@ -18,6 +18,7 @@
       - docker pull $CI_REGISTRY_IMAGE/backend:latest || true
       - docker pull $CI_REGISTRY_IMAGE/product_parser:latest || true
       - docker pull $CI_REGISTRY_IMAGE/payments:latest || true
+      - docker pull $CI_REGISTRY_IMAGE/tg_bot:latest || true
       - docker pull $CI_REGISTRY_IMAGE/frontend:latest || true
       - |
         if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA backend/) ]]; then
