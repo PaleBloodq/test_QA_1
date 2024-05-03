@@ -16,7 +16,7 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
     const [checkPromocode, { data: promoData }] = useCheckPromocodeMutation();
     // const { billEmail } = useSelector(userSelector)
     const [sameEmail, setSameEmail] = useState(false)
-    const [validPromo, setValidPromo] = useState('')
+    // const [validPromo, setValidPromo] = useState('')
     const dispatch = useDispatch()
 
     useEffect(() => {

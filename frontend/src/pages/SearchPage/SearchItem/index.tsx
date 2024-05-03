@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom"
 import Tag from "../../../components/common/Tag"
 import { replaceUrl } from "../../../helpers/replaceUrl"
-import { getDiscount } from "../../../hooks/getDiscount"
 
 export default function SearchItem({ item }: { item: any }) {
 
