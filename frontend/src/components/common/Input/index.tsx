@@ -23,7 +23,7 @@ export default function Input({ value, setValue, placeholder, type, hardlyEditab
 
     return (
         <div className="w-full h-[50px] custom-border px-[22px] flex justify-between items-center mb-3">
-            <input onBlur={() => setIsEditable(false)} ref={ref} readOnly={isEditable ? false : true} className="w-full text-subtitle-info bg-transparent outline-none" placeholder={placeholder} type={type} value={value} onChange={(e) => !localValue ? dispatch(setValue(e.target.value)) : setValue(e.target.value)} />
+            <input onBlur={() => hardlyEditable && setIsEditable(false)} ref={ref} readOnly={isEditable ? false : true} className="w-full text-subtitle-info bg-transparent outline-none" placeholder={placeholder} type={type} value={value} onChange={(e) => !localValue ? dispatch(setValue(e.target.value)) : setValue(e.target.value)} />
             {hardlyEditable &&
                 <button onClick={isEditableHandler} className="w-6 h-6">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
