@@ -35,6 +35,11 @@
           docker push $CI_REGISTRY_IMAGE/payments
         fi
       - |
+        if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA tg_bot/) ]]; then
+          docker build -t $CI_REGISTRY_IMAGE/tg_bot ./tg_bot
+          docker push $CI_REGISTRY_IMAGE/tg_bot
+        fi
+      - |
         if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA frontend/) ]]; then
           echo "VITE_BASE_URL=${VITE_BASE_URL}" > ./frontend/.env.production
           echo "VITE_API_URL=${VITE_API_URL}" >> ./frontend/.env.production
@@ -47,6 +52,7 @@
         - product_parser/**/*
         - payments/**/*
         - frontend/**/*
+        - tg_bot/**/*
 
   deploy:
     tags:
