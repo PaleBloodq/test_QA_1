@@ -1,13 +1,15 @@
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import WebApp
-from aiogram_dialog.widgets.text import Const
+from aiogram_dialog.widgets.text import Const, Format
 
+from tg_bot.app.windows.main.methods import getter_token
 from tg_bot.states.states import MainSG
 
 MainMenuWin = [
     Window(
-        WebApp(url=Const('https://chatlabs.site/aokibot/frontend/'), text=Const('Магазин')),
+        WebApp(url=Format('https://chatlabs.site/aokibot/frontend?token={token}'), text=Const('Магазин')),
         Const('Перейдите в магазин'),
+        getter=getter_token,
         state=MainSG.main_menu,
     ),
 ]
