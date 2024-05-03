@@ -3,6 +3,7 @@ import { ProductType } from "../../../types/ProductType";
 import Tag from "../Tag";
 import React from "react";
 import { replaceUrl } from "../../../helpers/replaceUrl";
+import { getDiscount } from "../../../hooks/getDiscount";
 
 const GameCard = React.memo(({ game }: { game: ProductType }) => {
 
@@ -15,7 +16,7 @@ const GameCard = React.memo(({ game }: { game: ProductType }) => {
             <div className='flex gap-2'>
                 <h3 className='price-small'>
                     {game.publications[0].discount
-                        ? game.publications[0].final_price
+                        ? getDiscount(game.publications[0].original_price, game.publications[0].discount)
                         : game.publications[0].original_price} ₽
                 </h3>
                 {game.publications[0].discount !== null && <Tag type="discount">-{game.publications[0].discount}%</Tag>}
