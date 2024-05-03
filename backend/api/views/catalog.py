@@ -58,8 +58,8 @@ class GetFilters(APIView):
                 models.Language.objects.all(),
                 many=True,
             ).data,
-            'minPrice': models.ProductPublication.objects.latest('-price').price,
-            'maxPrice': models.ProductPublication.objects.latest('price').price,
+            'minPrice': models.ProductPublication.objects.latest('-final_price').final_price,
+            'maxPrice': models.ProductPublication.objects.latest('final_price').final_price,
         }
 
 
@@ -69,9 +69,9 @@ class SearchProducts(APIView):
         limit = request.data.get('limit', 20)
         query = {}
         if request.data.get('minPrice'):
-            query['price__gte'] = request.data.get('minPrice')
+            query['final_price__gte'] = request.data.get('minPrice')
         if request.data.get('maxPrice'):
-            query['price__lte'] = request.data.get('maxPrice')
+            query['final_price__lte'] = request.data.get('maxPrice')
         if request.data.get('platforms'):
             query['platforms__in'] = request.data.get('platforms')
         if request.data.get('languages'):
