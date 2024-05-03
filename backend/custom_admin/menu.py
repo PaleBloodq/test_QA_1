@@ -3,6 +3,8 @@ from django.utils.translation import gettext_lazy as _
 
 from admin_tools.menu import items, Menu
 
+from settings import settings
+
 
 class CustomMenu(Menu):
     """
@@ -12,7 +14,7 @@ class CustomMenu(Menu):
         Menu.__init__(self, **kwargs)
         self.children += [
             items.MenuItem('Панель управления', reverse('admin:index')),
-            items.MenuItem('Чаты', '/admin/chat/'),
+            items.MenuItem('Чаты', f'{settings.FORCE_SCRIPT_NAME}/admin/chat/'),
             items.AppList(
                 'Приложения',
                 exclude=('django.contrib.*',)
