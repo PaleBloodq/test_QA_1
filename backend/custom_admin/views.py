@@ -30,7 +30,7 @@ class Chat(TemplateView):
             requests.post(
                 bot_url,
                 json={
-                    'user_id': form.instance.order.profile_id,
+                    'user_id': form.instance.order.profile.telegram_id,
                     'order_id': str(form.instance.order.id),
                     'text': form.instance.text
                 }
