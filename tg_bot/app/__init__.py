@@ -1,4 +1,4 @@
-from tg_bot.app.dialogs import DLGS
+from .dialogs import DLGS
 
 
 def register_dialogs(dp):

@@ -8,6 +8,6 @@ class IsReplyFilter(BaseFilter):
 
 
 def register_routes(dp):
-    from tg_bot.app import windows
+    from app import windows
     dp.message.register(windows.start, Command('start'))
     dp.message.register(windows.answer_order, IsReplyFilter())
