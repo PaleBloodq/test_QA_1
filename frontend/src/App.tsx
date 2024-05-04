@@ -9,11 +9,14 @@ import DonationPage from './pages/DonationPage';
 import SearchPage from './pages/SearchPage';
 import { useSwipeable } from 'react-swipeable';
 import Profile from './pages/Profile';
-import { useGetUserQuery } from './services/userApi';
+import { useGetUserQuery, useRefreshTokenMutation } from './services/userApi';
 import { setIsLoggined, setUpdateData, setUserData } from './features/User/userSlice';
 import { useDispatch } from 'react-redux';
+import cookie from 'cookiejs';
 
 export default function App() {
+
+
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -23,16 +26,12 @@ export default function App() {
     leave: { opacity: 0 },
     config: { duration: 400 },
     exitBeforeEnter: true,
-
   });
 
-  useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 200)
-  }, [location])
 
-  const { data: userData } = useGetUserQuery({});
+  const { data: userData, error: userError } = useGetUserQuery({});
+  const [refreshToken, { error: tokenError, data: tokenData }] = useRefreshTokenMutation();
+
   useEffect(() => {
     dispatch(setUserData(userData))
     dispatch(setUpdateData({
@@ -46,6 +45,26 @@ export default function App() {
       dispatch(setIsLoggined((false)))
     }
   }, [userData])
+
+
+  // useEffect(() => {
+  //   async function handleTokenRefresh() {
+  //     try {
+  //       const refreshedToken = await refreshToken({ token: cookie.get('token') });
+  //       if (refreshedToken?.data) {
+  //         cookie.set('token', refreshedToken?.data)
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to refresh token:', error);
+  //     }
+  //   }
+
+  //   if (userError?.status === 403) {
+  //     handleTokenRefresh()
+  //   }
+  // }, [userError, refreshToken])
+
+
 
   const navigate = useNavigate();
 

@@ -37,6 +37,13 @@ export const userApi = createApi({
         body: promoCode,
       }),
     }),
+    refreshToken: builder.mutation({
+      query: (token) => ({
+        url: `api/token/refresh/`,
+        method: "POST",
+        body: token,
+      }),
+    }),
   }),
 });
 
@@ -46,4 +53,5 @@ export const {
   useUpdateUserDataMutation,
   useMakeOrderMutation,
   useCheckPromocodeMutation,
+  useRefreshTokenMutation,
 } = userApi;

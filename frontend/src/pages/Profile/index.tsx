@@ -10,6 +10,7 @@ import { setUserName, updateAccountMail, updateAccountPassword, updateBillMail }
 import { userSelector } from "../../features/User/userSelectors";
 import Navigation from "../../components/common/Navigation";
 import { useNavigate } from "react-router";
+import cookie from "cookiejs";
 
 export default function Profile() {
     const dispatch = useDispatch()
@@ -24,9 +25,18 @@ export default function Profile() {
     }
 
 
+    // useEffect(() => {
+    //     dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
+    // }, []) РАСКОММЕНТИРОВАТЬ ПОЗЖЕ
+
     useEffect(() => {
-        dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
+        dispatch(setUserName(`123`))
     }, [])
+
+    //УДАЛИТЬ
+
+
+    console.log(cookie.get('token'))
 
     function orderStatusIcon(status: "PAID" | "ERROR" | "OK"): React.ReactNode {
         switch (status) {

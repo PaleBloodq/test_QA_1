@@ -15,6 +15,8 @@ export default function Cart() {
 
     const { isLoggined } = useSelector(userSelector)
 
+    const storageParsedItems = JSON.parse(localStorage.getItem('storageCartItems'))
+
     function calculateTotalPrice(cartItems: CartItemType[]): number {
         let totalPrice = 0;
         for (const item of cartItems) {
@@ -55,6 +57,10 @@ export default function Cart() {
             useCashback === true && items.length > 0 && totalPrice !== 0 ? setTotalPrice(totalPrice - userData.cashback) : setTotalPrice(calculateTotalPrice(items))
         }
     }, [useCashback])
+
+    useEffect(() => {
+        localStorage.setItem("storageCartItems", JSON.stringify(items))
+    }, [items])
 
     return (
         <Container>
