@@ -22,6 +22,11 @@ urlpatterns = [
             path('', views.GetProduct.as_view()),
         ])),
     ])),
+    path('publication/', include([
+        path('<str:publication_id>/', include([
+            path('', views.GetPublication.as_view()),
+        ])),
+    ])),
     path('order/', include([
         path('promocode/', include([
             path('check/', views.CheckPromoCode.as_view()),
