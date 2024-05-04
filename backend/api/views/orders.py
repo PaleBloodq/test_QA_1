@@ -114,6 +114,15 @@ class CreateOrder(APIView):
 
 
 class ChatMessages(APIView):
+    def get(self, request: Request):
+        return Response(
+            serializers.ChatMessageSerializer(
+                models.ChatMessage.objects.filter(order=request.query_params.get('order_id')),
+                many=True,
+            ).data,
+            status=status.HTTP_200_OK
+        )
+        
     def post(self, request: Request):
         order_id = request.data.get('order_id')
         text = request.data.get('text')
@@ -121,9 +130,26 @@ class ChatMessages(APIView):
             order = models.Order.objects.get(id=order_id)
             models.ChatMessage.objects.create(
                 order=order,
-                text=text
+                text=text,
+                manager=request.user if request.user.id else None,
             )
-            return Response(status=status.HTTP_200_OK)
+            if request.user.id:
+                requests.post(
+                    f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/message/send/',
+                    json={
+                        'user_id': order.profile.telegram_id,
+                        'order_id': order_id,
+                        'text': text
+                    }
+                )
+                return Response(status=status.HTTP_200_OK)
+            return Response(
+                serializers.ChatMessageSerializer(
+                    models.ChatMessage.objects.filter(order=order),
+                    many=True,
+                ).data,
+                status=status.HTTP_200_OK
+            )
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 

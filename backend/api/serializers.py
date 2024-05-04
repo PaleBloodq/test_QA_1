@@ -183,8 +183,17 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):
+    order_id = serializers.SlugRelatedField(source='order', slug_field='id', read_only=True)
+    manager_id = serializers.SlugRelatedField(source='manager', slug_field='id', read_only=True)
+    
     class Meta:
         model = models.ChatMessage
+        fields = (
+            'created_at',
+            'order_id',
+            'manager_id',
+            'text',
+        )
 
 
 class ProductToParseSerializer(serializers.ModelSerializer):

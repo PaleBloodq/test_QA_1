@@ -176,4 +176,4 @@ class ChatMessage(BaseModel):
     text = models.TextField('Текст сообщения')
     
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['created_at']
