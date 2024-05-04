@@ -90,9 +90,9 @@ class ChatMessageInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     change_form_template = 'admin/order.html'
     inlines = [OrderProductInline]
-    list_display = ['date', 'status', 'profile', 'amount', 'chat']
-    list_filter = ['date', 'status', 'profile', 'amount']
-    readonly_fields = ['id']
+    list_display = ['number', 'date', 'status', 'profile', 'amount', 'chat']
+    list_filter = ['number', 'date', 'status', 'profile', 'amount']
+    readonly_fields = ['id', 'number']
     
     def render_change_form(self, request, context, add, change, form_url, obj):
         context.update({

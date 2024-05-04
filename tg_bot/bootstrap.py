@@ -84,8 +84,8 @@ class ApiWrapper:
         return await cls._make_request('POST', '/api/token/get/', data=data)
 
     @classmethod
-    async def send_message(cls, order_id: str, text: str) -> Union[bool, dict]:
-        data = {'order_id': order_id, 'text': text}
+    async def send_message(cls, order_number: str, text: str) -> Union[bool, dict]:
+        data = {'order_number': order_number, 'text': text}
         return await cls._make_request('POST', '/api/order/chat/', data=data, expect_json=False)
 
 

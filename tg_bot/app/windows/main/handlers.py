@@ -12,9 +12,9 @@ async def start(message: types.Message, dialog_manager: DialogManager | None = N
 
 
 async def answer_order(message: types.Message, dialog_manager: DialogManager | None = None):
-    regex = r"№([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
+    regex = r"№(\d*)"
     match = re.search(regex, message.reply_to_message.text)
-    order_id = match.group(1)
-    await bootstrap.ApiWrapper.send_message(order_id=order_id, text=message.text)
-    print(order_id)
+    order_number = match.group(1)
+    await bootstrap.ApiWrapper.send_message(order_number=order_number, text=message.text)
+    print(order_number)
     await message.reply('Отлично! Ответ отправлен')
