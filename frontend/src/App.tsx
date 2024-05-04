@@ -21,7 +21,9 @@ export default function App() {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
-    config: { duration: 400 }
+    config: { duration: 400 },
+    exitBeforeEnter: true,
+
   });
 
   useEffect(() => {
@@ -54,10 +56,14 @@ export default function App() {
   const telegramThemeColor = window?.Telegram?.WebApp.headerColor
 
   useEffect(() => {
+    const bodyDiv = document.getElementById('webapp-root-body')
     if (telegramThemeColor === '#ffffff') {
-      document.getElementById('webapp-root-body').classList.value = 'light'
+      bodyDiv.classList.value = 'light'
+      bodyDiv.style.backgroundColor = '#ffffff'
+
     } else {
-      document.getElementById('webapp-root-body').classList.value = 'dark'
+      bodyDiv.classList.value = 'dark'
+      bodyDiv.style.backgroundColor = '#000000'
     }
 
   }, [telegramThemeColor])

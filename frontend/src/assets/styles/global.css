@@ -8,10 +8,6 @@
   box-sizing: border-box;
 }
 
-body {
-  background-color: #7b7b7b;
-}
-
 @layer components {
   .custom-border {
     @apply border border-[#E7E7E8] dark:border-[#26292d] rounded-xl bg-[#F6F7FA] dark:bg-[#FFFFFF0D];
