@@ -10,49 +10,67 @@ build:
   cache:
     key: "$CI_COMMIT_REF_NAME"
     paths:
-      - /cache/docker
+      - /var/lib/docker  # Убедитесь, что это правильный путь для кэша Docker
   before_script:
     - docker info
-  script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull $CI_REGISTRY_IMAGE/backend:latest || true
-    - docker pull $CI_REGISTRY_IMAGE/product_parser:latest || true
-    - docker pull $CI_REGISTRY_IMAGE/payments:latest || true
-    - docker pull $CI_REGISTRY_IMAGE/frontend:latest || true
+  script:
     - |
-      if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA backend/) ]]; then
+      if [ "$CI_COMMIT_BEFORE_SHA" == "0000000000000000000000000000000000000000" ]; then
+      echo "This is the first commit in the branch. Assuming all files have changed."
+      CHANGED_FILES=$(git ls-files | tr '\n' ' ')
+      else
+      CHANGED_FILES=$(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA | tr '\n' ' ')
+      fi
+    - |
+      if echo "$CHANGED_FILES" | grep -q "backend/"; then
+        docker pull $CI_REGISTRY_IMAGE/backend:latest || true
         docker build -t $CI_REGISTRY_IMAGE/backend ./backend
         docker push $CI_REGISTRY_IMAGE/backend
       fi
     - |
-      if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA product_parser/) ]]; then
+      if echo "$CHANGED_FILES" | grep -q "product_parser/"; then
+        docker pull $CI_REGISTRY_IMAGE/product_parser:latest || true
         docker build -t $CI_REGISTRY_IMAGE/product_parser ./product_parser
         docker push $CI_REGISTRY_IMAGE/product_parser
       fi
     - |
-      if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA payments/) ]]; then
+      if echo "$CHANGED_FILES" | grep -q "payments/"; then
+        docker pull $CI_REGISTRY_IMAGE/payments:latest || true
         docker build -t $CI_REGISTRY_IMAGE/payments ./payments
         docker push $CI_REGISTRY_IMAGE/payments
       fi
     - |
-      if [[ -n $(git diff --name-only $CI_COMMIT_BEFORE_SHA $CI_COMMIT_SHA frontend/) ]]; then
+      if echo "$CHANGED_FILES" | grep -q "tg_bot/"; then
+        docker pull $CI_REGISTRY_IMAGE/tg_bot:latest || true
+        docker build -t $CI_REGISTRY_IMAGE/tg_bot ./tg_bot
+        docker push $CI_REGISTRY_IMAGE/tg_bot
+      fi
+    - |
+      if echo "$CHANGED_FILES" | grep -q "frontend/"; then
+        docker pull $CI_REGISTRY_IMAGE/frontend:latest || true
+        echo "VITE_BASE_URL=$VITE_BASE_URL" > ./frontend/.env.production
+        echo "VITE_API_URL=$VITE_API_URL" >> ./frontend/.env.production
         docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
         docker push $CI_REGISTRY_IMAGE/frontend
       fi
-  only:
-    changes:
-      - backend/**/*
-      - product_parser/**/*
-      - payments/**/*
-      - frontend/**/*
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      changes:
+        - backend/**/*
+        - product_parser/**/*
+        - payments/**/*
+        - frontend/**/*
+        - tg_bot/**/*
+    - when: never
 
 deploy:
   tags:
   - dev
   stage: deploy
   before_script:
-  - mkdir -p /root/CICD/$CI_PROJECT_NAME
-  - sudo chmod 777 /root/CICD/$CI_PROJECT_NAME 
+    - mkdir -p /root/CICD/$CI_PROJECT_NAME
+    - sudo chmod 777 /root/CICD/$CI_PROJECT_NAME
   script:
     - export CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -63,10 +81,9 @@ deploy:
     - env BACKEND_PORT=$BACKEND_PORT envsubst '$BACKEND_PORT' < nginx.conf > nginx.processed.conf
     - mv docker-compose.processed.yaml docker-compose.yaml
     - mv nginx.processed.conf nginx.conf
-    - if [ ! -d "rsa" ]; then mkdir -p rsa && openssl genpkey -algorithm RSA -out rsa/private.pem && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem; fi
+    - if [ ! -d "rsa" ]; then mkdir -p rsa and openssl genpkey -algorithm RSA -out rsa/private.pem && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem; fi
     - docker compose pull
     - docker compose up -d
-  dependencies:
-    - build
-  only:
-    - dev
+    - docker image prune -a -f
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'

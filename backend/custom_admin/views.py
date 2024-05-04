@@ -1,3 +1,6 @@
+import os
+
+import requests
 from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import TemplateView
@@ -23,5 +26,14 @@ class Chat(TemplateView):
             form.instance.order = models.Order.objects.get(id=order_id)
             form.instance.manager = request.user
             form.save()
+            bot_url =f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/message/send/'
+            requests.post(
+                bot_url,
+                json={
+                    'user_id': form.instance.order.profile.telegram_id,
+                    'order_id': str(form.instance.order.id),
+                    'text': form.instance.text
+                }
+            )
         form = forms.SendChatMessageForm()
         return self.get(request, order_id)

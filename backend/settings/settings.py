@@ -7,10 +7,14 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 DEBUG = True if os.environ['DJANGO_DEBUG'] == '1' else False
 
-ALLOWED_HOSTS = [host for host in os.environ.get('DJANGO_ALLOWED_HOSTS', []).split(',')]
-CSRF_TRUSTED_ORIGINS = [host for host in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', []).split(',')]
+ALLOWED_HOSTS = [host for host in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')]
+
+CSRF_TRUSTED_ORIGINS = [host for host in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', '').split(',')]
+
 CORS_ORIGIN_ALLOW_ALL = True
+
 CORS_ALLOW_CREDENTIALS = False
+
 INSTALLED_APPS = [
     'admin_tools',
     'admin_tools.menu',
@@ -75,12 +79,14 @@ DATABASES = {
         'PORT': os.environ['POSTGRES_PORT'],
     }
 }
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": f"redis://redis/1",
     }
 }
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -105,6 +111,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+
 STATIC_ROOT = BASE_DIR / 'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -114,11 +121,17 @@ STATICFILES_FINDERS = [
 ]
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'custom_admin.dashboard.CustomIndexDashboard'
+
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'custom_admin.dashboard.CustomAppIndexDashboard'
+
 ADMIN_TOOLS_MENU = 'custom_admin.menu.CustomMenu'
 
 FORCE_SCRIPT_NAME = os.environ.get('DJANGO_BASE_URL', '/')
+
 MEDIA_URL = '/media/'
+
 MEDIA_ROOT = BASE_DIR / 'media'
+
 MEDIA_ROOT.mkdir(exist_ok=True)
+
 STATIC_ROOT.mkdir(exist_ok=True)
