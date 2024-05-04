@@ -63,6 +63,7 @@ class ProductPublication(BaseModel):
     platforms = models.ManyToManyField(Platform, verbose_name='Платформы')
     final_price = models.IntegerField('Конечная стоимость')
     original_price = models.IntegerField('Полная стоимость')
+    price_changed = models.BooleanField('Цена изменилась', default=False)
     hash = models.CharField('Хэш', max_length=255, null=True, blank=True)
     title = models.CharField('Заголовок', max_length=255, null=True, blank=True)
     duration = models.IntegerField('Длительность в месяцах', null=True, blank=True)
@@ -129,12 +130,13 @@ class Order(BaseModel):
     profile = models.ForeignKey(Profile, verbose_name='Пользователь', on_delete=models.CASCADE, related_name='order')
     date = models.DateField('Дата заказа')
     amount = models.IntegerField('Сумма заказа')
-    email = models.EmailField('E-mail')
-    password = models.CharField('Пароль', max_length=255)
     bill_email = models.EmailField('E-mail для чека')
     spend_cashback = models.BooleanField('Списать баллы')
     status = models.CharField('Статус', choices=StatusChoices.choices, default=StatusChoices.CREATED)
     cashback = models.IntegerField('Кэшбек', default=0)
+    need_account = models.BooleanField('Нужно создать аккаунт', default=False)
+    email = models.EmailField('E-mail', null=True, blank=True)
+    password = models.CharField('Пароль', max_length=255, null=True, blank=True)
     promo_code = models.CharField('Промокод', max_length=255, null=True, blank=True)
     promo_code_discount = models.IntegerField('Скидка по промокоду', null=True, blank=True)
     payment_id = models.CharField('ID платежа', null=True, blank=True)
@@ -176,4 +178,4 @@ class ChatMessage(BaseModel):
     text = models.TextField('Текст сообщения')
     
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['created_at']

@@ -88,10 +88,17 @@ class ChatMessageInline(admin.TabularInline):
 
 @admin.register(models.Order, site=admin.site)
 class OrderAdmin(admin.ModelAdmin):
-    inlines = [OrderProductInline, ChatMessageInline]
+    change_form_template = 'admin/order.html'
+    inlines = [OrderProductInline]
     list_display = ['date', 'status', 'profile', 'amount', 'chat']
     list_filter = ['date', 'status', 'profile', 'amount']
     readonly_fields = ['id']
+    
+    def render_change_form(self, request, context, add, change, form_url, obj):
+        context.update({
+            'FORCE_SCRIPT_NAME': settings.FORCE_SCRIPT_NAME,
+        })
+        return super().render_change_form(request, context, add, change, form_url, obj)
     
     @admin.display(description='Чат')
     def chat(self, obj: models.Order):
