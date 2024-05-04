@@ -71,7 +71,7 @@ export default function Cart() {
                 <p className="text-subtitle">Итого:</p>
                 <div className="flex gap-5 items-center">
                     <h1 className="price-medium ">{totalPrice.toLocaleString()} ₽</h1>
-                    <Tag type="cashback">Кэшбек: {totalCashback} ₽</Tag>
+                    <Tag type="cashback">Кэшбэк: {Math.round(totalCashback)} ₽</Tag>
                 </div>
                 <div className="flex w-full justify-between items-center">
                     <CheckBox onClick={() => setUseCashback(!useCashback)} checked={useCashback}>Списать баллы</CheckBox>

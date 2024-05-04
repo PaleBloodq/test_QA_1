@@ -21,7 +21,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   backend:
-    image: $CI_REGISTRY_IMAGE/backend
+    image: $CI_REGISTRY_IMAGE/backend:latest
     depends_on:
       - postgres
       - redis
@@ -37,7 +37,7 @@ services:
 
 
   product_parser:
-    image: $CI_REGISTRY_IMAGE/product_parser
+    image: $CI_REGISTRY_IMAGE/product_parser:latest
     depends_on:
       - postgres
       - backend
@@ -49,7 +49,7 @@ services:
 
 
   payments:
-    image: $CI_REGISTRY_IMAGE/payments
+    image: $CI_REGISTRY_IMAGE/payments:latest
     depends_on:
       - postgres
       - backend
@@ -59,7 +59,7 @@ services:
 
   
   frontend:
-    image: $CI_REGISTRY_IMAGE/frontend
+    image: $CI_REGISTRY_IMAGE/frontend:latest
     env_file:
       - ./local.env
     ports:
@@ -67,7 +67,7 @@ services:
     command: [ "serve", "-s", "dist", "-l", "8050" ]
 
   tg_bot:
-    image: $CI_REGISTRY_IMAGE/tg_bot
+    image: $CI_REGISTRY_IMAGE/tg_bot:latest
     env_file:
       - ./local.env
     command: [ "python", "main.py" ]
