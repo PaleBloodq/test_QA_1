@@ -4,10 +4,9 @@ import Home from './pages/Home';
 import Game from './pages/Game';
 import Subscription from './pages/Subscription';
 import Cart from './pages/Cart';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import DonationPage from './pages/DonationPage';
 import SearchPage from './pages/SearchPage';
-import { useSwipeable } from 'react-swipeable';
 import Profile from './pages/Profile';
 import { useGetUserQuery, useRefreshTokenMutation } from './services/userApi';
 import { setIsLoggined, setUpdateData, setUserData } from './features/User/userSlice';
@@ -15,17 +14,6 @@ import { useDispatch } from 'react-redux';
 
 export default function App() {
 
-  function getTokenFromUrl(url) {
-    const tokenRegex = /token=([^&#]+)/;
-    const match = url.match(tokenRegex);
-    console.log('match = ', match)
-
-    if (match && match[1]) {
-      return match[1];
-    } else {
-      return null;
-    }
-  }
 
 
 
@@ -40,21 +28,7 @@ export default function App() {
   });
   const navigate = useNavigate();
 
-  const [fetchData, setFetchData] = useState(false)
-
-  useEffect(() => {
-    const newToken = getTokenFromUrl(window.location.href);
-    if (newToken !== null) {
-      sessionStorage.setItem('token', newToken);
-      setFetchData(true);
-    } else {
-      setFetchData(false)
-    }
-    console.log(sessionStorage.getItem('token'))
-  }, [location.pathname])
-
-
-  const { data: userData, error: userError } = useGetUserQuery({}, { skip: !fetchData });
+  const { data: userData } = useGetUserQuery({});
   // const [refreshToken, { error: tokenError, data: tokenData }] = useRefreshTokenMutation();
 
   useEffect(() => {

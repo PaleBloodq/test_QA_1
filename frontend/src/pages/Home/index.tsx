@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Donation from "../../components/Home/Donation";
 import HeaderSlider from "../../components/Home/HeaderSlider";
 import Leaders from "../../components/Home/Leaders";
