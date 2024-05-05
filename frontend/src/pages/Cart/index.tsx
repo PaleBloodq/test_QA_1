@@ -76,7 +76,7 @@ export default function Cart() {
         if (items.length > 0) {
             localStorage.setItem("storageCartItems", JSON.stringify(items))
         } else if (items.length === 0) {
-            JSON.parse(localStorage.getItem('storageCartItems')).forEach((item: CartItemType) => {
+            JSON.parse(localStorage.getItem('storageCartItems'))?.forEach((item: CartItemType) => {
                 dispatch(addToCart(item))
             })
         }
