@@ -27,6 +27,7 @@ export default function App() {
     config: { duration: 400 },
     exitBeforeEnter: true,
   });
+  const navigate = useNavigate();
 
 
   const { data: userData, error: userError } = useGetUserQuery({});
@@ -66,12 +67,6 @@ export default function App() {
 
 
 
-  const navigate = useNavigate();
-
-  const handlers = useSwipeable({
-    onSwipedRight: () => navigate(-1),
-  });
-
   const telegramThemeColor = window?.Telegram?.WebApp.headerColor
 
   useEffect(() => {
@@ -87,10 +82,21 @@ export default function App() {
 
   }, [telegramThemeColor])
 
+  const backButton = window?.Telegram?.WebApp.BackButton
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      backButton && backButton.show()
+    } else {
+      backButton.hide()
+    }
+    backButton && backButton.onClick(() => navigate(-1))
+  }, [location.pathname])
+
+
 
   return transitions((styles, item) => (
     <animated.div style={styles} className="animated-page">
-      <div {...handlers} className='w-full h-full bg-white dark:bg-[#1a1e22]'>
+      <div className='w-full h-full bg-white dark:bg-[#1a1e22]'>
         <Routes location={item}>
           <Route path='/' element={<Home />} />
           <Route path='/game/:gameId/:pubId' element={<Game />} />
