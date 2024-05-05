@@ -12,7 +12,6 @@ import Profile from './pages/Profile';
 import { useGetUserQuery, useRefreshTokenMutation } from './services/userApi';
 import { setIsLoggined, setUpdateData, setUserData } from './features/User/userSlice';
 import { useDispatch } from 'react-redux';
-import cookie from 'cookiejs';
 
 export default function App() {
 
