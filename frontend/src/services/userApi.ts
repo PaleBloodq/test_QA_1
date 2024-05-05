@@ -14,7 +14,7 @@ export const userApi = createApi({
       query: () => `api/profile/`,
     }),
     getOrders: builder.query({
-      query: () => `api/profile/orders/?limit=10&offset=0`,
+      query: () => `api/profile/orders/`,
     }),
     makeOrder: builder.mutation({
       query: (order) => ({

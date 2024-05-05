@@ -15,7 +15,7 @@ import cookie from "cookiejs";
 export default function Profile() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { data: ordersData = [], isLoading: isOrdersLoading } = useGetOrdersQuery({})
+    const { data: ordersData = [], isLoading: isOrdersLoading, error: ordersError } = useGetOrdersQuery({})
     const [showOrderHistory, setShowOrderHistory] = useState(false)
     const { userData, updatedData, username, isLoggined } = useSelector(userSelector)
     const [updateUserData] = useUpdateUserDataMutation();
@@ -36,7 +36,7 @@ export default function Profile() {
     //УДАЛИТЬ
 
 
-    console.log(cookie.get('token'))
+    console.log(ordersError)
 
     function orderStatusIcon(status: "PAID" | "ERROR" | "OK"): React.ReactNode {
         switch (status) {
