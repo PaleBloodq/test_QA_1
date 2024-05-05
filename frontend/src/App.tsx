@@ -4,7 +4,7 @@ import Home from './pages/Home';
 import Game from './pages/Game';
 import Subscription from './pages/Subscription';
 import Cart from './pages/Cart';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import DonationPage from './pages/DonationPage';
 import SearchPage from './pages/SearchPage';
 import { useSwipeable } from 'react-swipeable';
@@ -40,16 +40,22 @@ export default function App() {
   });
   const navigate = useNavigate();
 
+  const [fetchData, setFetchData] = useState(false)
+
   useEffect(() => {
     const newToken = getTokenFromUrl(window.location.href);
     if (newToken !== null) {
       sessionStorage.setItem('token', newToken);
+      setFetchData(true);
+    } else {
+      setFetchData(false)
     }
     console.log(sessionStorage.getItem('token'))
   }, [location.pathname])
 
-  const { data: userData, error: userError } = useGetUserQuery({});
-  const [refreshToken, { error: tokenError, data: tokenData }] = useRefreshTokenMutation();
+
+  const { data: userData, error: userError } = useGetUserQuery({}, { skip: !fetchData });
+  // const [refreshToken, { error: tokenError, data: tokenData }] = useRefreshTokenMutation();
 
   useEffect(() => {
     dispatch(setUserData(userData))
