@@ -18,6 +18,7 @@ export default function Home() {
     function getTokenFromUrl(url) {
         const tokenRegex = /token=([^&#]+)/;
         const match = url.match(tokenRegex);
+        console.log('match = ', match)
 
         if (match && match[1]) {
             return match[1];
@@ -28,9 +29,11 @@ export default function Home() {
 
     useEffect(() => {
         const newToken = getTokenFromUrl(window.location.href);
+        console.log(newToken)
         if (newToken !== null) {
             cookie.set('token', newToken);
         }
+        console.log(cookie.get('token'))
     }, [])
 
 
