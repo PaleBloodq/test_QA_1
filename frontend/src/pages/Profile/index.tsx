@@ -10,7 +10,6 @@ import { setUserName, updateAccountMail, updateAccountPassword, updateBillMail }
 import { userSelector } from "../../features/User/userSelectors";
 import Navigation from "../../components/common/Navigation";
 import { useNavigate } from "react-router";
-import cookie from "cookiejs";
 
 export default function Profile() {
     const dispatch = useDispatch()

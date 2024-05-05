@@ -9,7 +9,6 @@ import Container from "../../components/common/Container";
 import Navigation from "../../components/common/Navigation";
 import { useGetCategoryProductsQuery } from "../../services/productsApi";
 import { SectionType } from "../../types/SectionType";
-import cookie from 'cookiejs';
 
 export default function Home() {
 
@@ -29,11 +28,10 @@ export default function Home() {
 
     useEffect(() => {
         const newToken = getTokenFromUrl(window.location.href);
-        console.log(newToken)
         if (newToken !== null) {
-            cookie.set('token', newToken);
+            sessionStorage.setItem('token', newToken);
         }
-        console.log(cookie.get('token'))
+        console.log(sessionStorage.getItem('token'))
     }, [])
 
 
