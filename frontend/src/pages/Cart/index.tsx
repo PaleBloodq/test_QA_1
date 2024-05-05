@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Container from "../../components/common/Container";
 import { cartSelector } from "../../features/Cart/cartSelectors";
 import { CartItemType } from "../../types/cartItem";
@@ -10,10 +10,26 @@ import CheckBox from "../../components/common/CheckBox";
 import { userSelector } from "../../features/User/userSelectors";
 import Order from "./Order";
 import calcCashback from "../../helpers/calcCashback";
+import axios from "axios";
+import { addToCart } from "../../features/Cart/cartSlice";
 
 export default function Cart() {
 
     const { isLoggined } = useSelector(userSelector)
+    const dispatch = useDispatch()
+
+
+    const checkItem = async (item: CartItemType) => {
+        try {
+            const response = await axios.get(`https://chatlabs.site/aokibot/backend/api/publication/${item.id}`);
+            return response.status === 200;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    };
+
+
 
     function calculateTotalPrice(cartItems: CartItemType[]): number {
         let totalPrice = 0;
@@ -55,6 +71,29 @@ export default function Cart() {
             useCashback === true && items.length > 0 && totalPrice !== 0 ? setTotalPrice(totalPrice - userData.cashback) : setTotalPrice(calculateTotalPrice(items))
         }
     }, [useCashback])
+
+    useEffect(() => {
+        if (items.length > 0) {
+            localStorage.setItem("storageCartItems", JSON.stringify(items))
+        } else if (items.length === 0) {
+            JSON.parse(localStorage.getItem('storageCartItems')).forEach((item: CartItemType) => {
+                dispatch(addToCart(item))
+            })
+        }
+    }, [items])
+
+
+
+    useEffect(() => {
+        const fetchItems = async () => {
+            const storageParsedItems: CartItemType[] = JSON.parse(localStorage.getItem('storageCartItems')) || [];
+            const results = await Promise.all(storageParsedItems.map(item => checkItem(item)));
+            const validItems = storageParsedItems.filter((item, index) => results[index]);
+            localStorage.setItem('storageCartItems', JSON.stringify(validItems));
+        };
+
+        fetchItems();
+    }, []);
 
     return (
         <Container>

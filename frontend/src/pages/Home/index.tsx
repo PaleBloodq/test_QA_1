@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Donation from "../../components/Home/Donation";
 import HeaderSlider from "../../components/Home/HeaderSlider";
 import Leaders from "../../components/Home/Leaders";
@@ -13,8 +14,13 @@ import cookie from 'cookiejs';
 export default function Home() {
 
     const { data = [] } = useGetCategoryProductsQuery({})
+    useEffect(() => {
+        const newToken = new URL(window.location.href).searchParams.get('token');
+        if (newToken !== null) {
+            cookie.set('token', newToken);
+        }
+    }, [])
 
-    cookie.set('token', new URL(window.location.href).searchParams.get('token'))
 
     return (
         <Container>
