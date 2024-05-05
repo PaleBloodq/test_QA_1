@@ -15,6 +15,18 @@ import { useDispatch } from 'react-redux';
 
 export default function App() {
 
+  function getTokenFromUrl(url) {
+    const tokenRegex = /token=([^&#]+)/;
+    const match = url.match(tokenRegex);
+    console.log('match = ', match)
+
+    if (match && match[1]) {
+      return match[1];
+    } else {
+      return null;
+    }
+  }
+
 
 
   const dispatch = useDispatch();
@@ -28,6 +40,13 @@ export default function App() {
   });
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const newToken = getTokenFromUrl(window.location.href);
+    if (newToken !== null) {
+      sessionStorage.setItem('token', newToken);
+    }
+    console.log(sessionStorage.getItem('token'))
+  }, [location.pathname])
 
   const { data: userData, error: userError } = useGetUserQuery({});
   const [refreshToken, { error: tokenError, data: tokenData }] = useRefreshTokenMutation();

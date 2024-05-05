@@ -14,26 +14,6 @@ export default function Home() {
 
     const { data = [] } = useGetCategoryProductsQuery({})
 
-    function getTokenFromUrl(url) {
-        const tokenRegex = /token=([^&#]+)/;
-        const match = url.match(tokenRegex);
-        console.log('match = ', match)
-
-        if (match && match[1]) {
-            return match[1];
-        } else {
-            return null;
-        }
-    }
-
-    useEffect(() => {
-        const newToken = getTokenFromUrl(window.location.href);
-        if (newToken !== null) {
-            sessionStorage.setItem('token', newToken);
-        }
-        console.log(sessionStorage.getItem('token'))
-    }, [])
-
 
     return (
         <Container>
