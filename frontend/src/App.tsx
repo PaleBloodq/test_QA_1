@@ -4,13 +4,13 @@ import Home from './pages/Home';
 import Game from './pages/Game';
 import Subscription from './pages/Subscription';
 import Cart from './pages/Cart';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import DonationPage from './pages/DonationPage';
 import SearchPage from './pages/SearchPage';
 import Profile from './pages/Profile';
 import { useGetUserQuery, useRefreshTokenMutation } from './services/userApi';
 import { setIsLoggined, setUpdateData, setUserData } from './features/User/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 export default function App() {
 
@@ -28,7 +28,7 @@ export default function App() {
   });
   const navigate = useNavigate();
 
-  const { data: userData, error: userError } = useGetUserQuery({});
+  const { data: userData } = useGetUserQuery({});
   // const [refreshToken, { error: tokenError, data: tokenData }] = useRefreshTokenMutation();
 
   useEffect(() => {
