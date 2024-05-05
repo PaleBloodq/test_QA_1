@@ -179,14 +179,8 @@ class ChatMessages(APIView):
         
     def post(self, request: Request):
         order_id = request.data.get('order_id')
-        order_number = request.data.get('order_number')
         text = request.data.get('text')
-        if order_id:
-            order = models.Order.objects.get(id=order_id)
-        elif order_number:
-            order = models.Order.objects.get(number=order_number)
-        else:
-            order = None
+        order = models.Order.objects.filter(id=order_id).first()
         if order and text:
             models.ChatMessage.objects.create(
                 order=order,
@@ -198,7 +192,7 @@ class ChatMessages(APIView):
                     f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/message/send/',
                     json={
                         'user_id': order.profile.telegram_id,
-                        'order_number': order_number,
+                        'order_id': order_id,
                         'text': text
                     }
                 )
@@ -223,7 +217,7 @@ class UpdateOrderStatus(APIView):
                     order.status = models.Order.StatusChoices.PAID
                     bot_url = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/payment/access/'
                     requests.post(bot_url, data={'user_id': order.profile.id,
-                                                 'order_number': order.number,
+                                                 'order_id': order.id,
                                                  'need_account': order.need_account})
                 else:
                     order.status = models.Order.StatusChoices.ERROR
