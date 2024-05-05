@@ -1,13 +1,21 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const token = sessionStorage.getItem("token");
+function getTokenFromUrl(url: string) {
+  const tokenRegex = /token=([^&#]+)/;
+  const match = url.match(tokenRegex);
+  if (match && match[1]) {
+    return match[1];
+  } else {
+    return null;
+  }
+}
 
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL,
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getTokenFromUrl(window.location.href)}`,
     },
   }),
   endpoints: (builder) => ({
