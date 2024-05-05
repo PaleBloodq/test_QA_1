@@ -14,8 +14,20 @@ import cookie from 'cookiejs';
 export default function Home() {
 
     const { data = [] } = useGetCategoryProductsQuery({})
+
+    function getTokenFromUrl(url) {
+        const tokenRegex = /token=([^&#]+)/;
+        const match = url.match(tokenRegex);
+
+        if (match && match[1]) {
+            return match[1];
+        } else {
+            return null;
+        }
+    }
+
     useEffect(() => {
-        const newToken = new URL(window.location.href).searchParams.get('token');
+        const newToken = getTokenFromUrl(window.location.href);
         if (newToken !== null) {
             cookie.set('token', newToken);
         }
