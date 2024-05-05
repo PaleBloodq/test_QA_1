@@ -1,6 +1,5 @@
 import uuid
 from django.db import models
-from django.db.utils import IntegrityError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from imagekit.models import ProcessedImageField
 from django.contrib.auth.models import User
@@ -128,7 +127,6 @@ class Order(BaseModel):
         IN_PROGRESS = 'IN_PROGRESS', 'В работе'
         COMPLETED = 'COMPLETED', 'Выполнен'
     
-    number = models.IntegerField('Номер заказа', unique=True, editable=False)
     profile = models.ForeignKey(Profile, verbose_name='Пользователь', on_delete=models.CASCADE, related_name='order')
     date = models.DateField('Дата заказа')
     amount = models.IntegerField('Сумма заказа')
@@ -144,17 +142,8 @@ class Order(BaseModel):
     payment_id = models.CharField('ID платежа', null=True, blank=True)
     payment_url = models.URLField('Ссылка на оплату', null=True, blank=True)
     
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None) -> None:
-        last_instance = Order.objects.last()
-        self.number = last_instance.number + 1 if last_instance else 1
-        for i in range(5):
-            try:
-                return super().save(force_insert, force_update, using, update_fields)
-            except IntegrityError:
-                self.number += 1
-    
     def __str__(self) -> str:
-        return f'{self.number} от {self.date}'
+        return f'{self.id} от {self.date}'
     
     class Meta:
         verbose_name = 'Заказ'

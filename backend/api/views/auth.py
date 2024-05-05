@@ -1,9 +1,7 @@
-from datetime import datetime, date
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from django.db.models import Sum
 from api import models, serializers, utils
 
 
@@ -21,7 +19,7 @@ class RefreshToken(APIView):
     def post(self, request: Request):
         token = request.data.get('token')
         if token:
-            profile = utils.decode_token(token)
+            profile = utils.decode_token(token, True)
             if profile:
                 return Response({
                     'token': utils.encode_profile(profile.telegram_id)

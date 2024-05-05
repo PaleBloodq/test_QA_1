@@ -11,7 +11,7 @@ async def send_message_manager(request: Request) -> Response:
     data = await request.json()
     try:
         data = NewMessage(**data)
-        text = f"Сообщение от менеджера по заказу №{data.order_number}\n" + data.text
+        text = f"Сообщение от менеджера по заказу №{data.order_id}\n" + data.text
         await bot.send_message(data.user_id, text=text)
     except Exception as e:
         print(e)
@@ -23,7 +23,7 @@ async def send_message_payment(request: Request) -> Response:
     data = await request.json()
     try:
         data = NewPayment(**data)
-        text = f"Отлично! по заказу №{data.order_number} прошла оплата.\n\n"
+        text = f"Отлично! по заказу №{data.order_id} прошла оплата.\n\n"
         if data.need_account:
             text += "Мы создадим вам аккаунт и передадим данные от него по готовности"
         else:
