@@ -7,7 +7,8 @@
     <script>
         if (!window.hasInitializedSocket) {
             const audio = new Audio("{{ FORCE_SCRIPT_NAME }}/sounds/notification_default.wav");
-            const socket = new WebSocket("ws://" + window.location.host + "{{ FORCE_SCRIPT_NAME }}/ws/admin/notifications/");
+            const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+            const socket = new WebSocket(`${wsProtocol}//` + window.location.host + "{{ FORCE_SCRIPT_NAME }}/ws/admin/notifications/");
             socket.onmessage = function (event) {
                 const data = JSON.parse(event.data);
                 toastr.options = {
