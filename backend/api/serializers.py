@@ -122,7 +122,7 @@ class OrderProductSerializer(serializers.ModelSerializer):
         model = models.OrderProduct
         fields = (
             'description',
-            'price',
+            'final_price',
         )
 
 
