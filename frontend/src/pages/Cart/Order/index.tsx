@@ -35,7 +35,9 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
     }
 
     function handleOrder() {
-        makeOrder(orderObject)
+        if (orderObject.cart.length !== 0 && orderObject.billEmail) {
+            makeOrder(orderObject)
+        }
     }
 
     console.log(orderData, orderErorr)
