@@ -113,6 +113,7 @@ class OrderInfo:
         if payment.is_valid():
             order.payment_id = payment.validated_data.get('payment_id')
             order.payment_url = payment.validated_data.get('payment_url')
+            order.status = models.Order.StatusChoices.PAYMENT
         order.save()
         return order
     

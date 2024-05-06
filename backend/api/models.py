@@ -152,6 +152,7 @@ class Profile(BaseModel):
 class Order(BaseModel):
     class StatusChoices(models.TextChoices):
         CREATED = 'CREATED', 'Создан'
+        PAYMENT = 'PAYMENT', 'Ожидает оплаты'
         PAID = 'PAID', 'Оплачен'
         ERROR = 'ERROR', 'Ошибка'
         IN_PROGRESS = 'IN_PROGRESS', 'В работе'
