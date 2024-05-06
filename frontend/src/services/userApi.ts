@@ -4,18 +4,25 @@ function getTokenFromUrl(url: string) {
   const tokenRegex = /token=([^&#]+)/;
   const match = url.match(tokenRegex);
   if (match && match[1]) {
+    sessionStorage.setItem("token", match[1]);
     return match[1];
   } else {
-    return null;
+    return false;
   }
 }
+
+getTokenFromUrl(window.location.href);
+
+const token = sessionStorage.getItem("token");
+
+console.log(token);
 
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL,
     headers: {
-      Authorization: `Bearer ${getTokenFromUrl(window.location.href)}`,
+      Authorization: `Bearer ${token}`,
     },
   }),
   endpoints: (builder) => ({
@@ -43,7 +50,7 @@ export const userApi = createApi({
       query: ({ promoCode }) => ({
         url: `api/order/promocode/check/`,
         method: "POST",
-        body: promoCode,
+        body: { promoCode: promoCode },
       }),
     }),
     refreshToken: builder.mutation({
