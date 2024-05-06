@@ -11,9 +11,8 @@ if not (TERMINAL_KEY and SECRET_KEY):
 
 API_URL = 'https://securepay.tinkoff.ru/v2/'
 
-BACKEND_URL = f'{os.environ.get("SERVER_URL")}/{os.environ.get("BACKEND_HOST")}'
-if os.environ.get("BACKEND_PORT"):
-    BACKEND_URL += f':{os.environ.get("BACKEND_PORT")}'
+PAYMENT_WEBHOOK_URL = os.environ.get("PAYMENT_WEBHOOK_URL")
+
 
 class Order(BaseModel):
     order_id: UUID4
@@ -58,7 +57,7 @@ async def create_payment(order: Order) -> Payment | None:
         'PayType': 'O',
         'Recurrent': 'N',
         'CustomerKey': str(order.customer_telegram_id),
-        'NotificationURL': f'{BACKEND_URL}/api/order/update_status/',
+        'NotificationURL': PAYMENT_WEBHOOK_URL,
     }
     payment_data['Token'] = await get_token(payment_data)
     async with aiohttp.ClientSession() as session:
