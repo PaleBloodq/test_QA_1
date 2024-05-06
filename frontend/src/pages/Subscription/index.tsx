@@ -29,14 +29,14 @@ export default function Subscription() {
     const { data = {} as ProductType, isLoading } = useGetAnyProductQuery(subscriptionId);
     const selectedSubscription = useSelector(selectedSubscriptionSelector);
     const currentDuration = useSelector(durationSelector);
-    const [currentSubscription, setCurrentSubscription] = useState(data.publications?.find((sub: Publication) => sub.id === id))
+    const [currentSubscription, setCurrentSubscription] = useState(data?.publications?.find((sub: Publication) => sub?.id === id))
     // useEffect(() => {
     //     setCurrentSubscription(data.publications?.find((sub: Publication) => sub.id === id))
     //     dispatch(setSelectedSubscription(data.publications?.find((sub: Publication) => sub.id === id).id))
     // }, [data])
 
     useEffect(() => {
-        setCurrentSubscription(data.publications?.find((sub: Publication) => sub.id === selectedSubscription))
+        setCurrentSubscription(data?.publications?.find((sub: Publication) => sub?.id === selectedSubscription))
     }, [selectedSubscription])
 
     const currentPrice = currentSubscription?.original_price
@@ -55,8 +55,8 @@ export default function Subscription() {
         cashback: currentSubscription?.cashback
     }
     useEffect(() => {
-        dispatch(setDuration(data?.publications?.find((pub) => pub.id === id).duration))
-        dispatch(setSelectedSubscription(data?.publications?.find((pub) => pub.id === id).id))
+        dispatch(setDuration(data?.publications?.find((pub) => pub?.id === id).duration))
+        dispatch(setSelectedSubscription(data?.publications?.find((pub) => pub?.id === id).id))
     }, [isLoading, dispatch, id])
 
 
@@ -65,26 +65,26 @@ export default function Subscription() {
             <div className="flex flex-col items-center">
                 {!isLoading && currentSubscription !== undefined ? (
                     <div className="flex flex-col items-start">
-                        <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentSubscription.photo)} alt="subscription image" />
-                        <h1 className="text-header mb-2">{data.title.includes('PS') ? 'PS Plus' : 'EA Play'} {currentSubscription.title}</h1>
+                        <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentSubscription?.photo)} alt="subscription image" />
+                        <h1 className="text-header mb-2">{data?.title.includes('PS') ? 'PS Plus' : 'EA Play'} {currentSubscription?.title}</h1>
                         <div className="flex items-center">
                             <h1 className="price-big">{currentPrice} ₽</h1>
                         </div>
-                        <SelectSubscription publications={data.publications} />
+                        <SelectSubscription publications={data?.publications} />
                         <div className="mt-8 w-full">
                             <p className="text-subtitle-info">
-                                {currentSubscription.includes}
+                                {currentSubscription?.includes}
                             </p>
                         </div>
                         <Line />
                         <div className='flex flex-col gap-2 w-full'>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Платформа:</p>
-                                <p className='text-title text-[14px]'>{currentSubscription.platforms.map((platform) => platform).join(', ')}</p>
+                                <p className='text-title text-[14px]'>{currentSubscription?.platforms?.map((platform) => platform).join(', ')}</p>
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Язык:</p>
-                                <p className='text-title text-[14px]'>{data.languages.map((lang) => lang).join(', ')}</p>
+                                <p className='text-title text-[14px]'>{data?.languages?.map((lang) => lang).join(', ')}</p>
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Дата релиза:</p>

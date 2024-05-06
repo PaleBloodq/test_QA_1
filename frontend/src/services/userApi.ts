@@ -1,12 +1,21 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import cookie from "cookiejs";
+
+function getTokenFromUrl(url: string) {
+  const tokenRegex = /token=([^&#]+)/;
+  const match = url.match(tokenRegex);
+  if (match && match[1]) {
+    return match[1];
+  } else {
+    return null;
+  }
+}
 
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL,
     headers: {
-      Authorization: `Bearer ${cookie.get("token")}`,
+      Authorization: `Bearer ${getTokenFromUrl(window.location.href)}`,
     },
   }),
   endpoints: (builder) => ({
@@ -14,7 +23,7 @@ export const userApi = createApi({
       query: () => `api/profile/`,
     }),
     getOrders: builder.query({
-      query: () => `api/profile/orders/?limit=10&offset=0`,
+      query: () => `api/profile/orders/`,
     }),
     makeOrder: builder.mutation({
       query: (order) => ({
@@ -37,6 +46,13 @@ export const userApi = createApi({
         body: promoCode,
       }),
     }),
+    refreshToken: builder.mutation({
+      query: (token) => ({
+        url: `api/token/refresh/`,
+        method: "POST",
+        body: token,
+      }),
+    }),
   }),
 });
 
@@ -46,4 +62,5 @@ export const {
   useUpdateUserDataMutation,
   useMakeOrderMutation,
   useCheckPromocodeMutation,
+  useRefreshTokenMutation,
 } = userApi;

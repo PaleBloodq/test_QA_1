@@ -28,7 +28,7 @@ export default function PSPlus({ data = [] }: { data: ProductType[] }) {
                 {!isLoading && groupedSubscriptions && Object.entries(groupedSubscriptions).map((subscription: any, index: number) => {
                     return (
                         <Link to={`/subscription/${data[0]?.id}/${subscription[1].find((pub: Publication) => pub.duration === duration)?.id}`} className="flex w-full px-2 py-2 custom-border justify-between items-center" key={'pssub-' + index}>
-                            <img src={replaceUrl(subscription[1]?.find((pub: Publication) => pub.duration === duration)?.preview)} alt="preview" />
+                            <img className="max-w-[111px] max-h-[80px]" src={replaceUrl(subscription[1]?.find((pub: Publication) => pub.duration === duration)?.preview)} alt="preview" />
                             <div className="flex flex-col gap-2 items-start">
                                 <h1 className="text-subtitle">{subscription[0]}</h1>
                                 <h2 className="price-small">{subscription[1]?.find((pub: Publication) => pub.duration === duration)?.original_price} ₽</h2>

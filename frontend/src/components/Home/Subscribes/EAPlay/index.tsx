@@ -15,7 +15,7 @@ export default function EAPlay({ data = [] }: { data: ProductType[] }) {
                 {!isLoading && (
                     <>
                         <Link to={`/subscription/${data[0].id}/${data[0].publications[0].id}`} className="flex w-full px-2 py-2 custom-border justify-between items-center" key={`sub-` + data[0].id} >
-                            <img src={replaceUrl(data[0].publications[0].preview)} alt="preview" />
+                            <img className="max-w-[111px] max-h-[80px]" src={replaceUrl(data[0].publications[0].preview)} alt="preview" />
                             <div className="flex flex-col gap-2 items-start">
                                 <h1 className="text-subtitle">{data[0].title}</h1>
                                 <h2 className="price-small">{data[0].publications[0].original_price} ₽</h2>

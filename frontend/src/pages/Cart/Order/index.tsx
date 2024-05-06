@@ -12,7 +12,7 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
 
 
     const { hasAccount, accountEmail, accountPassword, reciptEmail, rememberData, promocode, items } = useSelector(cartSelector)
-    const [makeOrder, { data: orderData }] = useMakeOrderMutation();
+    const [makeOrder, { data: orderData, error: orderErorr }] = useMakeOrderMutation();
     const [checkPromocode, { data: promoData }] = useCheckPromocodeMutation();
     // const { billEmail } = useSelector(userSelector)
     const [sameEmail, setSameEmail] = useState(false)
@@ -38,7 +38,8 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
         makeOrder(orderObject)
     }
 
-    console.log(orderData)
+    console.log(orderData, orderErorr)
+    console.log(orderObject)
 
     function checkIsValidPromo() {
         console.log({ promoCode: promocode })

@@ -14,7 +14,7 @@ import { useNavigate } from "react-router";
 export default function Profile() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { data: ordersData = [], isLoading: isOrdersLoading } = useGetOrdersQuery({})
+    const { data: ordersData = [], isLoading: isOrdersLoading, error: ordersError } = useGetOrdersQuery({})
     const [showOrderHistory, setShowOrderHistory] = useState(false)
     const { userData, updatedData, username, isLoggined } = useSelector(userSelector)
     const [updateUserData] = useUpdateUserDataMutation();
@@ -24,9 +24,18 @@ export default function Profile() {
     }
 
 
+    // useEffect(() => {
+    //     dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
+    // }, []) РАСКОММЕНТИРОВАТЬ ПОЗЖЕ
+
     useEffect(() => {
-        dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
+        dispatch(setUserName(`123`))
     }, [])
+
+    //УДАЛИТЬ
+
+
+    console.log(ordersError)
 
     function orderStatusIcon(status: "PAID" | "ERROR" | "OK"): React.ReactNode {
         switch (status) {

@@ -7,13 +7,15 @@ import Cart from './pages/Cart';
 import { useEffect } from 'react';
 import DonationPage from './pages/DonationPage';
 import SearchPage from './pages/SearchPage';
-import { useSwipeable } from 'react-swipeable';
 import Profile from './pages/Profile';
-import { useGetUserQuery } from './services/userApi';
+import { useGetUserQuery, useRefreshTokenMutation } from './services/userApi';
 import { setIsLoggined, setUpdateData, setUserData } from './features/User/userSlice';
 import { useDispatch } from 'react-redux';
 
 export default function App() {
+
+
+
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -23,16 +25,12 @@ export default function App() {
     leave: { opacity: 0 },
     config: { duration: 400 },
     exitBeforeEnter: true,
-
   });
-
-  useEffect(() => {
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 200)
-  }, [location])
+  const navigate = useNavigate();
 
   const { data: userData } = useGetUserQuery({});
+  // const [refreshToken, { error: tokenError, data: tokenData }] = useRefreshTokenMutation();
+
   useEffect(() => {
     dispatch(setUserData(userData))
     dispatch(setUpdateData({
@@ -47,11 +45,26 @@ export default function App() {
     }
   }, [userData])
 
-  const navigate = useNavigate();
 
-  const handlers = useSwipeable({
-    onSwipedRight: () => navigate(-1),
-  });
+
+  // useEffect(() => {
+  //   async function handleTokenRefresh() {
+  //     try {
+  //       const refreshedToken = await refreshToken({ token: cookie.get('token') });
+  //       if (refreshedToken?.data) {
+  //         cookie.set('token', refreshedToken?.data)
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to refresh token:', error);
+  //     }
+  //   }
+
+  //   if (userError?.status === 403) {
+  //     handleTokenRefresh()
+  //   }
+  // }, [userError, refreshToken])
+
+
 
   const telegramThemeColor = window?.Telegram?.WebApp.headerColor
 
@@ -68,10 +81,21 @@ export default function App() {
 
   }, [telegramThemeColor])
 
+  const backButton = window?.Telegram?.WebApp.BackButton
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      backButton && backButton.show()
+    } else {
+      backButton.hide()
+    }
+    backButton && backButton.onClick(() => navigate(-1))
+  }, [location.pathname])
+
+
 
   return transitions((styles, item) => (
     <animated.div style={styles} className="animated-page">
-      <div {...handlers} className='w-full h-full bg-white dark:bg-[#1a1e22]'>
+      <div className='w-full h-full bg-white dark:bg-[#1a1e22]'>
         <Routes location={item}>
           <Route path='/' element={<Home />} />
           <Route path='/game/:gameId/:pubId' element={<Game />} />
