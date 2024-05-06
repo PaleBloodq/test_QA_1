@@ -151,7 +151,6 @@ class Profile(BaseModel):
 
 class Order(BaseModel):
     class StatusChoices(models.TextChoices):
-        CREATED = 'CREATED', 'Создан'
         PAYMENT = 'PAYMENT', 'Ожидает оплаты'
         PAID = 'PAID', 'Оплачен'
         ERROR = 'ERROR', 'Ошибка'
@@ -163,7 +162,7 @@ class Order(BaseModel):
     amount = models.IntegerField('Сумма заказа')
     bill_email = models.EmailField('E-mail для чека')
     spend_cashback = models.BooleanField('Списать баллы')
-    status = models.CharField('Статус', choices=StatusChoices.choices, default=StatusChoices.CREATED)
+    status = models.CharField('Статус', choices=StatusChoices.choices, default=StatusChoices.PAYMENT)
     cashback = models.IntegerField('Кэшбек', default=0)
     need_account = models.BooleanField('Нужно создать аккаунт', default=False)
     email = models.EmailField('E-mail', null=True, blank=True)

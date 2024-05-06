@@ -133,7 +133,7 @@ class OrderInfo:
             password=self.password,
             bill_email=self.bill_email,
             spend_cashback=self.spend_cashback,
-            status=models.Order.StatusChoices.CREATED,
+            status=models.Order.StatusChoices.PAYMENT,
             promo_code=self.promo_code,
             promo_code_discount=promo_code_discount,
         )
