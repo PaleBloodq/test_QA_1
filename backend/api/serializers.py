@@ -139,6 +139,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'amount',
             'status',
             'order_products',
+            'payment_url',
         )
 
 
