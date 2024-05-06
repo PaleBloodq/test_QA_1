@@ -11,7 +11,11 @@ function getTokenFromUrl(url: string) {
   }
 }
 
-const token = getTokenFromUrl(window.location.href) || sessionStorage.getItem("token");
+getTokenFromUrl(window.location.href);
+
+const token = sessionStorage.getItem("token");
+
+console.log(token);
 
 export const userApi = createApi({
   reducerPath: "userApi",

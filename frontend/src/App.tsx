@@ -28,7 +28,8 @@ export default function App() {
   });
   const navigate = useNavigate();
 
-  const { data: userData } = useGetUserQuery({});
+  const { data: userData, error: userError } = useGetUserQuery({});
+  const [refreshToken, { data: refreshData, error: refreshError }] = useRefreshTokenMutation()
   // const [refreshToken, { error: tokenError, data: tokenData }] = useRefreshTokenMutation();
 
   useEffect(() => {
@@ -63,6 +64,33 @@ export default function App() {
   //     handleTokenRefresh()
   //   }
   // }, [userError, refreshToken])
+
+  useEffect(() => {
+    if (userError?.status === 403) {
+      refreshToken({ token: sessionStorage.getItem('token') })
+    }
+  }, [userError])
+
+  useEffect(() => {
+    if (refreshData) {
+      const newToken = refreshData?.token;
+      sessionStorage.setItem('token', newToken);
+
+      const tokenRegex = /token=([^&#]+)/;
+      let url = window.location.href;
+      if (url.match(tokenRegex)) {
+        // Если токен уже есть в URL, замените его новым
+        url = url.replace(tokenRegex, `token=${newToken}`);
+      } else {
+        // Если токена нет в URL, добавьте его
+        const separator = url.includes('?') ? '&' : '?';
+        url += `${separator}token=${newToken}`;
+      }
+
+      window.history.pushState({}, '', url);
+      window.location.reload()
+    }
+  }, [refreshData]);
 
 
 
