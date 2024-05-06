@@ -24,15 +24,14 @@ export default function Profile() {
     }
 
 
-    // useEffect(() => {
-    //     dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
-    // }, []) РАСКОММЕНТИРОВАТЬ ПОЗЖЕ
-
     useEffect(() => {
-        dispatch(setUserName(`123`))
+        dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
     }, [])
 
-    //УДАЛИТЬ
+    // useEffect(() => {
+    //     dispatch(setUserName(`123`))
+    // }, [])
+
 
 
     console.log(ordersError)
