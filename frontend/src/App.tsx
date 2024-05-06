@@ -16,7 +16,7 @@ export default function App() {
 
 
 
-
+  window.Telegram.WebApp.expand()
   const dispatch = useDispatch();
   const location = useLocation();
   const transitions = useTransition(location, {
