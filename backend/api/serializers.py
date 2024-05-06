@@ -123,6 +123,7 @@ class OrderProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.OrderProduct
         fields = (
+            'item',
             'description',
             'final_price',
         )
