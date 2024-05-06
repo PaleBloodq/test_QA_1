@@ -30,7 +30,6 @@ export default function App() {
 
   const { data: userData, error: userError } = useGetUserQuery({});
   const [refreshToken, { data: refreshData, error: refreshError }] = useRefreshTokenMutation()
-  // const [refreshToken, { error: tokenError, data: tokenData }] = useRefreshTokenMutation();
 
   useEffect(() => {
     dispatch(setUserData(userData))
@@ -47,24 +46,6 @@ export default function App() {
   }, [userData])
 
 
-
-  // useEffect(() => {
-  //   async function handleTokenRefresh() {
-  //     try {
-  //       const refreshedToken = await refreshToken({ token: cookie.get('token') });
-  //       if (refreshedToken?.data) {
-  //         cookie.set('token', refreshedToken?.data)
-  //       }
-  //     } catch (error) {
-  //       console.error('Failed to refresh token:', error);
-  //     }
-  //   }
-
-  //   if (userError?.status === 403) {
-  //     handleTokenRefresh()
-  //   }
-  // }, [userError, refreshToken])
-
   useEffect(() => {
     if (userError?.status === 403) {
       refreshToken({ token: sessionStorage.getItem('token') })
@@ -79,10 +60,8 @@ export default function App() {
       const tokenRegex = /token=([^&#]+)/;
       let url = window.location.href;
       if (url.match(tokenRegex)) {
-        // Если токен уже есть в URL, замените его новым
         url = url.replace(tokenRegex, `token=${newToken}`);
       } else {
-        // Если токена нет в URL, добавьте его
         const separator = url.includes('?') ? '&' : '?';
         url += `${separator}token=${newToken}`;
       }
@@ -91,6 +70,14 @@ export default function App() {
       window.location.reload()
     }
   }, [refreshData]);
+
+  useEffect(() => {
+    if (refreshError) {
+      window.Telegram.WebApp.showAlert('Произошла ошибка, пожалуйста перезайдите в приложение', () => {
+        window.Telegram.WebApp.close()
+      });
+    }
+  }, [refreshError])
 
 
 
