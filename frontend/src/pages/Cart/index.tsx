@@ -73,14 +73,12 @@ export default function Cart() {
     }, [useCashback])
 
     useEffect(() => {
-        if (items.length > 0) {
-            localStorage.setItem("storageCartItems", JSON.stringify(items))
-        } else if (items.length === 0) {
+        if (items.length === 0) {
             JSON.parse(localStorage.getItem('storageCartItems'))?.forEach((item: CartItemType) => {
                 dispatch(addToCart(item))
             })
         }
-    }, [items])
+    }, [items, dispatch])
 
 
 
