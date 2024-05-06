@@ -1,12 +1,13 @@
 export type OrderType = {
   date: string;
   amount: number;
-  order_products: OrderCartType[];
-  status: "PAID" | "OK" | "ERROR";
+  order_products: OrderItemType[];
+  status: "PAID" | "ERROR" | "OK" | "PAYMENT" | "IN_PROGRESS" | "COMPLETED";
+  payment_url: string;
 };
 
-type OrderCartType = {
+type OrderItemType = {
   item: string;
   description: string;
-  price: number;
+  final_price: number;
 };

@@ -10,7 +10,7 @@ const GameCard = React.memo(({ game }: { game: ProductType }) => {
 
     return (
         <Link to={`/game/${game?.id}/${game?.publications[0]?.id}`} className='w-full h-full flex flex-col items-start justify-between'>
-            <img className='rounded-xl max-h-[200px] mb-[18px]' src={replaceUrl(game?.publications[0]?.preview)} alt="game image" />
+            <img className='rounded-xl object-cover !h-[200px] w-full mb-[18px]' src={replaceUrl(game?.publications[0]?.preview)} alt="game image" />
             <h1 className='text-title text-start'>{game?.title}</h1>
             {game?.publications && <h2 className='text-subtitle'>{game?.publications[0]?.title}</h2>}
             <div className='flex gap-2'>
