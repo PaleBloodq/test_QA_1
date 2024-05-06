@@ -2,6 +2,7 @@ import os
 from datetime import date
 from dataclasses import dataclass
 import requests
+from asgiref.sync import async_to_sync
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,6 +10,7 @@ from rest_framework import status
 from django.db.models import Sum
 from django.db.models.manager import BaseManager
 from api import models, serializers, utils
+from api.senders import send_admin_notification, NotifyLevels
 
 PAYMENTS_URL = f'{os.environ.get("PAYMENTS_SCHEMA")}://{os.environ.get("PAYMENTS_HOST")}'
 if os.environ.get("PAYMENTS_PORT"):
@@ -160,6 +162,8 @@ class CreateOrder(APIView):
                 order_info.password = profile.playstation_password
         if order_info.cart and order_info.bill_email:
             order = order_info.create_order()
+            async_to_sync(send_admin_notification)({'text': f'Новый заказ {order.id}',
+                                                    'level': NotifyLevels.SUCCESS.value})
             return Response(
                 {
                     'PaymentUrl': order.payment_url
@@ -214,12 +218,16 @@ class UpdateOrderStatus(APIView):
             order = models.Order.objects.filter(id=request.data.get('OrderId')).first()
             if order:
                 if request.data.get('Status') == 'CONFIRMED':
+                    async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} оплачен',
+                                                            'level': NotifyLevels.SUCCESS.value})
                     order.status = models.Order.StatusChoices.PAID
                     bot_url = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/payment/access/'
                     requests.post(bot_url, data={'user_id': order.profile.id,
                                                  'order_id': order.id,
                                                  'need_account': order.need_account})
                 else:
+                    async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
+                                                            'level': NotifyLevels.ERROR.value})
                     order.status = models.Order.StatusChoices.ERROR
                 order.save()
             return Response('OK')
