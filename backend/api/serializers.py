@@ -118,6 +118,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class OrderProductSerializer(serializers.ModelSerializer):
+    item = serializers.CharField(source='product')
+    
     class Meta:
         model = models.OrderProduct
         fields = (
