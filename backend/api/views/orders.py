@@ -222,6 +222,8 @@ class UpdateOrderStatus(APIView):
                     async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} оплачен',
                                                             'level': NotifyLevels.SUCCESS.value})
                     order.status = models.Order.StatusChoices.PAID
+                    order.profile.cashback += order.cashback
+                    order.profile.save()
                     bot_url = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/payment/access/'
                     requests.post(bot_url, data={'user_id': order.profile.id,
                                                  'order_id': order.id,
