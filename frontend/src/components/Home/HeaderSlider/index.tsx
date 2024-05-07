@@ -45,7 +45,7 @@ export default function HeaderSlider({ data }: { data: SectionType }) {
                                 <Link className="flex w-full h-full relative" to={`/game/${game.id}/${game.publications[0].id}`}>
                                     <img className="rounded-xl" src={replaceUrl(game.publications[0].preview)} alt="" />
                                     <div className="absolute bottom-[50px] z-10 flex w-full items-center gap-2 flex-col justify-center">
-                                        <h1 className="text-white font-bold text-4xl">{game.publications[0].discount && game.publications[0].discount > 0 ? (game.publications[0].final_price) : (game.publications[0].original_price)} ₽</h1>
+                                        <h1 className="font-bold text-4xl text-white drop-shadow-[0_40px_40px_rgba(1,1,1,1)]">{game.publications[0].discount && game.publications[0].discount > 0 ? (game.publications[0].final_price) : (game.publications[0].original_price)} ₽</h1>
                                         <div className='w-16 flex gap-3 justify-center'>
                                             {game.publications[0].discount !== 0 && <Tag type="discount">-{game.publications[0].discount}%</Tag>}
                                             {isNew(game.release_date) && <Tag type="new">Новинка</Tag>}
