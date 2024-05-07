@@ -11,7 +11,7 @@ export default function CartItem({ item }: { item: CartItemType }) {
 
     function handleDelete() {
         dispatch(deleteFromCart(item.id))
-        const localStorageItems = JSON.parse(localStorage.getItem('storageCartItems'))?.filter((element) => element.id !== item.id)
+        const localStorageItems = JSON.parse(localStorage.getItem('storageCartItems'))?.filter((element: any) => element.id !== item.id)
         localStorage.setItem('storageCartItems', JSON.stringify(localStorageItems))
     }
 

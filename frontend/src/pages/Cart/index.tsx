@@ -102,7 +102,7 @@ export default function Cart() {
             <div className="mt-8 custom-border w-full flex flex-col gap-2 px-[35px] py-[21px]">
                 <p className="text-subtitle">Итого:</p>
                 <div className="flex gap-5 items-center">
-                    <h1 className="price-medium ">{totalPrice.toLocaleString()} ₽</h1>
+                    <h1 className="price-medium ">{Math.round(totalPrice).toLocaleString()} ₽</h1>
                     <Tag type="cashback">Кэшбэк: {Math.round(totalCashback)} ₽</Tag>
                 </div>
                 <div className="flex w-full justify-between items-center">
