@@ -24,7 +24,7 @@ async def send_message_manager(request: Request) -> Response:
         markup = InlineKeyboardMarkup(inline_keyboard=[[
             InlineKeyboardButton(text='🔎Посмотреть ID заказа', callback_data=f'order_show_{data.order_id}')
         ]])
-        text = f"*Сообщение от менеджера по вашему заказу:*\n```. " + escape_markdown(data.text)
+        text = f"*Сообщение от менеджера по вашему заказу:*\n```📨 " + escape_markdown(data.text)
         text += '```\n\n_Чтобы ответить на сообщение, потяните его вправо, если вы с телефона, напишите текст и отправьте\n' \
                 'В ином случае нажмите правой кнопкой мыши на сообщение и нажмите "Ответить"_'
         await bot.send_message(data.user_id, text=text, reply_markup=markup, parse_mode='markdown')
@@ -44,5 +44,5 @@ async def change_order(request: Request) -> Response:
     UserData.get_data(order.user_id).selected_order = order
     logging.warning(order)
     manager = await create_bg_manager(order.user_id)
-    await manager.start(state=OrderSG.order, data=data, mode=StartMode.RESET_STACK, show_mode=ShowMode.SEND)
+    await manager.start(state=OrderSG.order, data=data, mode=StartMode.RESET_STACK, show_mode=ShowMode.DELETE_AND_SEND)
     return Response()
