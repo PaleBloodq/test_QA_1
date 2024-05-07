@@ -10,7 +10,7 @@ services:
       - backend
       - product_parser
       - payments
-      
+
   postgres:
     image: postgres:14-alpine3.17
     ports:
@@ -34,8 +34,14 @@ services:
     volumes:
       - ./backend:/backend
       - ./rsa:/backend/rsa
-    command: sh -c "python manage.py makemigrations --no-input && python manage.py migrate && (python manage.py createsuperuser --username admin --email admin@mail.ru --noinput || true) && python manage.py collectstatic --noinput && python start_service.py"
-
+    command: sh -c "nohup celery -A settings worker --concurrency=2 --pool=threads --loglevel=info & \
+                      nohup celery -A settings beat --loglevel=info & \
+                      python manage.py makemigrations && \
+                      python manage.py migrate && \
+                      (python manage.py createsuperuser --username admin --email admin@mail.ru --noinput || true) && \
+                      python manage.py collectstatic --noinput && \
+                      nohup python start_service.py & \
+                      wait"
 
   product_parser:
     image: registry.gitlab.com/chat-labs/aoki-bot/product_parser:latest
@@ -73,6 +79,8 @@ services:
     image: registry.gitlab.com/chat-labs/aoki-bot/tg_bot:latest
     env_file:
       - ./local.env
+    volumes:
+      - ./tg_bot:/tg_bot
     command: [ "python", "main.py" ]
 
   redis:
@@ -80,5 +88,17 @@ services:
     ports:
       - "6379:6379"
     restart: unless-stopped
+
+
+  flower:
+    image: mher/flower
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/3
+      - FLOWER_PORT=8888
+    ports:
+      - 8889:8888
+    depends_on:
+      - redis
+
 volumes:
   postgres_data:

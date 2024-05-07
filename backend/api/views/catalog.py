@@ -17,7 +17,7 @@ class GetCategories(APIView):
         return Response(self.get_categorys())
 
     @staticmethod
-    @CacheProxy.memoize(timeout=3600, depend_models=[models.Product, models.Tag])
+    @CacheProxy.memoize(timeout=3600, depend_models=[models.Product, models.Tag, models.ProductPublication])
     def get_categorys():
         return [
             {
