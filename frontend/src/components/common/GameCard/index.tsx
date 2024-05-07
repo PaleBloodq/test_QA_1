@@ -19,7 +19,7 @@ const GameCard = React.memo(({ game }: { game: ProductType }) => {
                         ? getDiscount(game?.publications[0]?.original_price, game?.publications[0]?.discount)
                         : game?.publications[0]?.original_price} ₽
                 </h3>
-                {game?.publications[0]?.discount !== null && <Tag type="discount">-{game?.publications[0]?.discount}%</Tag>}
+                {game?.publications[0] && game?.publications[0]?.discount !== 0 && <Tag type="discount">-{game?.publications[0]?.discount}%</Tag>}
             </div>
         </Link>
     );

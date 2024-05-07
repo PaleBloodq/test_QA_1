@@ -47,7 +47,7 @@ export default function HeaderSlider({ data }: { data: SectionType }) {
                                     <div className="absolute bottom-[50px] z-10 flex w-full items-center gap-2 flex-col justify-center">
                                         <h1 className="text-white font-bold text-4xl">{game.publications[0].discount && game.publications[0].discount > 0 ? (game.publications[0].final_price) : (game.publications[0].original_price)} ₽</h1>
                                         <div className='w-16 flex gap-3 justify-center'>
-                                            {game.publications[0].discount !== null && <Tag type="discount">-{game.publications[0].discount}%</Tag>}
+                                            {game.publications[0].discount !== 0 && <Tag type="discount">-{game.publications[0].discount}%</Tag>}
                                             {isNew(game.release_date) && <Tag type="new">Новинка</Tag>}
                                         </div>
                                     </div>
