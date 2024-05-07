@@ -15,7 +15,7 @@ export default function SubscriptionCard({ subscription }: { subscription: Produ
                         ? subscription?.publications[0]?.final_price
                         : subscription?.publications[0]?.original_price} ₽
                 </h3>
-                {subscription?.publications[0]?.discount !== null && <Tag type="discount">-{subscription?.publications[0]?.discount}%</Tag>}
+                {subscription?.publications[0] && subscription?.publications[0]?.discount !== 0 && <Tag type="discount">-{subscription?.publications[0]?.discount}%</Tag>}
             </div>
         </Link>
     )

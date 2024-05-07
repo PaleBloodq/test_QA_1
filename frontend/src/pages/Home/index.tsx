@@ -30,6 +30,8 @@ export default function Home() {
         }
     }, [items, dispatch])
 
+    console.log(data)
+
 
     return (
         <Container>
