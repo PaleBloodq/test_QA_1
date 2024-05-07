@@ -29,24 +29,12 @@ export default function Cart() {
         }
     };
 
-
-
     function calculateTotalPrice(cartItems: CartItemType[]): number {
-        let totalPrice = 0;
-        for (const item of cartItems) {
-            const discountPrice = getDiscount(item.price, item.discount);
-            totalPrice += discountPrice;
-        }
-        return totalPrice;
+        return cartItems.reduce((total, { price, discount }) => total + getDiscount(price, discount), 0);
     }
 
     function calculateTotalCashback(cartItems: CartItemType[]): number {
-        let totalCashback = 0;
-        for (const item of cartItems) {
-            const cashback = calcCashback(item.price, item.cashback);
-            totalCashback += cashback;
-        }
-        return totalCashback;
+        return cartItems.reduce((total, item) => total + calcCashback(item.price, item.cashback), 0);
     }
 
     const { items }: { items: CartItemType[] } = useSelector(cartSelector)
@@ -63,35 +51,42 @@ export default function Cart() {
     }, [items])
 
     useEffect(() => {
-        if (isLoggined) {
-            if (useCashback === true && totalPrice - userData.cashback < 0) {
-                setTotalPrice(0)
-                return
+        let newTotalPrice = calculateTotalPrice(items);
+        if (isLoggined && useCashback) {
+            const cashbackLimit = userData.cashback;
+            if (newTotalPrice < cashbackLimit) {
+                newTotalPrice = 0;
+            } else {
+                newTotalPrice -= cashbackLimit;
             }
-            useCashback === true && items.length > 0 && totalPrice !== 0 ? setTotalPrice(totalPrice - userData.cashback) : setTotalPrice(calculateTotalPrice(items))
         }
-    }, [useCashback])
+        setTotalPrice(newTotalPrice);
+    }, [isLoggined, useCashback, items, userData]);
 
     useEffect(() => {
         if (items.length === 0) {
-            JSON.parse(localStorage.getItem('storageCartItems'))?.forEach((item: CartItemType) => {
-                dispatch(addToCart(item))
-            })
+            const storageParsedItems: CartItemType[] | null = JSON.parse(localStorage.getItem('storageCartItems'));
+            storageParsedItems?.forEach((item) => dispatch(addToCart(item)));
         }
-    }, [items, dispatch])
-
+    }, [items, dispatch]);
 
 
     useEffect(() => {
         const fetchItems = async () => {
-            const storageParsedItems: CartItemType[] = JSON.parse(localStorage.getItem('storageCartItems')) || [];
-            const results = await Promise.all(storageParsedItems.map(item => checkItem(item)));
-            const validItems = storageParsedItems.filter((item, index) => results[index]);
-            localStorage.setItem('storageCartItems', JSON.stringify(validItems));
+            try {
+                const storageParsedItems: CartItemType[] = JSON.parse(localStorage.getItem('storageCartItems')) || [];
+                const promises = storageParsedItems.map(item => checkItem(item));
+                const results = await Promise.all(promises);
+                const validItems = storageParsedItems.filter((_item, index) => results[index]);
+                localStorage.setItem('storageCartItems', JSON.stringify(validItems));
+            } catch (error) {
+                console.error('Ошбика чтения элементов из localStorage:', error);
+            }
         };
 
         fetchItems();
     }, []);
+
 
     return (
         <Container>
