@@ -172,6 +172,7 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
             if publication.final_price != final_price:
                 async_to_sync(send_admin_notification)({'text': f'Цена на издание товара {publication.product.title} изменилась',
                                                         'level': NotifyLevels.WARN.value})
+                publication.price_changed = True
             publication.final_price = final_price
             publication.original_price = original_price
             publication.discount_deadline = offer_ends

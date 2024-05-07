@@ -72,25 +72,31 @@ class Product(BaseModel):
 
 class ProductPublication(BaseModel):
     product = models.ForeignKey(Product, verbose_name='Товар', on_delete=models.CASCADE, related_name='publications')
-    platforms = models.ManyToManyField(Platform, verbose_name='Платформы')
-    final_price = models.IntegerField('Конечная стоимость')
+    platforms = models.ManyToManyField(Platform, verbose_name='Платформы', blank=True)
+    final_price = models.IntegerField('Конечная стоимость', editable=False)
     original_price = models.IntegerField('Полная стоимость')
-    price_changed = models.BooleanField('Цена изменилась', default=False)
-    hash = models.CharField('Хэш', max_length=255, null=True, blank=True)
-    title = models.CharField('Заголовок', max_length=255, null=True, blank=True)
+    price_changed = models.BooleanField('Цена изменилась', default=False, editable=False)
+    hash = models.CharField('Хэш', max_length=255, null=True, blank=True, editable=False)
+    title = models.CharField('Заголовок', max_length=255)
     duration = models.IntegerField('Длительность в месяцах', null=True, blank=True)
     quantity = models.IntegerField('Количество игровой валюты', null=True, blank=True)
     includes = models.TextField('Включает', null=True, blank=True)
     preview = ProcessedImageField(verbose_name='Превью', format='WEBP', options={'quality': 40}, null=True, blank=True)
     photo = ProcessedImageField(verbose_name='Изображение', format='WEBP', options={'quality': 60}, null=True,
                                 blank=True)
-    cashback = models.IntegerField('Кэшбек %', default=3, null=True, blank=True, validators=percent_validator)
-    ps_plus_discount = models.IntegerField('Скидка PS Plus %', null=True, blank=True, validators=percent_validator)
-    discount = models.IntegerField('Скидка %', null=True, blank=True, validators=percent_validator)
+    cashback = models.IntegerField('Кэшбек %', default=3, validators=percent_validator)
+    ps_plus_discount = models.IntegerField('Скидка PS Plus %', default=0, validators=percent_validator)
+    discount = models.IntegerField('Скидка %', default=0, validators=percent_validator)
     discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
 
-    def clean(self) -> None:
-        return super().clean()
+    def _normalize_price(self, price: int) -> int:
+        price = round(price / 1000) * 1000 if price >= 1000 else price
+        return price - price % 5
+    
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.final_price = self.original_price - self.original_price * self.discount / 100
+        self.final_price = self._normalize_price(self.final_price)
+        return super().save(force_insert, force_update, using, update_fields)
 
     def set_photo_from_url(self, url):
         try:
