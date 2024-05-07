@@ -8,16 +8,15 @@ import { useEffect, useState } from "react";
 import Button from "../../../components/common/Button";
 import { useCheckPromocodeMutation, useMakeOrderMutation } from "../../../services/userApi";
 
-export default function Order({ useCashback }: { useCashback: boolean }) {
+export default function Order({ useCashback, totalPrice, setTotalPrice }: { useCashback: boolean, totalPrice: number, setTotalPrice: (arg1: number) => void }) {
 
 
     const { hasAccount, accountEmail, accountPassword, reciptEmail, rememberData, promocode, items } = useSelector(cartSelector)
     const [makeOrder, { data: orderData, error: orderErorr }] = useMakeOrderMutation();
     const [checkPromocode, { data: promoData, error: promoError }] = useCheckPromocodeMutation();
-    // const { billEmail } = useSelector(userSelector)
     const [sameEmail, setSameEmail] = useState(false)
-    // const [validPromo, setValidPromo] = useState('')
     const dispatch = useDispatch()
+    const [promocodeSelected, setPromocodeSelected] = useState(false)
 
     useEffect(() => {
         sameEmail ? dispatch(setReciptEmail(accountEmail)) : dispatch(setReciptEmail(""))
@@ -52,6 +51,13 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
         }
     }, [orderData])
 
+    useEffect(() => {
+        if (promocodeSelected === false && promoData?.result === true && promoData?.discount) {
+            setTotalPrice((totalPrice - (promoData?.discount / 100) * totalPrice))
+            setPromocodeSelected(true)
+        }
+    }, [promoData])
+
 
     return (
         <div className="mt-8">
@@ -84,7 +90,7 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
                             </svg>
                         </button>
                     </div>
-                    {promoData ? promoData?.result === true ? <span className="text-sm text-green-600">Промокод успешно применен</span> : <span className="text-sm text-red-600">Такого промокода не существует</span> : <></>}
+                    {promoData ? promoData?.result === true ? <span className="text-sm text-green-600">Промокод применен. Скидка составила <strong>{promoData?.discount}%</strong></span> : <span className="text-sm text-red-600">Такого промокода не существует</span> : <></>}
                 </div>
                 <Button onClick={handleOrder}>Оформить заказ</Button>
             </div>

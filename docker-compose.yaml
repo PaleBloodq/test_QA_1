@@ -33,7 +33,7 @@ services:
     volumes:
       - ./backend:/backend
       - ./rsa:/backend/rsa
-    command: sh -c "nohup celery -A settings worker --loglevel=info & \
+    command: sh -c "nohup celery -A settings worker --concurrency=2 --pool=threads --loglevel=info & \
                       nohup celery -A settings beat --loglevel=info & \
                       python manage.py makemigrations && \
                       python manage.py migrate && \
@@ -78,6 +78,8 @@ services:
 
   tg_bot:
     image: $CI_REGISTRY_IMAGE/tg_bot:latest
+    volumes:
+      - ./tg_bot:/tg_bot
     env_file:
       - ./local.env
     command: [ "python", "main.py" ]

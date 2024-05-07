@@ -17,10 +17,9 @@ import Line from '../../components/common/Line';
 import { useGetAnyProductQuery } from '../../services/productsApi';
 import { CartItemType } from '../../types/cartItem';
 import AddToCartButton from '../../components/common/AddToCartButton';
-import { Publication } from '../../types/PublicationType';
 import { replaceUrl } from '../../helpers/replaceUrl';
-import { ProductType } from '../../types/ProductType';
 import calcCashback from '../../helpers/calcCashback';
+import { ProductType } from '../../types/ProductType';
 
 export default function Game() {
     const dispatch = useDispatch();
@@ -30,7 +29,6 @@ export default function Game() {
     const selectedPlatform = useSelector(selectedPlatformSelector);
     const currentPrice = useSelector(currentPriceSelector);
 
-
     useEffect(() => {
         if (data?.publications) {
             dispatch(setSelectedPublication(data?.publications[0]?.id));
@@ -38,26 +36,27 @@ export default function Game() {
     }, [data, dispatch]);
 
     useEffect(() => {
-        dispatch(setSelectedPublication(pubId))
-        dispatch(setSelectedPlatform(data?.publications?.find((pub) => pub?.id === pubId)?.platforms[0]));
-    }, [isLoading])
+        dispatch(setSelectedPublication(pubId));
+        const publication = data?.publications?.find(pub => pub?.id === pubId);
+        if (publication) {
+            dispatch(setSelectedPlatform(publication.platforms[0]));
+        }
+    }, [isLoading, dispatch, data, pubId]);
 
     useEffect(() => {
-        const publication = data?.publications?.find((pub: Publication) => pub?.id === selectedPublication);
-        const price = publication?.original_price
-        dispatch(setCurrentPrice(price));
-    }, [selectedPublication, selectedPlatform, data]);
-
+        const publication = data?.publications?.find(pub => pub?.id === selectedPublication);
+        if (publication) {
+            dispatch(setCurrentPrice(publication.original_price));
+        }
+    }, [selectedPublication, selectedPlatform, data, dispatch]);
 
     if (isLoading) {
         return <div>Загрузка...</div>;
     }
 
     const { publications, title } = data || {};
-    const currentPublication = publications?.find((pub: Publication) => pub?.id === selectedPublication);
+    const currentPublication = publications?.find(pub => pub?.id === selectedPublication);
     const isPsPlus = currentPublication?.ps_plus_discount;
-
-
 
     const cartItem: CartItemType = {
         id: currentPublication?.id,
@@ -68,12 +67,14 @@ export default function Game() {
         platform: selectedPlatform,
         price: currentPrice,
         discount: currentPublication?.discount,
-        cashback: currentPublication?.cashback
+        cashback: currentPublication?.cashback,
+    };
+
+    const includes = currentPublication?.includes?.split("\r\n") || [];
+
+    if (!currentPublication) {
+        return <div>Publication not found</div>;
     }
-
-    const includes = currentPublication?.includes?.split("\r\n") || []
-
-
 
     return (
         <Container>
@@ -93,7 +94,7 @@ export default function Game() {
                             <SelectPrice price={currentPrice} discount={currentPublication?.ps_plus_discount} />
                         )}
                         <div className="flex gap-2">
-                            {currentPublication?.ps_plus_discount === null && currentPublication?.discount > 0 ? (
+                            {currentPublication?.ps_plus_discount === 0 && currentPublication?.discount > 0 ? (
                                 <Tag type="discount">-{currentPublication.discount}%</Tag>
                             ) : null}
                             {currentPublication?.cashback ? <Tag type="cashback">Кэшбэк: {calcCashback(currentPrice, currentPublication?.cashback)} ₽</Tag> : null}

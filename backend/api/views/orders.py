@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import date
 from dataclasses import dataclass
@@ -11,6 +12,7 @@ from django.db.models import Sum
 from django.db.models.manager import BaseManager
 from api import models, serializers, utils
 from api.senders import send_admin_notification, NotifyLevels
+from api.utils import send_order_to_bot
 
 PAYMENTS_URL = f'{os.environ.get("PAYMENTS_SCHEMA")}://{os.environ.get("PAYMENTS_HOST")}'
 if os.environ.get("PAYMENTS_PORT"):
@@ -218,18 +220,16 @@ class UpdateOrderStatus(APIView):
         if check_token.get('TokenCorrect'):
             order = models.Order.objects.filter(id=request.data.get('OrderId')).first()
             if order:
-                if request.data.get('Status') == 'CONFIRMED':
-                    async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} оплачен',
-                                                            'level': NotifyLevels.SUCCESS.value})
-                    order.status = models.Order.StatusChoices.PAID
-                    order.profile.cashback += order.cashback
-                    order.profile.save()
-                else:
-                    async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
-                                                            'level': NotifyLevels.ERROR.value})
-                    order.status = models.Order.StatusChoices.ERROR
+                match request.data.get('Status'):
+                    case 'CONFIRMED':
+                        async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} оплачен',
+                                                                'level': NotifyLevels.SUCCESS.value})
+                        order.status = models.Order.StatusChoices.PAID
+                        order.profile.cashback += order.cashback
+                        order.profile.save()
+                    case 'REJECTED'| 'REVERSED' | 'PARTIAL_REVERSED'| 'PARTIAL_REFUNDED'| 'REFUNDED':
+                        async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
+                                                                'level': NotifyLevels.ERROR.value})
+                        order.status = models.Order.StatusChoices.ERROR
                 order.save()
-                bot_url = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/payment/access/'
-                requests.post(bot_url, json=serializers.OrderSerializer(order).data)
-            return Response('OK')
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response('OK')

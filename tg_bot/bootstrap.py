@@ -59,11 +59,12 @@ class ApiWrapper:
             await cls.session.__aexit__(None, None, None)
 
     @classmethod
-    async def _make_request(cls, method: str, url: str, data: dict = None, params: dict = None, expect_json = True) -> Union[bool, dict]:
+    async def _make_request(cls, method: str, url: str, data: dict = None, headers: dict = None, expect_json = True) -> Union[bool, dict]:
         await cls.init_session()
         full_url = f"{cls.api_root_url}{url}"
         try:
-            async with cls.session.request(method, full_url, json=data, params=params, timeout=cls.timeout) as response:
+            async with cls.session.request(method, full_url, json=data, headers=headers, timeout=cls.timeout) as response:
+                logging.warning(response)
                 if response.status == 200 and expect_json:
                     json_data = await response.json()
                     return json_data
@@ -88,6 +89,10 @@ class ApiWrapper:
         data = {'order_id': order_id, 'text': text}
         return await cls._make_request('POST', '/api/order/chat/', data=data, expect_json=False)
 
+    @classmethod
+    async def get_orders(cls, token: str) -> Union[bool, dict]:
+        headers = {'Authorization': 'Bearer ' + token}
+        return await cls._make_request('GET', '/api/profile/orders/?limit=100&offset=0', headers=headers)
 
 def bootstrap():
     MyBot()
