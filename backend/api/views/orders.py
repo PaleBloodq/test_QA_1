@@ -232,6 +232,4 @@ class UpdateOrderStatus(APIView):
                                                                 'level': NotifyLevels.ERROR.value})
                         order.status = models.Order.StatusChoices.ERROR
                 order.save()
-                send_order_to_bot(order)
-            return Response('OK')
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response('OK')
