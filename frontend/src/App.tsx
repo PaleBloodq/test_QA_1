@@ -16,7 +16,7 @@ export default function App() {
 
 
 
-
+  window.Telegram.WebApp.expand()
   const dispatch = useDispatch();
   const location = useLocation();
   const transitions = useTransition(location, {
@@ -28,8 +28,8 @@ export default function App() {
   });
   const navigate = useNavigate();
 
-  const { data: userData } = useGetUserQuery({});
-  // const [refreshToken, { error: tokenError, data: tokenData }] = useRefreshTokenMutation();
+  const { data: userData, error: userError } = useGetUserQuery({});
+  const [refreshToken, { data: refreshData, error: refreshError }] = useRefreshTokenMutation()
 
   useEffect(() => {
     dispatch(setUserData(userData))
@@ -46,23 +46,38 @@ export default function App() {
   }, [userData])
 
 
+  useEffect(() => {
+    if (userError?.status === 403) {
+      refreshToken({ token: sessionStorage.getItem('token') })
+    }
+  }, [userError])
 
-  // useEffect(() => {
-  //   async function handleTokenRefresh() {
-  //     try {
-  //       const refreshedToken = await refreshToken({ token: cookie.get('token') });
-  //       if (refreshedToken?.data) {
-  //         cookie.set('token', refreshedToken?.data)
-  //       }
-  //     } catch (error) {
-  //       console.error('Failed to refresh token:', error);
-  //     }
-  //   }
+  useEffect(() => {
+    if (refreshData) {
+      const newToken = refreshData?.token;
+      sessionStorage.setItem('token', newToken);
 
-  //   if (userError?.status === 403) {
-  //     handleTokenRefresh()
-  //   }
-  // }, [userError, refreshToken])
+      const tokenRegex = /token=([^&#]+)/;
+      let url = window.location.href;
+      if (url.match(tokenRegex)) {
+        url = url.replace(tokenRegex, `token=${newToken}`);
+      } else {
+        const separator = url.includes('?') ? '&' : '?';
+        url += `${separator}token=${newToken}`;
+      }
+
+      window.history.pushState({}, '', url);
+      window.location.reload()
+    }
+  }, [refreshData]);
+
+  useEffect(() => {
+    if (refreshError) {
+      window.Telegram.WebApp.showAlert('Произошла ошибка, пожалуйста перезайдите в приложение', () => {
+        window.Telegram.WebApp.close()
+      });
+    }
+  }, [refreshError])
 
 
 

@@ -5,7 +5,7 @@ services:
     ports:
       - "8100:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./dev.nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - backend
       - product_parser
@@ -21,7 +21,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   backend:
-    image: $CI_REGISTRY_IMAGE/backend:latest
+    image: registry.gitlab.com/chat-labs/aoki-bot/backend:latest
+    build: backend/
     depends_on:
       - postgres
       - redis
@@ -33,43 +34,35 @@ services:
     volumes:
       - ./backend:/backend
       - ./rsa:/backend/rsa
-    command: sh -c "nohup celery -A settings worker --loglevel=info & \
-                      nohup celery -A settings beat --loglevel=info & \
-                      python manage.py makemigrations && \
-                      python manage.py migrate && \
-                      (python manage.py createsuperuser --username admin --email admin@mail.ru --noinput || true) && \
-                      python manage.py collectstatic --noinput && \
-                      nohup python start_service.py & \
-                      wait"
+    command: sh -c "python manage.py makemigrations --no-input && python manage.py migrate && (python manage.py createsuperuser --username admin --email admin@mail.ru --noinput || true) && python manage.py collectstatic --noinput && python start_service.py"
+
 
   product_parser:
-    image: $CI_REGISTRY_IMAGE/product_parser:latest
+    image: registry.gitlab.com/chat-labs/aoki-bot/product_parser:latest
     depends_on:
       - postgres
       - backend
     env_file:
       - ./local.env
-    volumes:
-      - ./product_parser:/product_parser
     environment:
       - BACKEND_HOST=backend
     command: [ "python", "main.py" ]
 
 
   payments:
-    image: $CI_REGISTRY_IMAGE/payments:latest
+    image: registry.gitlab.com/chat-labs/aoki-bot/payments:latest
     depends_on:
       - postgres
       - backend
-    volumes:
-      - ./payments:/payments
     env_file:
       - ./local.env
+    volumes:
+      - ./payments:/payments
     command: [ "python", "main.py" ]
 
   
   frontend:
-    image: $CI_REGISTRY_IMAGE/frontend:latest
+    image: registry.gitlab.com/chat-labs/aoki-bot/frontend:latest
     env_file:
       - ./local.env
     ports:
@@ -77,7 +70,7 @@ services:
     command: [ "serve", "-s", "dist", "-l", "8050" ]
 
   tg_bot:
-    image: $CI_REGISTRY_IMAGE/tg_bot:latest
+    image: registry.gitlab.com/chat-labs/aoki-bot/tg_bot:latest
     env_file:
       - ./local.env
     command: [ "python", "main.py" ]

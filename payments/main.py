@@ -1,7 +1,8 @@
+import logging
 import os
 from aiohttp import web
 import routes
-
+logging.basicConfig(level=logging.DEBUG)
 
 def main():
     app = web.Application()
