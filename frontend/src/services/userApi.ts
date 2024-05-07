@@ -15,8 +15,6 @@ getTokenFromUrl(window.location.href);
 
 const token = sessionStorage.getItem("token");
 
-console.log(token);
-
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
