@@ -58,6 +58,12 @@ export default function Order({ useCashback, totalPrice, setTotalPrice }: { useC
         }
     }, [promoData])
 
+    useEffect(() => {
+        if (orderErorr || promoError) {
+            window.Telegram.WebApp.showAlert('Произошла ошибка! Попробуйте еще раз или перезайдите в приложение.');
+        }
+    }, [orderErorr, promoError])
+
 
     return (
         <div className="mt-8">
