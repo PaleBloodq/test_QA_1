@@ -1,7 +1,7 @@
 import logging
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram_dialog import StartMode
+from aiogram_dialog import StartMode, ShowMode
 from pydantic import ValidationError
 
 import bootstrap
@@ -44,5 +44,5 @@ async def change_order(request: Request) -> Response:
     UserData.get_data(order.user_id).selected_order = order
     logging.warning(order)
     manager = await create_bg_manager(order.user_id)
-    await manager.start(state=OrderSG.order, data=data, mode=StartMode.RESET_STACK)
+    await manager.start(state=OrderSG.order, data=data, mode=StartMode.RESET_STACK, show_mode=ShowMode.SEND)
     return Response()
