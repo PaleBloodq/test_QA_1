@@ -55,8 +55,11 @@ export default function Subscription() {
         cashback: currentSubscription?.cashback
     }
     useEffect(() => {
-        dispatch(setDuration(data?.publications?.find((pub) => pub?.id === id).duration))
-        dispatch(setSelectedSubscription(data?.publications?.find((pub) => pub?.id === id).id))
+        const foundSubscription = data?.publications?.find((sub: Publication) => sub?.id === id)
+        if (foundSubscription) {
+            dispatch(setDuration(foundSubscription.duration))
+            dispatch(setSelectedSubscription(foundSubscription.id))
+        }
     }, [isLoading, dispatch, id])
 
 
