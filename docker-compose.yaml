@@ -78,6 +78,8 @@ services:
 
   tg_bot:
     image: $CI_REGISTRY_IMAGE/tg_bot:latest
+    volumes:
+      - ./tg_bot:/tg_bot
     env_file:
       - ./local.env
     command: [ "python", "main.py" ]
