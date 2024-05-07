@@ -33,6 +33,9 @@ const cartSlice = createSlice({
     deleteFromCart: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
+    clearCart: (state) => {
+      state.items = [];
+    },
     setHasAccount: (state, action) => {
       state.hasAccount = action.payload;
     },
@@ -63,6 +66,7 @@ export const {
   setPromocode,
   setReciptEmail,
   setRememberData,
+  clearCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
