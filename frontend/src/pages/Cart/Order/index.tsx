@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import Button from "../../../components/common/Button";
 import { useCheckPromocodeMutation, useMakeOrderMutation } from "../../../services/userApi";
 
-export default function Order({ useCashback }: { useCashback: boolean }) {
+export default function Order({ useCashback, totalPrice, setTotalPrice }: { useCashback: boolean, totalPrice: number, setTotalPrice: (arg1: number) => void }) {
 
 
     const { hasAccount, accountEmail, accountPassword, reciptEmail, rememberData, promocode, items } = useSelector(cartSelector)
@@ -51,6 +51,12 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
             window.location.href = orderData?.PaymentUrl
         }
     }, [orderData])
+
+    useEffect(() => {
+        if (promoData?.result === true && promoData?.discount) {
+            setTotalPrice((totalPrice - (promoData?.discount / 100) * totalPrice))
+        }
+    }, [promoData])
 
 
     return (

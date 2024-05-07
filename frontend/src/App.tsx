@@ -81,7 +81,6 @@ export default function App() {
 
 
 
-
   const telegramThemeColor = window?.Telegram?.WebApp.headerColor
 
   useEffect(() => {

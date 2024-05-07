@@ -118,7 +118,7 @@ export default function Cart() {
                     </div>
                 </div>
             </div>
-            <Order useCashback={useCashback} />
+            <Order totalPrice={totalPrice} setTotalPrice={setTotalPrice} useCashback={useCashback} />
         </Container>
     )
 }
