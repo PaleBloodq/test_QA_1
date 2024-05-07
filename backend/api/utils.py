@@ -2,14 +2,17 @@ import os
 from datetime import datetime, timedelta
 from hashlib import md5
 import uuid
+
+import requests
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 import jwt
-from api import models
+from api import models, serializers
 
+BOT_URL = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/change/'
 
 with open(os.environ.get('RSA_PEM_FILE'), "rb") as key_file:
     private_key = serialization.load_pem_private_key(
@@ -89,3 +92,6 @@ def check_promo_code(promo_code: str | None) -> int | None:
         ).first()
         if promo:
             return promo.discount
+
+def send_order_to_bot(order: models.Order):
+    requests.post(BOT_URL, json=serializers.OrderSerializer(order).data)

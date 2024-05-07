@@ -11,6 +11,7 @@ from django.db.models import Sum
 from django.db.models.manager import BaseManager
 from api import models, serializers, utils
 from api.senders import send_admin_notification, NotifyLevels
+from api.utils import send_order_to_bot
 
 PAYMENTS_URL = f'{os.environ.get("PAYMENTS_SCHEMA")}://{os.environ.get("PAYMENTS_HOST")}'
 if os.environ.get("PAYMENTS_PORT"):
@@ -229,7 +230,6 @@ class UpdateOrderStatus(APIView):
                                                             'level': NotifyLevels.ERROR.value})
                     order.status = models.Order.StatusChoices.ERROR
                 order.save()
-                bot_url = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/payment/access/'
-                requests.post(bot_url, json=serializers.OrderSerializer(order).data)
+                send_order_to_bot(order)
             return Response('OK')
         return Response(status=status.HTTP_400_BAD_REQUEST)

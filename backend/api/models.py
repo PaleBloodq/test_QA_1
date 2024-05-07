@@ -59,7 +59,8 @@ class Product(BaseModel):
     ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True)
 
     def clean(self):
-        self.ps_store_url = validate_ps_store_url(self.ps_store_url)
+        if not self.type in (self.TypeChoices.SUBSCRIPTION, self.TypeChoices.DONATION):
+            self.ps_store_url = validate_ps_store_url(self.ps_store_url)
         super().clean()
 
     def __str__(self) -> str:
@@ -89,7 +90,7 @@ class ProductPublication(BaseModel):
     discount = models.IntegerField('Скидка %', default=0, validators=percent_validator)
     discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
 
-    def _normalize_price(self, price: int) -> int:
+    def _normalize_price(self, price: float) -> int:
         price = round(price / 1000) * 1000 if price >= 1000 else price
         return price - price % 5
     
@@ -184,7 +185,6 @@ class Order(BaseModel):
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
-
 
 class OrderProduct(BaseModel):
     order = models.ForeignKey(Order, verbose_name='Заказ', on_delete=models.CASCADE, related_name='order_products')
