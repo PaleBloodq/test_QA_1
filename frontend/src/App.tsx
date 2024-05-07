@@ -71,15 +71,14 @@ export default function App() {
     }
   }, [refreshData]);
 
-  // useEffect(() => {
-  //   if (refreshError) {
-  //     window.Telegram.WebApp.showAlert('Произошла ошибка, пожалуйста перезайдите в приложение', () => {
-  //       window.Telegram.WebApp.close()
-  //     });
-  //   }
-  // }, [refreshError])
+  useEffect(() => {
+    if (refreshError) {
+      window.Telegram.WebApp.showAlert('Произошла ошибка, пожалуйста перезайдите в приложение', () => {
+        window.Telegram.WebApp.close()
+      });
+    }
+  }, [refreshError])
 
-  // РАСКОМЕНТИТь
 
 
 
