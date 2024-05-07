@@ -64,8 +64,5 @@ def delete_photo_product_publication(instance: models.ProductPublication, **kwar
 @receiver(signals.post_save, sender=models.Order)
 def change_order_status(sender, instance: models.Order, created: bool, **kwargs):
     if not created:
-        if instance.status in (instance.StatusChoices.IN_PROGRESS,
-                               instance.StatusChoices.COMPLETED):
-            ...
         send_order_to_bot(instance)
 
