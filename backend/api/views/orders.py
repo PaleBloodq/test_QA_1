@@ -224,14 +224,12 @@ class UpdateOrderStatus(APIView):
                     order.status = models.Order.StatusChoices.PAID
                     order.profile.cashback += order.cashback
                     order.profile.save()
-                    bot_url = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/payment/access/'
-                    requests.post(bot_url, data={'user_id': order.profile.id,
-                                                 'order_id': order.id,
-                                                 'need_account': order.need_account})
                 else:
                     async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
                                                             'level': NotifyLevels.ERROR.value})
                     order.status = models.Order.StatusChoices.ERROR
                 order.save()
+                bot_url = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/payment/access/'
+                requests.post(bot_url, json=serializers.OrderSerializer(order).data)
             return Response('OK')
         return Response(status=status.HTTP_400_BAD_REQUEST)
