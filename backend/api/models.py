@@ -54,8 +54,8 @@ class Product(BaseModel):
 
     title = models.CharField('Заголовок', max_length=255)
     type = models.CharField('Тип', max_length=32, choices=TypeChoices.choices)
-    languages = models.ManyToManyField(Language, verbose_name='Языки')
-    release_date = models.DateField('Дата релиза', )
+    languages = models.ManyToManyField(Language, verbose_name='Языки', blank=True)
+    release_date = models.DateField('Дата релиза', null=True, blank=True)
     ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True)
 
     def clean(self):

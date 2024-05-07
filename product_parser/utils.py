@@ -38,6 +38,7 @@ class Edition:
     offer_ends: Optional[str] = None
     discount: Optional[int] = None
     image: Optional[str] = None
+    release_date: Optional[str] = None
 
     final_price_int: int = field(init=False, repr=False)
     original_price_int: Optional[int] = field(init=False, repr=False)
@@ -49,6 +50,7 @@ class Edition:
         self.original_price = self.original_price_int if self.original_price_int else self.final_price_int
         self.offer_ends = self._parse_offer_ends(self.offer_ends)
         self.discount = self._calculate_discount(self.original_price_int, self.final_price_int)
+        self.release_date = self._parse_release_date(self.release_date)
 
     @staticmethod
     def _normalize_price(price: Optional[str]) -> int:
@@ -70,6 +72,12 @@ class Edition:
     def _parse_offer_ends(offer_ends: Optional[str]) -> Optional[str]:
         if offer_ends:
             return datetime.strptime(offer_ends, r"Offer ends %d/%m/%Y %I:%M %p %Z").isoformat()
+        return None
+    
+    @staticmethod
+    def _parse_release_date(release_date: Optional[str]) -> Optional[str]:
+        if release_date:
+            return datetime.strptime(release_date, r"%d/%m/%Y").isoformat()
         return None
 
     @staticmethod
@@ -123,9 +131,9 @@ class Parser:
             product_platforms = (
                 soup.find("dd", {"data-qa": re.compile("platform-value")}).text.split(", ")
             )
-
+            release_date = soup.find("dd", {"data-qa": re.compile("releaseDate-value")})
             editions = [
-                self._parse_edition(soup_edition, product_platforms)
+                self._parse_edition(soup_edition, product_platforms, release_date)
                 for soup_edition in soup.find_all("article")
                 if soup_edition.find("span", {"data-qa": re.compile("finalPrice")}).text != "Free"
             ]
@@ -134,7 +142,7 @@ class Parser:
                 await self.send_publications(session, str(product_id), editions)
 
     @staticmethod
-    def _parse_edition(soup_edition, product_platforms: List[str]) -> Edition:
+    def _parse_edition(soup_edition, product_platforms: List[str], release_date: str) -> Edition:
         title = soup_edition.find("h3", {"data-qa": re.compile("editionName")}).text
         final_price = soup_edition.find("span", {"data-qa": re.compile("finalPrice")}).text
         platforms = [
@@ -153,6 +161,7 @@ class Parser:
             original_price=original_price,
             offer_ends=offer_ends,
             image=image,
+            release_date=release_date,
         )
 
     async def send_publications(self, session: aiohttp.ClientSession, product_id: str, editions: List[Edition]):

@@ -151,6 +151,7 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
     offer_ends = serializers.DateTimeField(allow_null=True)
     discount = serializers.IntegerField(allow_null=True)
     image = serializers.CharField(allow_null=True)
+    release_date = serializers.DateField(allow_null=True)
 
     def save(self, product: models.Product):
         title = self.validated_data.get('title')
@@ -160,6 +161,10 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
         offer_ends = self.validated_data.get('offer_ends')
         discount = self.validated_data.get('discount')
         image = self.validated_data.get('image')
+        release_date = self.validated_data.get('release_date')
+        if product.release_date != release_date:
+            product.release_date = release_date
+            product.save()
         hash = utils.hash_product_publication(
             product.id,
             title,
