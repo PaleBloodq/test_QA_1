@@ -130,16 +130,22 @@ class OrderProductSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(source='profile')
+    order_id = serializers.UUIDField(source='id')
     order_products = OrderProductSerializer(many=True)
     
     class Meta:
         model = models.Order
         fields = (
+            'user_id',
+            'order_id',
             'date',
             'amount',
             'status',
             'order_products',
             'payment_url',
+            'need_account',
+            'status',
         )
 
 
