@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import date
 from dataclasses import dataclass
@@ -219,16 +220,17 @@ class UpdateOrderStatus(APIView):
         if check_token.get('TokenCorrect'):
             order = models.Order.objects.filter(id=request.data.get('OrderId')).first()
             if order:
-                if request.data.get('Status') == 'CONFIRMED':
-                    async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} оплачен',
-                                                            'level': NotifyLevels.SUCCESS.value})
-                    order.status = models.Order.StatusChoices.PAID
-                    order.profile.cashback += order.cashback
-                    order.profile.save()
-                else:
-                    async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
-                                                            'level': NotifyLevels.ERROR.value})
-                    order.status = models.Order.StatusChoices.ERROR
+                match request.data.get('Status'):
+                    case 'CONFIRMED':
+                        async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} оплачен',
+                                                                'level': NotifyLevels.SUCCESS.value})
+                        order.status = models.Order.StatusChoices.PAID
+                        order.profile.cashback += order.cashback
+                        order.profile.save()
+                    case 'REJECTED'| 'REVERSED' | 'PARTIAL_REVERSED'| 'PARTIAL_REFUNDED'| 'REFUNDED':
+                        async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
+                                                                'level': NotifyLevels.ERROR.value})
+                        order.status = models.Order.StatusChoices.ERROR
                 order.save()
                 send_order_to_bot(order)
             return Response('OK')
