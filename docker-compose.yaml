@@ -33,7 +33,7 @@ services:
     volumes:
       - ./backend:/backend
       - ./rsa:/backend/rsa
-    command: sh -c "nohup celery -A settings worker --loglevel=info & \
+    command: sh -c "nohup celery -A settings worker --concurrency=2 --pool=threads --loglevel=info & \
                       nohup celery -A settings beat --loglevel=info & \
                       python manage.py makemigrations && \
                       python manage.py migrate && \
