@@ -77,7 +77,8 @@ class Edition:
     @staticmethod
     def _parse_release_date(release_date: Optional[str]) -> Optional[str]:
         if release_date:
-            return datetime.strptime(release_date, r"%d/%m/%Y").isoformat()
+            parsed_date = datetime.strptime(release_date, r"%d/%m/%Y")
+            return parsed_date.date().isoformat()
         return None
 
     @staticmethod
