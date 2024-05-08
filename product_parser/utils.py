@@ -131,7 +131,7 @@ class Parser:
             product_platforms = (
                 soup.find("dd", {"data-qa": re.compile("platform-value")}).text.split(", ")
             )
-            release_date = soup.find("dd", {"data-qa": re.compile("releaseDate-value")})
+            release_date = soup.find("dd", {"data-qa": re.compile("releaseDate-value")}).text
             editions = [
                 self._parse_edition(soup_edition, product_platforms, release_date)
                 for soup_edition in soup.find_all("article")
