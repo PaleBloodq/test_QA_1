@@ -28,13 +28,8 @@ export default function Profile() {
         dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
     }, [])
 
-    // useEffect(() => {
-    //     dispatch(setUserName(`123`))
-    // }, [])
 
 
-
-    console.log(ordersError)
 
     function orderStatusIcon(status: "PAID" | "ERROR" | "OK" | "PAYMENT" | "IN_PROGRESS" | "COMPLETED"): React.ReactNode {
         switch (status) {

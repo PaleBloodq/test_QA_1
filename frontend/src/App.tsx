@@ -47,7 +47,7 @@ export default function App() {
 
 
   useEffect(() => {
-    if (userError?.status === 403) {
+    if (userError && 'status' in userError && userError.status === 403) {
       refreshToken({ token: sessionStorage.getItem('token') })
     }
   }, [userError])
