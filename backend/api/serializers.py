@@ -151,8 +151,8 @@ class OrderSerializer(serializers.ModelSerializer):
 class UpdateProductPublicationSerializer(serializers.Serializer):
     title = serializers.CharField(required=True)
     platforms = serializers.ListField(required=True)
-    final_price = serializers.IntegerField(required=True)
-    original_price = serializers.IntegerField(required=True)
+    final_price = serializers.IntegerField(allow_null=True)
+    original_price = serializers.IntegerField(allow_null=True)
     offer_ends = serializers.DateTimeField(allow_null=True)
     discount = serializers.IntegerField(allow_null=True)
     image = serializers.CharField(allow_null=True)
@@ -161,10 +161,10 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
     def save(self, product: models.Product):
         title = self.validated_data.get('title')
         platforms = self.validated_data.get('platforms')
-        final_price = self.validated_data.get('final_price')
-        original_price = self.validated_data.get('original_price')
+        final_price = self.validated_data.get('final_price') or 0
+        original_price = self.validated_data.get('original_price') or 0
         offer_ends = self.validated_data.get('offer_ends')
-        discount = self.validated_data.get('discount')
+        discount = self.validated_data.get('discount') or 0
         image = self.validated_data.get('image')
         release_date = self.validated_data.get('release_date')
         if product.release_date != release_date:
@@ -188,7 +188,6 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
             publication.discount_deadline = offer_ends
             publication.discount = discount
         else:
-
             publication = models.ProductPublication(
                 product=product,
                 title=title,

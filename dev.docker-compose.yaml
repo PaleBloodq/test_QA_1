@@ -50,6 +50,8 @@ services:
       - backend
     env_file:
       - ./local.env
+    volumes:
+      - ./product_parser:/product_parser
     environment:
       - BACKEND_HOST=backend
     command: [ "python", "main.py" ]
