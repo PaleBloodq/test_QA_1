@@ -230,6 +230,8 @@ class UpdateOrderStatus(APIView):
             if order:
                 match request.data.get('Status'):
                     case 'CONFIRMED':
+                        if order.status == order.status.PAID:
+                            return Response('OK')
                         async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} оплачен',
                                                                 'level': NotifyLevels.SUCCESS.value})
                         order.status = models.Order.StatusChoices.PAID
