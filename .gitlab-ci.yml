@@ -134,6 +134,7 @@ deploy:
     - mv nginx.processed.conf nginx.conf
     - if [ ! -d "rsa" ]; then mkdir -p rsa and openssl genpkey -algorithm RSA -out rsa/private.pem && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem; fi
     - docker compose pull
+    - docker compose down
     - docker compose up -d
     - docker image prune -a -f
   rules:
