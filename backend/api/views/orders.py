@@ -57,6 +57,7 @@ class OrderInfo:
     email: str
     password: str
     promo_code: str
+    spend_cashback_amount: int = 0
     
     def get_promo_code_discount(self) -> int | None:
         discount = utils.check_promo_code(self.promo_code)
@@ -71,8 +72,10 @@ class OrderInfo:
             amount -= amount * promo_code_discount / 100
         if self.spend_cashback:
             if self.profile.cashback >= amount:
+                self.spend_cashback_amount = amount - 1
                 return 1
-            amount -= self.profile.cashback
+            self.spend_cashback_amount = self.profile.cashback
+            amount -= self.spend_cashback_amount
         return amount
     
     def get_description(self, publication: models.ProductPublication) -> str:
@@ -81,15 +84,17 @@ class OrderInfo:
             description += f' - {platform.name}'
         return description
     
-    def remember_ps_account(self):
-        self.profile.playstation_email = self.email
-        self.profile.playstation_password = self.password
-        self.profile.bill_email = self.bill_email
+    def update_profile(self):
+        if self.remember_account:
+            self.profile.playstation_email = self.email
+            self.profile.playstation_password = self.password
+            self.profile.bill_email = self.bill_email
+        if self.spend_cashback:
+            self.profile.cashback -= self.spend_cashback_amount
         self.profile.save()
     
     def fill_order(self, order: models.Order, promo_code_discount: int) -> models.Order:
-        if self.remember_account:
-            self.remember_ps_account()
+        self.update_profile()
         order.cashback = 0
         for publication in self.cart:
             if not self.spend_cashback:
@@ -116,6 +121,8 @@ class OrderInfo:
             order.payment_id = payment.validated_data.get('payment_id')
             order.payment_url = payment.validated_data.get('payment_url')
             order.status = models.Order.StatusChoices.PAYMENT
+        else:
+            order.status = models.Order.StatusChoices.ERROR
         order.save()
         return order
     
@@ -138,6 +145,7 @@ class OrderInfo:
             status=models.Order.StatusChoices.PAYMENT,
             promo_code=self.promo_code,
             promo_code_discount=promo_code_discount,
+            spend_cashback_amount=self.spend_cashback_amount,
         )
         if created:
             order = self.fill_order(order, promo_code_discount)
@@ -230,6 +238,8 @@ class UpdateOrderStatus(APIView):
                     case 'REJECTED'| 'REVERSED' | 'PARTIAL_REVERSED'| 'PARTIAL_REFUNDED'| 'REFUNDED':
                         async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
                                                                 'level': NotifyLevels.ERROR.value})
+                        order.profile.cashback += order.spend_cashback_amount
+                        order.profile.save()
                         order.status = models.Order.StatusChoices.ERROR
                 order.save()
         return Response('OK')
