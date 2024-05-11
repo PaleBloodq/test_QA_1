@@ -46,6 +46,7 @@ class ProductPublicationSerializer(serializers.ModelSerializer):
             'ps_plus_discount',
             'discount',
             'discount_deadline',
+            'is_main',
         )
 
 

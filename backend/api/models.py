@@ -73,6 +73,7 @@ class Product(BaseModel):
 
 class ProductPublication(BaseModel):
     product = models.ForeignKey(Product, verbose_name='Товар', on_delete=models.CASCADE, related_name='publications')
+    is_main = models.BooleanField('Отображать как основное', default=False)
     platforms = models.ManyToManyField(Platform, verbose_name='Платформы', blank=True)
     final_price = models.IntegerField('Конечная стоимость', editable=False)
     original_price = models.IntegerField('Полная стоимость')
