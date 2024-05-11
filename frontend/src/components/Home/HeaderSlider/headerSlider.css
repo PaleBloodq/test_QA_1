@@ -3,24 +3,16 @@
   height: 100%;
 }
 
-.headerSwiper {
-  position: absolute;
-  left: 0;
-  height: 355px;
-}
-
 .headerSwiper .swiper-slide {
   text-align: center;
   font-size: 18px;
   background: transparent;
-  width: 82.5% !important;
+  width: 307px;
   height: 324px;
   /* Center slide text vertically */
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: all 0.3s;
-  border-radius: 12px;
 }
 
 .swiper-slide img {
@@ -29,6 +21,12 @@
   height: 100%;
   object-fit: cover;
 }
+
+.headerSwiper .swiper-slide {
+  transition: all 0.3s;
+  border-radius: 12px;
+}
+
 .headerSwiper .swiper-slide-active {
   height: 355px;
 }
