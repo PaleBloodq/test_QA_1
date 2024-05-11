@@ -3,7 +3,7 @@ import Container from "../../components/common/Container";
 import { searchSelector } from "../../features/Search/searchSelectors";
 import { setSearchValue } from "../../features/Search/searchSlice";
 import { useGetSearchFiltersQuery, useGetSearchProductsMutation } from "../../services/productsApi";
-import { useEffect, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import Filter from "./Filter";
 import SearchItem from "./SearchItem";
 
@@ -26,7 +26,10 @@ export default function SearchPage() {
     }
     useEffect(() => {
         getSearchProducts({ params })
+        inputRef.current.focus();
     }, [])
+
+    const inputRef = createRef();
 
 
     return (
@@ -36,6 +39,7 @@ export default function SearchPage() {
                 <div className="w-full flex flex-col">
                     <div className="w-full h-[38px] flex items-center justify-between">
                         <input
+                            ref={inputRef}
                             onKeyDown={(event) => event.key === "Enter" && getSearchProducts({ params })}
                             onChange={(e) => dispatch(setSearchValue(e.target.value))} value={value}
                             className="w-full bg-transparent outline-none text-header" type="text" placeholder="Найти игру..."
