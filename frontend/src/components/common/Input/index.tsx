@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useDispatch } from "react-redux"
 
 type Props = {
@@ -15,15 +15,32 @@ export default function Input({ value, setValue, placeholder, type, hardlyEditab
     const ref = useRef<HTMLInputElement>(null)
     const dispatch = useDispatch()
     const [isEditable, setIsEditable] = useState(!hardlyEditable)
+    const [isValidEmail, setIsValidEmail] = useState(true);
 
-    function isEditableHandler() {
+    function isEditableHandler(): void {
         setIsEditable(!isEditable)
-        // ref.current?.focus()
     }
 
+    function validateEmail(email: string): void {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        setIsValidEmail(emailRegex.test(email));
+    };
+
+    useEffect(() => {
+        if (type === 'email' && value !== '') {
+            validateEmail(value)
+        }
+    }, [])
+
+
     return (
-        <div className="w-full h-[50px] custom-border px-[22px] flex justify-between items-center mb-3">
-            <input onBlur={() => hardlyEditable && setIsEditable(false)} ref={ref} readOnly={isEditable ? false : true} className="w-full text-subtitle-info bg-transparent outline-none" placeholder={placeholder} type={type} value={value} onChange={(e) => !localValue ? dispatch(setValue(e.target.value)) : setValue(e.target.value)} />
+        <div className={`w-full h-[50px] custom-border px-[22px] flex justify-between items-center mb-3 ${type === 'email' && !isValidEmail ? '!border-red-500' : ''}`}>
+            <input onBlur={() => { hardlyEditable && setIsEditable(false) }} ref={ref} readOnly={isEditable ? false : true} className="w-full text-subtitle-info bg-transparent outline-none" placeholder={placeholder} type={type} value={value} onChange={(e) => {
+                !localValue ? dispatch(setValue(e.target.value)) : setValue(e.target.value)
+                validateEmail(e.target.value)
+            }
+            }
+            />
             {hardlyEditable &&
                 <button onClick={isEditableHandler} className="w-6 h-6">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

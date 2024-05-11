@@ -84,7 +84,7 @@ export default function Order({ useCashback, totalPrice, setTotalPrice }: { useC
                         </>
                     )
                     : (<></>)}
-                <Input value={reciptEmail} setValue={setReciptEmail} placeholder="Введите E-mail для чека" type="text" />
+                <Input value={reciptEmail} setValue={setReciptEmail} placeholder="Введите E-mail для чека" type="email" />
                 <div className="mt-6">
                     <CheckBox checked={rememberData} onClick={() => dispatch(setRememberData(!rememberData))}>Запомнить данные для следующих заказов</CheckBox>
                 </div>
