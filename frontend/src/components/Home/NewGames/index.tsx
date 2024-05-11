@@ -9,12 +9,16 @@ export default function NewGames({ data }: { data: SectionType }) {
 
 
     return (
-        <div className="mt-7 pt-6 pb-3 px-4 custom-border flex flex-col">
-            <div className="flex gap-3 items-center mb-4">
-                <img src={lightningIcon} alt="new" />
-                <h1 className="text-header">Новинки</h1>
+        <div className="w-screen relative -ml-[15px]">
+            <div className="max-w-[560px] mx-auto mt-7 pt-6 pb-3 px-0 custom-border flex flex-col">
+                <div className="flex gap-3 items-center mb-4">
+                    <img className="ml-5" src={lightningIcon} alt="new" />
+                    <h1 className="text-header">Новинки</h1>
+                </div>
+                <div className="ml-2">
+                    <GamesSlider type="GAME" data={data?.objects} isLoading={isLoading} />
+                </div>
             </div>
-            <GamesSlider type="GAME" data={data?.objects} isLoading={isLoading} />
         </div>
-    )
+    );
 }

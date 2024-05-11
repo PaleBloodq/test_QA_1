@@ -79,8 +79,8 @@ export default function Game() {
     return (
         <Container>
             <div className="flex flex-col items-center">
-                <div className="flex flex-col items-start">
-                    <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentPublication?.photo)} alt="game image" />
+                <div className="flex flex-col items-start w-full">
+                    <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentPublication?.photo)} alt="game image" />
                     <div className='flex items-center mb-2 gap-2'>
                         <h1 className="text-header">{title && title}</h1>
                         {isNew(data?.release_date) && <Tag type="new">Новинка</Tag>}

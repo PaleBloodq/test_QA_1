@@ -66,7 +66,7 @@ export default function SearchPage() {
                     </div>
                     <div className="min-h-screen">
                         {!isLoading && data?.length > 0 ?
-                            <div className="w-full h-auto flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
+                            <div className="w-full h-auto flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px] justify-center">
                                 {data?.map((item: any, index: number) => <SearchItem key={index} item={item} />)}
                             </div>
                             :

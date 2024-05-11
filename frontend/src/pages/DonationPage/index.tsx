@@ -46,7 +46,7 @@ export default function DonationPage() {
             <div className="flex flex-col items-center">
                 {!isLoading &&
                     <div className="flex flex-col items-start w-full">
-                        <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(data?.publications[0]?.photo)} alt="donation image" />
+                        <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(data?.publications[0]?.photo)} alt="donation image" />
                         <h1 className="text-header mb-2">{data?.title}</h1>
                         <DonationQuantity selectedQuantity={selectedQuantity} setSelectedQuantity={setSelectedQuantity} quantitys={data?.publications?.map((pub: Publication) => pub?.quantity)} />
                         <h2 className="text-subtitle mt-8 mb-2">Цена:</h2>

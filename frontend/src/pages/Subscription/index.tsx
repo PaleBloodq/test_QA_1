@@ -63,8 +63,8 @@ export default function Subscription() {
         <Container>
             <div className="flex flex-col items-center">
                 {!isLoading && currentSubscription !== undefined ? (
-                    <div className="flex flex-col items-start">
-                        <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentSubscription?.photo)} alt="subscription image" />
+                    <div className="flex flex-col items-start w-full">
+                        <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentSubscription?.photo)} alt="subscription image" />
                         <h1 className="text-header mb-2">{data?.title.includes('PS') ? 'PS Plus' : 'EA Play'} {currentSubscription?.title}</h1>
                         <div className="flex items-center">
                             <h1 className="price-big">{currentPrice} ₽</h1>
