@@ -1,38 +1,19 @@
 import logging
 import os
 
-from django import forms
 from django.contrib import admin
-from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
-from django.db.models import QuerySet, ImageField, ForeignKey, ManyToManyField
+from django.db.models import QuerySet, ImageField, ManyToManyField
 from django.http import HttpRequest
-from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from api import models, serializers
+from api import models, serializers, forms
 from settings import settings
+
 
 PRODUCT_PARSER_URL = f'{os.environ.get("PRODUCT_PARSER_SCHEMA")}://{os.environ.get("PRODUCT_PARSER_HOST")}'
 if os.environ.get("PRODUCT_PARSER_PORT"):
     PRODUCT_PARSER_URL += f':{os.environ.get("PRODUCT_PARSER_PORT")}'
 PRODUCT_PARSER_URL += '/parse'
-
-admin.site.register(models.Platform)
-
-admin.site.register(models.Language)
-
-admin.site.register(models.Tag)
-
-admin.site.register(models.Profile)
-
-
-class DragAndDropFileInput(forms.ClearableFileInput):
-    template_name = 'admin/drag_and_drop_file_input.html'
-
-    def get_context(self, name, value, attrs):
-        context = super().get_context(name, value, attrs)
-        context['BASE_URL'] = settings.FORCE_SCRIPT_NAME
-        return context
 
 
 class ProductPublicationInline(admin.TabularInline):
@@ -42,7 +23,8 @@ class ProductPublicationInline(admin.TabularInline):
     ordering = ('title',)
     exclude = ['hash']
     formfield_overrides = {
-        ImageField: {'widget': DragAndDropFileInput},
+        ImageField: {'widget': forms.DragAndDropFileInput},
+        ManyToManyField: {'widget': forms.ManyToManyForm},
     }
 
     def get_fields(self, request, obj=None):
@@ -65,6 +47,7 @@ class ProductPublicationInline(admin.TabularInline):
                     self.exclude += ['duration', 'quantity']
         return super().get_exclude(request, product)
 
+
 class PriceChangedListFilter(admin.SimpleListFilter):
     title = 'Цена изменилась?'
     parameter_name = 'price_changed'
@@ -82,7 +65,7 @@ class PriceChangedListFilter(admin.SimpleListFilter):
             return queryset.exclude(publications__price_changed=True).distinct()
 
 
-@admin.register(models.Product, site=admin.site)
+@admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     @admin.display(description='Количество изданий')
     def count_publications(self, obj: models.Product):
@@ -104,6 +87,9 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = [PriceChangedListFilter]
     list_display = ['title', 'type', 'release_date', 'count_publications', 'price_changed']
     actions = [parse_product_publications]
+    formfield_overrides = {
+        ManyToManyField: {'widget': forms.ManyToManyForm},
+    }
 
 
 class OrderProductInline(admin.TabularInline):
@@ -130,7 +116,7 @@ class ChatMessageInline(admin.TabularInline):
         return False
 
 
-@admin.register(models.Order, site=admin.site)
+@admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     change_form_template = 'admin/order.html'
     inlines = [OrderProductInline]
@@ -145,6 +131,28 @@ class OrderAdmin(admin.ModelAdmin):
         return super().render_change_form(request, context, add, change, form_url, obj)
 
 
-@admin.register(models.PromoCode, site=admin.site)
+@admin.register(models.PromoCode)
 class PromoCodeAdmin(admin.ModelAdmin):
     list_display = ['promo_code', 'discount', 'expiration']
+
+
+@admin.register(models.Tag)
+class TagAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        ManyToManyField: {'widget': forms.ManyToManyForm},
+    }
+
+
+@admin.register(models.Platform)
+class PlatformAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.Language)
+class LanguageAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    pass
