@@ -24,8 +24,11 @@ export default function Profile() {
     }
 
 
+    // useEffect(() => {
+    //     dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
+    // }, [])
     useEffect(() => {
-        dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
+        dispatch(setUserName(`123`))
     }, [])
 
 
