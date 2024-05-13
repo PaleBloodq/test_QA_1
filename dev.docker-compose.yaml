@@ -55,8 +55,6 @@ services:
       - ./product_parser:/product_parser
     environment:
       - BACKEND_HOST=backend
-    volumes:
-      - ./product_parser:/product_parser
     command: [ "python", "main.py" ]
 
 
