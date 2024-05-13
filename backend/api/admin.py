@@ -27,25 +27,24 @@ class ProductPublicationInline(admin.TabularInline):
         ManyToManyField: {'widget': forms.ManyToManyForm},
     }
 
-    def get_fields(self, request, obj=None):
+    def get_fields(self, request, obj: models.Product = None):
         # Получить все поля модели
         fields = super().get_fields(request, obj)
+        if obj:
+            match obj.type:
+                case models.Product.TypeChoices.DONATION:
+                    fields.remove('title')
+                    fields.remove('duration')
+                case models.Product.TypeChoices.SUBSCRIPTION:
+                    fields.remove('quantity')
+                case models.Product.TypeChoices.GAME:
+                    fields.remove('duration')
+                    fields.remove('quantity')
         fields.remove('final_price')
         fields.insert(2, 'final_price')
         fields.remove('price_changed')
         fields.insert(3, 'price_changed')
         return fields
-
-    def get_exclude(self, request, product: models.Product):
-        if product:
-            match product.type:
-                case models.Product.TypeChoices.DONATION:
-                    self.exclude += ['title', 'duration']
-                case models.Product.TypeChoices.SUBSCRIPTION:
-                    self.exclude += ['quantity']
-                case models.Product.TypeChoices.GAME:
-                    self.exclude += ['duration', 'quantity']
-        return super().get_exclude(request, product)
 
 
 class PriceChangedListFilter(admin.SimpleListFilter):
@@ -123,6 +122,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['date', 'status', 'profile', 'amount']
     list_filter = ['date', 'status', 'profile', 'amount']
     readonly_fields = ['id']
+    search_fields = ['id', 'profile__telegram_id', 'amount']
 
     def render_change_form(self, request, context, add, change, form_url, obj):
         context.update({

@@ -45,6 +45,7 @@ services:
 
   product_parser:
     image: registry.gitlab.com/chat-labs/aoki-bot/product_parser:latest
+    build: product_parser/
     depends_on:
       - postgres
       - backend

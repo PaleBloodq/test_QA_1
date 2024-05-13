@@ -7,8 +7,8 @@ from PIL import Image
 from django.core.files.base import ContentFile
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from imagekit.models import ProcessedImageField
 from django.contrib.auth.models import User
+from imagekit.models import ProcessedImageField
 
 from api.validators import validate_ps_store_url
 
@@ -54,7 +54,6 @@ class Product(BaseModel):
 
     title = models.CharField('Заголовок', max_length=255)
     type = models.CharField('Тип', max_length=32, choices=TypeChoices.choices)
-    languages = models.ManyToManyField(Language, verbose_name='Языки', blank=True)
     release_date = models.DateField('Дата релиза', null=True, blank=True)
     ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True)
 
@@ -77,11 +76,13 @@ class ProductPublication(BaseModel):
     platforms = models.ManyToManyField(Platform, verbose_name='Платформы', blank=True)
     final_price = models.IntegerField('Конечная стоимость', editable=False)
     original_price = models.IntegerField('Полная стоимость')
+    languages = models.ManyToManyField(Language, verbose_name='Языки', blank=True)
+    parsing_enabled = models.BooleanField('Парсить', default=True)
     price_changed = models.BooleanField('Цена изменилась', default=False, editable=False)
     hash = models.CharField('Хэш', max_length=255, null=True, blank=True, editable=False)
-    title = models.CharField('Заголовок', max_length=255)
-    duration = models.IntegerField('Длительность в месяцах', null=True, blank=True)
-    quantity = models.IntegerField('Количество игровой валюты', null=True, blank=True)
+    title = models.CharField('Заголовок', max_length=255, null=True)
+    duration = models.IntegerField('Длительность в месяцах', null=True)
+    quantity = models.IntegerField('Количество игровой валюты', null=True)
     includes = models.TextField('Включает', null=True, blank=True)
     preview = ProcessedImageField(verbose_name='Превью', format='WEBP', options={'quality': 40}, null=True, blank=True)
     photo = ProcessedImageField(verbose_name='Изображение', format='WEBP', options={'quality': 60}, null=True,

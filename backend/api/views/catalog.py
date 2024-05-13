@@ -79,7 +79,7 @@ class SearchProducts(APIView):
         if request.data.get('platforms'):
             query['platforms__in'] = request.data.get('platforms')
         if request.data.get('languages'):
-            query['product__languages__in'] = request.data.get('languages')
+            query['languages__in'] = request.data.get('languages')
         if request.data.get('q'):
             query['product__title__iregex'] = request.data.get('q')
         if query:
