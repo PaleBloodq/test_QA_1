@@ -45,6 +45,7 @@ services:
 
   product_parser:
     image: registry.gitlab.com/chat-labs/aoki-bot/product_parser:latest
+    build: product_parser/
     depends_on:
       - postgres
       - backend
@@ -52,6 +53,8 @@ services:
       - ./local.env
     environment:
       - BACKEND_HOST=backend
+    volumes:
+      - ./product_parser:/product_parser
     command: [ "python", "main.py" ]
 
 
