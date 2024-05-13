@@ -36,7 +36,7 @@ class CheckPromoCode(APIView):
     def post(self, request: Request, profile: models.Profile):
         promo_code = request.data.get('promoCode')
         if promo_code:
-            promo = utils.check_promo_code(promo_code)
+            promo = utils.check_promo_code(profile, promo_code)
             if promo:
                 return Response({
                     'result': True,
@@ -60,7 +60,7 @@ class OrderInfo:
     spend_cashback_amount: int = 0
     
     def get_promo_code_discount(self) -> int | None:
-        discount = utils.check_promo_code(self.promo_code)
+        discount = utils.check_promo_code(self.profile, self.promo_code)
         if not discount:
             self.promo_code = None
             discount = 0
