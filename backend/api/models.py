@@ -77,6 +77,7 @@ class ProductPublication(BaseModel):
     platforms = models.ManyToManyField(Platform, verbose_name='Платформы', blank=True)
     final_price = models.IntegerField('Конечная стоимость', editable=False)
     original_price = models.IntegerField('Полная стоимость')
+    parsing_enabled = models.BooleanField('Парсить', default=True)
     price_changed = models.BooleanField('Цена изменилась', default=False, editable=False)
     hash = models.CharField('Хэш', max_length=255, null=True, blank=True, editable=False)
     title = models.CharField('Заголовок', max_length=255)

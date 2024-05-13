@@ -180,6 +180,11 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
 
         if publication:
             publication = publication.first()
+            if not publication.parsing_enabled:
+                if publication.price_changed:
+                    publication.price_changed = False
+                    publication.save()
+                return publication
             if publication.final_price != final_price:
                 async_to_sync(send_admin_notification)({'text': f'Цена на издание товара {publication.product.title} изменилась',
                                                         'level': NotifyLevels.WARN.value})
