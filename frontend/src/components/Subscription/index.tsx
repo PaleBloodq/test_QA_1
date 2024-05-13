@@ -11,20 +11,21 @@ export default function SelectSubscription({ publications }: { publications: Pub
   const currentDuration = useSelector(durationSelector)
   const selectedSubscription = useSelector(selectedSubscriptionSelector)
 
-  const filteredPublications = publications?.filter((pub) => pub.duration === currentDuration)
+  const currentDurationPublications = publications?.filter((pub) => pub.duration === currentDuration)
 
   useEffect(() => {
-    dispatch(setSelectedSubscription(filteredPublications.find((item) => item.duration === currentDuration)?.id))
-  }, [currentDuration])
+    const currentSubItem = publications?.find((item) => item.id === selectedSubscription)
+    dispatch(setSelectedSubscription(currentDurationPublications?.find(item => item.title === currentSubItem?.title)?.id))
+  }, [currentDurationPublications])
 
   return (
     <div className="flex flex-col mt-2">
       <h1 className="text-title mb-5">Издания</h1>
       <div>
         <SubscriptionPeriodSelector selected={currentDuration} />
-        {filteredPublications.length > 1 &&
+        {currentDurationPublications.length > 1 &&
           <div className="w-full gap-3 flex justify-center flex-wrap">
-            {filteredPublications.map((pub) => {
+            {currentDurationPublications.map((pub) => {
               return (
                 <button
                   onClick={() => dispatch(setSelectedSubscription(pub.id))}

@@ -19,9 +19,13 @@ export default function DonationPage() {
     const [currentPublicaton, setCurrentSubscription] = useState(data?.publications?.find((item) => item?.quantity === selectedQuantity))
 
     useEffect(() => {
-        setCurrentSubscription(data?.publications?.find((item) => item?.quantity === selectedQuantity))
-    }, [selectedQuantity])
-    const currentPrice = currentPublicaton?.original_price || 0
+        if (data?.publications) {
+            const foundPublication = data.publications.find((item) => item?.quantity === selectedQuantity);
+            setCurrentSubscription(foundPublication ?? currentPublicaton);
+        }
+    }, [data?.publications, selectedQuantity, currentPublicaton]);
+
+    const currentPrice = (currentPublicaton && currentPublicaton.original_price) || 0;
 
     const cartItem: CartItemType = {
         id: currentPublicaton?.id,

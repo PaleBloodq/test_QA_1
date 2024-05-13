@@ -2,7 +2,7 @@ import SelectType from "./SelectType";
 import { cartSelector } from "../../../features/Cart/cartSelectors";
 import Input from "../../../components/common/Input";
 import { useDispatch, useSelector } from "react-redux";
-import { setAccountEmail, setAccountPassword, setHasAccount, setPromocode, setReciptEmail, setRememberData } from "../../../features/Cart/cartSlice";
+import { clearCart, setAccountEmail, setAccountPassword, setHasAccount, setPromocode, setReciptEmail, setRememberData } from "../../../features/Cart/cartSlice";
 import CheckBox from "../../../components/common/CheckBox";
 import { useEffect, useState } from "react";
 import Button from "../../../components/common/Button";
@@ -47,6 +47,8 @@ export default function Order({ useCashback, totalPrice, setTotalPrice }: { useC
 
     useEffect(() => {
         if (orderData?.PaymentUrl) {
+            dispatch(clearCart())
+            localStorage.removeItem('storageCartItems')
             window.location.href = orderData?.PaymentUrl
         }
     }, [orderData])
@@ -57,6 +59,12 @@ export default function Order({ useCashback, totalPrice, setTotalPrice }: { useC
             setPromocodeSelected(true)
         }
     }, [promoData])
+
+    useEffect(() => {
+        if (orderErorr || promoError) {
+            window.Telegram.WebApp.showAlert('Произошла ошибка! Попробуйте еще раз или перезайдите в приложение.');
+        }
+    }, [orderErorr, promoError])
 
 
     return (

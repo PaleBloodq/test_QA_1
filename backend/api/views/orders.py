@@ -230,16 +230,19 @@ class UpdateOrderStatus(APIView):
             if order:
                 match request.data.get('Status'):
                     case 'CONFIRMED':
+                        if order.status == models.Order.StatusChoices.PAID:
+                            return Response('OK')
                         async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} оплачен',
                                                                 'level': NotifyLevels.SUCCESS.value})
                         order.status = models.Order.StatusChoices.PAID
                         order.profile.cashback += order.cashback
                         order.profile.save()
+                        order.save()
                     case 'REJECTED'| 'REVERSED' | 'PARTIAL_REVERSED'| 'PARTIAL_REFUNDED'| 'REFUNDED':
                         async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
                                                                 'level': NotifyLevels.ERROR.value})
                         order.profile.cashback += order.spend_cashback_amount
                         order.profile.save()
                         order.status = models.Order.StatusChoices.ERROR
-                order.save()
+                        order.save()
         return Response('OK')

@@ -32,6 +32,7 @@ export default function Home() {
 
     console.log(data)
 
+    const basicTags = ["offers", "new", "psPlus", "eaPlay", "leaders", "donation"];
 
     return (
         <Container>
@@ -41,7 +42,7 @@ export default function Home() {
             <Subscribes psSubs={data.find((item: SectionType) => item.tag === "psPlus")} eaSubs={data.find((item: SectionType) => item.tag === "eaPlay")} />
             <Leaders data={data.find((item: SectionType) => item.tag === "leaders")} />
             <Donation data={data.find((item: SectionType) => item.tag === "donation")} />
-            <Other data={data.filter((item: SectionType) => item.tag === "other")} />
+            <Other data={data.filter((item: SectionType) => !basicTags.includes(item.tag))} />
         </Container>
     )
 }

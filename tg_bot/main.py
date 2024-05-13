@@ -4,7 +4,6 @@ import os
 from aiogram.types import BotCommandScopeDefault, BotCommand
 from aiogram_dialog import setup_dialogs
 from aiohttp import web
-from celery import Celery
 
 import bootstrap
 from app import register_dialogs

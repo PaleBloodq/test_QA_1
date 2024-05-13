@@ -100,7 +100,7 @@ class UpdateProductPublications(APIView):
             async_to_sync(send_admin_notification)({'text': 'Парсинг окончен!',
                                                     'level': NotifyLevels.INFO.value})
         if product:
-            logging.warning(request.data.get('publications', []))
+            logging.warning(request.data.get('publications'))
             for publication in request.data.get('publications', []):
                 serializer = serializers.UpdateProductPublicationSerializer(
                     data=publication,

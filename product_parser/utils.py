@@ -77,7 +77,8 @@ class Edition:
     @staticmethod
     def _parse_release_date(release_date: Optional[str]) -> Optional[str]:
         if release_date:
-            return datetime.strptime(release_date, r"%d/%m/%Y").isoformat()
+            parsed_date = datetime.strptime(release_date, r"%d/%m/%Y")
+            return parsed_date.date().isoformat()
         return None
 
     @staticmethod
@@ -131,7 +132,7 @@ class Parser:
             product_platforms = (
                 soup.find("dd", {"data-qa": re.compile("platform-value")}).text.split(", ")
             )
-            release_date = soup.find("dd", {"data-qa": re.compile("releaseDate-value")})
+            release_date = soup.find("dd", {"data-qa": re.compile("releaseDate-value")}).text
             editions = [
                 self._parse_edition(soup_edition, product_platforms, release_date)
                 for soup_edition in soup.find_all("article")

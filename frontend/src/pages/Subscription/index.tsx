@@ -30,14 +30,11 @@ export default function Subscription() {
     const selectedSubscription = useSelector(selectedSubscriptionSelector);
     const currentDuration = useSelector(durationSelector);
     const [currentSubscription, setCurrentSubscription] = useState(data?.publications?.find((sub: Publication) => sub?.id === id))
-    // useEffect(() => {
-    //     setCurrentSubscription(data.publications?.find((sub: Publication) => sub.id === id))
-    //     dispatch(setSelectedSubscription(data.publications?.find((sub: Publication) => sub.id === id).id))
-    // }, [data])
 
     useEffect(() => {
         setCurrentSubscription(data?.publications?.find((sub: Publication) => sub?.id === selectedSubscription))
     }, [selectedSubscription])
+
 
     const currentPrice = currentSubscription?.original_price
 
@@ -54,11 +51,13 @@ export default function Subscription() {
         discount: currentSubscription?.discount,
         cashback: currentSubscription?.cashback
     }
-    useEffect(() => {
-        dispatch(setDuration(data?.publications?.find((pub) => pub?.id === id).duration))
-        dispatch(setSelectedSubscription(data?.publications?.find((pub) => pub?.id === id).id))
-    }, [isLoading, dispatch, id])
 
+    useEffect(() => {
+        if (!isLoading) {
+            dispatch(setSelectedSubscription(id))
+            dispatch(setDuration(data?.publications?.find((sub: Publication) => sub?.id === id)?.duration))
+        }
+    }, [isLoading])
 
     return (
         <Container>
