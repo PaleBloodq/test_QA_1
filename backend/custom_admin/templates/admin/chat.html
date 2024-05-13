@@ -28,7 +28,8 @@
     }
 
     .input textarea {
-        height: 2em !important;
+        min-height: 1em !important;
+        max-height: 4em !important;
         outline: none;
         padding: 5px;
         font-size: 16px;
@@ -110,7 +111,7 @@
         padding: 0 0.5rem 0 1.5rem;
     }
 
-    .chat .input input {
+    .chat .input input, textarea {
         border: none;
         background-image: none;
         background-color: white;
@@ -159,7 +160,7 @@
         <div class="messages" id="chat">
         </div>
         <div class="input">
-            <input id="message-input" type="text" placeholder="Введите сообщение...">
+            <textarea id="message-input" type="text" placeholder="Введите сообщение..."></textarea>
             <input id="message-send-button" type="button" value="Отправить">
         </div>
     </div>
@@ -184,7 +185,7 @@
         // Create message element
         const messageDiv = document.createElement("div");
         messageDiv.classList.add("message", message.manager_id ? "manager" : "client");
-        messageDiv.textContent = message.text;
+        messageDiv.innerHTML = message.text.replace(/\n/g, "<br>");
         container.appendChild(messageDiv);
 
         return container;
@@ -216,7 +217,7 @@
         const data = {
             order_id: orderId,
             manager_id: managerId,
-            text: text,
+            text: text.replace(/\n/g, "\\n"),
         };
 
         try {
@@ -246,13 +247,14 @@
     }
 
     document.getElementById("message-send-button").addEventListener("click", sendMessage);
-    document.getElementById("message-input").addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
+    document.getElementById("message-input").addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && event.shiftKey) {
+            return
+        } else if (event.key === "Enter") {
+            event.preventDefault(); // Предотвращаем стандартное действие Enter, чтобы не отправлять форму
             sendMessage();
         }
     });
-
     setInterval(fetchChatMessages, 5000);
     fetchChatMessages();
 </script>
