@@ -64,7 +64,9 @@ class Edition:
         else:
             exchange_rate = 4.5
         normalized_price *= exchange_rate
-        normalized_price = round(normalized_price / 1000) * 1000 if normalized_price >= 1000 else normalized_price
+        normalized_price *= 0.9
+        if normalized_price >= 1000 and normalized_price % 1000 < 25:
+            normalized_price -= normalized_price % 1000 + 5
         normalized_price = normalized_price - normalized_price % 5
         return int(normalized_price)
 

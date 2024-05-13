@@ -93,7 +93,8 @@ class ProductPublication(BaseModel):
     discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
 
     def _normalize_price(self, price: float) -> int:
-        price = round(price / 1000) * 1000 if price >= 1000 else price
+        if price >= 1000 and price % 1000 < 25:
+            price -= price % 1000 + 5
         return price - price % 5
     
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
