@@ -54,7 +54,6 @@ class Product(BaseModel):
 
     title = models.CharField('Заголовок', max_length=255)
     type = models.CharField('Тип', max_length=32, choices=TypeChoices.choices)
-    languages = models.ManyToManyField(Language, verbose_name='Языки', blank=True)
     release_date = models.DateField('Дата релиза', null=True, blank=True)
     ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True)
 
@@ -77,6 +76,7 @@ class ProductPublication(BaseModel):
     platforms = models.ManyToManyField(Platform, verbose_name='Платформы', blank=True)
     final_price = models.IntegerField('Конечная стоимость', editable=False)
     original_price = models.IntegerField('Полная стоимость')
+    languages = models.ManyToManyField(Language, verbose_name='Языки', blank=True)
     parsing_enabled = models.BooleanField('Парсить', default=True)
     price_changed = models.BooleanField('Цена изменилась', default=False, editable=False)
     hash = models.CharField('Хэш', max_length=255, null=True, blank=True, editable=False)

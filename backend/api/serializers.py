@@ -28,6 +28,7 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 class ProductPublicationSerializer(serializers.ModelSerializer):
     platforms = EnumSerializer(many=True, read_only=True)
+    languages = EnumSerializer(many=True, read_only=True)
     
     class Meta:
         model = models.ProductPublication
@@ -47,13 +48,13 @@ class ProductPublicationSerializer(serializers.ModelSerializer):
             'discount',
             'discount_deadline',
             'is_main',
+            'languages',
         )
 
 
 class ProductSerializer(serializers.ModelSerializer):
     type = serializers.CharField()
     publications = ProductPublicationSerializer(many=True)
-    languages = EnumSerializer(many=True, read_only=True)
     
     class Meta:
         model = models.Product
@@ -61,7 +62,6 @@ class ProductSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'type',
-            'languages',
             'release_date',
             'publications',
         )
@@ -69,7 +69,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class SingleProductSerializer(serializers.ModelSerializer):
     type = serializers.CharField()
-    languages = EnumSerializer(many=True, read_only=True)
     
     class Meta:
         model = models.Product
@@ -77,7 +76,6 @@ class SingleProductSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'type',
-            'languages',
             'release_date',
         )
 
@@ -85,6 +83,7 @@ class SingleProductSerializer(serializers.ModelSerializer):
 class SingleProductPublicationSerializer(serializers.ModelSerializer):
     product = SingleProductSerializer()
     platforms = EnumSerializer(many=True, read_only=True)
+    languages = EnumSerializer(many=True, read_only=True)
     
     class Meta:
         model = models.ProductPublication
@@ -104,6 +103,7 @@ class SingleProductPublicationSerializer(serializers.ModelSerializer):
             'discount',
             'discount_deadline',
             'product',
+            'languages',
         )
 
 
