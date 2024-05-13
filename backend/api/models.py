@@ -7,8 +7,8 @@ from PIL import Image
 from django.core.files.base import ContentFile
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from imagekit.models import ProcessedImageField
 from django.contrib.auth.models import User
+from imagekit.models import ProcessedImageField
 
 from api.validators import validate_ps_store_url
 
@@ -80,9 +80,9 @@ class ProductPublication(BaseModel):
     parsing_enabled = models.BooleanField('Парсить', default=True)
     price_changed = models.BooleanField('Цена изменилась', default=False, editable=False)
     hash = models.CharField('Хэш', max_length=255, null=True, blank=True, editable=False)
-    title = models.CharField('Заголовок', max_length=255)
-    duration = models.IntegerField('Длительность в месяцах', null=True, blank=True)
-    quantity = models.IntegerField('Количество игровой валюты', null=True, blank=True)
+    title = models.CharField('Заголовок', max_length=255, null=True)
+    duration = models.IntegerField('Длительность в месяцах', null=True)
+    quantity = models.IntegerField('Количество игровой валюты', null=True)
     includes = models.TextField('Включает', null=True, blank=True)
     preview = ProcessedImageField(verbose_name='Превью', format='WEBP', options={'quality': 40}, null=True, blank=True)
     photo = ProcessedImageField(verbose_name='Изображение', format='WEBP', options={'quality': 60}, null=True,
