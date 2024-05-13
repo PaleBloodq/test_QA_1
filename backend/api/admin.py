@@ -123,6 +123,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['date', 'status', 'profile', 'amount']
     list_filter = ['date', 'status', 'profile', 'amount']
     readonly_fields = ['id']
+    search_fields = ['id', 'profile__telegram_id', 'amount']
 
     def render_change_form(self, request, context, add, change, form_url, obj):
         context.update({
