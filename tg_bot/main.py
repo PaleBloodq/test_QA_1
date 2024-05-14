@@ -10,11 +10,11 @@ from app import register_dialogs
 from app.dialogs import error_handler
 from app.routes import register_routes
 
-from web.api.routes import send_message_manager, send_message_payment
+from web.api.routes import send_message_manager, change_order
 
 app = web.Application()
 app.add_routes([web.post('/api/order/message/send/', send_message_manager),
-                web.post('/api/order/payment/access/', send_message_payment),])
+                web.post('/api/order/change/', change_order),])
 
 
 async def main():
@@ -25,7 +25,6 @@ async def main():
     register_routes(dp)
     register_dialogs(dp)
     setup_dialogs(dp)
-    print(dp.sub_routers)
     await bot.set_my_commands([BotCommand(command="start", description="Запустить бота")],
                               scope=BotCommandScopeDefault())
     runner = web.AppRunner(app)

@@ -33,8 +33,14 @@ services:
     volumes:
       - ./backend:/backend
       - ./rsa:/backend/rsa
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && (python manage.py createsuperuser --username admin --email admin@mail.ru --noinput || true) && python manage.py collectstatic --noinput && python start_service.py"
-
+    command: sh -c "nohup celery -A settings worker --concurrency=2 --pool=threads --loglevel=info & \
+                      nohup celery -A settings beat --loglevel=info & \
+                      python manage.py makemigrations && \
+                      python manage.py migrate && \
+                      (python manage.py createsuperuser --username admin --email admin@mail.ru --noinput || true) && \
+                      python manage.py collectstatic --noinput && \
+                      nohup python start_service.py & \
+                      wait"
 
   product_parser:
     image: $CI_REGISTRY_IMAGE/product_parser:latest
@@ -43,6 +49,8 @@ services:
       - backend
     env_file:
       - ./local.env
+    volumes:
+      - ./product_parser:/product_parser
     environment:
       - BACKEND_HOST=backend
     command: [ "python", "main.py" ]
@@ -53,6 +61,8 @@ services:
     depends_on:
       - postgres
       - backend
+    volumes:
+      - ./payments:/payments
     env_file:
       - ./local.env
     command: [ "python", "main.py" ]
@@ -68,6 +78,8 @@ services:
 
   tg_bot:
     image: $CI_REGISTRY_IMAGE/tg_bot:latest
+    volumes:
+      - ./tg_bot:/tg_bot
     env_file:
       - ./local.env
     command: [ "python", "main.py" ]

@@ -6,6 +6,8 @@ from aiogram_dialog.api.exceptions import UnknownIntent
 
 import bootstrap
 from .windows.main.menu import MainMenuWin
+from .windows.order.menu import OrderWin
+from .windows.twofa.menu import TwoFaWin
 
 bot = bootstrap.MyBot().getInstance()
 
@@ -27,4 +29,6 @@ async def error_handler(event):
         return UNHANDLED
 
 
-DLGS = (Dialog(*MainMenuWin, launch_mode=LaunchMode.ROOT),)
+DLGS = (Dialog(*MainMenuWin, launch_mode=LaunchMode.ROOT),
+        Dialog(*OrderWin, launch_mode=LaunchMode.ROOT),
+        Dialog(*TwoFaWin, launch_mode=LaunchMode.SINGLE_TOP),)

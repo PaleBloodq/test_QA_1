@@ -33,6 +33,7 @@ test.py
 # Django
 static/
 media/
+migrations/
 
 # Sensitive information
 *.pem

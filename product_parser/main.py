@@ -1,6 +1,9 @@
+import logging
 import os
 from aiohttp import web
 import routes
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def main():
@@ -14,6 +17,7 @@ def main():
         )
     except KeyboardInterrupt:
         pass
+
 
 if __name__ == '__main__':
     main()

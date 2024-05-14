@@ -1,5 +1,7 @@
+from asgiref.sync import async_to_sync
 from rest_framework import serializers
 from api import models, utils
+from api.senders import send_admin_notification, NotifyLevels
 
 
 class EnumSerializer(serializers.RelatedField):
@@ -26,6 +28,7 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 class ProductPublicationSerializer(serializers.ModelSerializer):
     platforms = EnumSerializer(many=True, read_only=True)
+    languages = EnumSerializer(many=True, read_only=True)
     
     class Meta:
         model = models.ProductPublication
@@ -44,13 +47,14 @@ class ProductPublicationSerializer(serializers.ModelSerializer):
             'ps_plus_discount',
             'discount',
             'discount_deadline',
+            'is_main',
+            'languages',
         )
 
 
 class ProductSerializer(serializers.ModelSerializer):
     type = serializers.CharField()
     publications = ProductPublicationSerializer(many=True)
-    languages = EnumSerializer(many=True, read_only=True)
     
     class Meta:
         model = models.Product
@@ -58,7 +62,6 @@ class ProductSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'type',
-            'languages',
             'release_date',
             'publications',
         )
@@ -66,7 +69,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class SingleProductSerializer(serializers.ModelSerializer):
     type = serializers.CharField()
-    languages = EnumSerializer(many=True, read_only=True)
     
     class Meta:
         model = models.Product
@@ -74,7 +76,6 @@ class SingleProductSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'type',
-            'languages',
             'release_date',
         )
 
@@ -82,6 +83,7 @@ class SingleProductSerializer(serializers.ModelSerializer):
 class SingleProductPublicationSerializer(serializers.ModelSerializer):
     product = SingleProductSerializer()
     platforms = EnumSerializer(many=True, read_only=True)
+    languages = EnumSerializer(many=True, read_only=True)
     
     class Meta:
         model = models.ProductPublication
@@ -101,6 +103,7 @@ class SingleProductPublicationSerializer(serializers.ModelSerializer):
             'discount',
             'discount_deadline',
             'product',
+            'languages',
         )
 
 
@@ -116,51 +119,76 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class OrderProductSerializer(serializers.ModelSerializer):
+    item = serializers.CharField(source='product')
+    
     class Meta:
         model = models.OrderProduct
         fields = (
             'item',
             'description',
-            'price',
+            'final_price',
         )
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(source='profile.telegram_id')
+    order_id = serializers.UUIDField(source='id')
     order_products = OrderProductSerializer(many=True)
     
     class Meta:
         model = models.Order
         fields = (
+            'user_id',
+            'order_id',
             'date',
             'amount',
-            'status',
             'order_products',
+            'payment_url',
+            'need_account',
+            'status',
         )
 
 
 class UpdateProductPublicationSerializer(serializers.Serializer):
     title = serializers.CharField(required=True)
     platforms = serializers.ListField(required=True)
-    final_price = serializers.IntegerField(required=True)
-    original_price = serializers.IntegerField(required=True)
+    final_price = serializers.IntegerField(allow_null=True)
+    original_price = serializers.IntegerField(allow_null=True)
     offer_ends = serializers.DateTimeField(allow_null=True)
     discount = serializers.IntegerField(allow_null=True)
-    
+    image = serializers.CharField(allow_null=True)
+    release_date = serializers.DateField(allow_null=True)
+
     def save(self, product: models.Product):
         title = self.validated_data.get('title')
         platforms = self.validated_data.get('platforms')
-        final_price = self.validated_data.get('final_price')
-        original_price = self.validated_data.get('original_price')
+        final_price = self.validated_data.get('final_price') or 0
+        original_price = self.validated_data.get('original_price') or 0
         offer_ends = self.validated_data.get('offer_ends')
-        discount = self.validated_data.get('discount')
+        discount = self.validated_data.get('discount') or 0
+        image = self.validated_data.get('image')
+        release_date = self.validated_data.get('release_date')
+        if product.release_date != release_date:
+            product.release_date = release_date
+            product.save()
         hash = utils.hash_product_publication(
             product.id,
             title,
             [platform for platform in platforms]
         )
         publication = models.ProductPublication.objects.filter(hash=hash)
+
         if publication:
             publication = publication.first()
+            if not publication.parsing_enabled:
+                if publication.price_changed:
+                    publication.price_changed = False
+                    publication.save()
+                return publication
+            if publication.final_price != final_price:
+                async_to_sync(send_admin_notification)({'text': f'Цена на издание товара {publication.product.title} изменилась',
+                                                        'level': NotifyLevels.WARN.value})
+                publication.price_changed = True
             publication.final_price = final_price
             publication.original_price = original_price
             publication.discount_deadline = offer_ends
@@ -174,6 +202,7 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
                 discount_deadline=offer_ends,
                 discount=discount
             )
+            publication.set_photo_from_url(image)
             publication.save()
             for platform in platforms:
                 publication.platforms.add(models.Platform.objects.get_or_create(name=platform)[0])
@@ -183,8 +212,17 @@ class UpdateProductPublicationSerializer(serializers.Serializer):
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):
+    order_id = serializers.SlugRelatedField(source='order', slug_field='id', read_only=True)
+    manager_id = serializers.SlugRelatedField(source='manager', slug_field='id', read_only=True)
+    
     class Meta:
         model = models.ChatMessage
+        fields = (
+            'created_at',
+            'order_id',
+            'manager_id',
+            'text',
+        )
 
 
 class ProductToParseSerializer(serializers.ModelSerializer):
