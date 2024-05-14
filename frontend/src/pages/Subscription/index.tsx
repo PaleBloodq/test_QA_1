@@ -85,7 +85,7 @@ export default function Subscription() {
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Язык:</p>
-                                <p className='text-title text-[14px]'>{data?.languages?.map((lang) => lang).join(', ')}</p>
+                                <p className='text-title text-[14px]'>{currentSubscription?.languages?.map((lang) => lang).join(', ')}</p>
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Дата релиза:</p>

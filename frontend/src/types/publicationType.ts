@@ -9,6 +9,7 @@ export type Publication = {
   discount: number;
   cashback: number;
   is_main: boolean;
+  languages: string[];
   ps_plus_discount: number;
   platforms: string[];
   preview: string;

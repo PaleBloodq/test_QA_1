@@ -76,6 +76,8 @@ export default function Game() {
         return <div>Publication not found</div>;
     }
 
+    console.log(currentPublication)
+
     return (
         <Container>
             <div className="flex flex-col items-center">
@@ -129,7 +131,7 @@ export default function Game() {
                         </div>
                         <div className='w-full flex justify-between'>
                             <p className='text-subtitle'>Язык:</p>
-                            <p className='text-title text-[14px]'>{data?.languages?.map((lang) => lang)?.join(', ')}</p>
+                            <p className='text-title text-[14px]'>{currentPublication?.languages?.map((lang) => lang)?.join(', ')}</p>
                         </div>
                         <div className='w-full flex justify-between'>
                             <p className='text-subtitle'>Дата релиза:</p>
