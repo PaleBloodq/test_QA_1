@@ -20,7 +20,7 @@ const SubscriptionPeriodSelector = ({ selected }: { selected: number }) => {
     }
 
     return (
-        <div className="flex w-full justify-between gap-2 mb-6">
+        <div className="flex w-full max-w-[425px] mx-auto justify-between gap-2 mb-6">
             {periods.map(period => (
                 <button
                     key={period}

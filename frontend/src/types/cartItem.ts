@@ -6,6 +6,7 @@ export type CartItemType = {
   publication: string;
   platform: string;
   price: number;
+  final_price: number;
   discount: number;
   cashback: number;
 };

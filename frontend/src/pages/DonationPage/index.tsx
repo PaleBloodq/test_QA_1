@@ -9,6 +9,7 @@ import AddToCartButton from "../../components/common/AddToCartButton";
 import { ProductType } from "../../types/ProductType";
 import { replaceUrl } from "../../helpers/replaceUrl";
 import { Publication } from "../../types/PublicationType";
+import Tag from "../../components/common/Tag";
 
 export default function DonationPage() {
 
@@ -25,7 +26,7 @@ export default function DonationPage() {
         }
     }, [data?.publications, selectedQuantity, currentPublicaton]);
 
-    const currentPrice = (currentPublicaton && currentPublicaton.original_price) || 0;
+    const currentPrice = (currentPublicaton && currentPublicaton.final_price) || 0;
 
     const cartItem: CartItemType = {
         id: currentPublicaton?.id,
@@ -35,6 +36,7 @@ export default function DonationPage() {
         publication: `${selectedQuantity} шт`,
         platform: currentPublicaton?.platforms?.map((platform) => platform).join(', '),
         price: currentPrice,
+        final_price: currentPrice,
         discount: currentPublicaton?.discount,
         cashback: currentPublicaton?.cashback
     }
@@ -46,11 +48,15 @@ export default function DonationPage() {
             <div className="flex flex-col items-center">
                 {!isLoading &&
                     <div className="flex flex-col items-start w-full">
-                        <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(data?.publications[0]?.photo)} alt="donation image" />
+                        <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(data?.publications[0]?.photo)} alt="donation image" />
                         <h1 className="text-header mb-2">{data?.title}</h1>
                         <DonationQuantity selectedQuantity={selectedQuantity} setSelectedQuantity={setSelectedQuantity} quantitys={data?.publications?.map((pub: Publication) => pub?.quantity)} />
                         <h2 className="text-subtitle mt-8 mb-2">Цена:</h2>
-                        <h1 className="price-big">{currentPrice} ₽</h1>
+                        <div className="flex gap-2 items-center">
+                            <h1 className="price-big">{currentPrice} ₽</h1>
+                            {currentPublicaton?.discount ? <Tag type="discount">-{currentPublicaton?.discount}%</Tag> : null}
+
+                        </div>
                         <Line />
                         <div className='flex flex-col gap-2 w-full'>
                             <div className='w-full flex justify-between'>
