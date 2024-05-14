@@ -10,6 +10,7 @@ type State = {
   rememberData: boolean;
   promocode: string;
   totalPrice: number;
+  totalCashback: number;
 };
 
 const initialState: State = {
@@ -21,6 +22,7 @@ const initialState: State = {
   rememberData: false,
   promocode: "",
   totalPrice: 0,
+  totalCashback: 0,
 };
 
 const cartSlice = createSlice({
@@ -59,6 +61,9 @@ const cartSlice = createSlice({
     setTotalPrice: (state, action) => {
       state.totalPrice = action.payload;
     },
+    setTotalCashback: (state, action) => {
+      state.totalCashback = action.payload;
+    },
   },
 });
 
@@ -73,6 +78,7 @@ export const {
   setRememberData,
   clearCart,
   setTotalPrice,
+  setTotalCashback,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
