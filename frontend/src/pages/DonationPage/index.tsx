@@ -65,7 +65,7 @@ export default function DonationPage() {
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Язык:</p>
-                                <p className='text-title text-[14px]'>{data?.languages.map((lang) => lang)?.join(', ')}</p>
+                                <p className='text-title text-[14px]'>{currentPublicaton?.languages.map((lang) => lang)?.join(', ')}</p>
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Дата релиза:</p>
