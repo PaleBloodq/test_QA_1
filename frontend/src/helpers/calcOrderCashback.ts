@@ -7,7 +7,7 @@ export default function calcOrderCashback(
   let totalCashback = 0;
   cartItems.forEach((item) => (totalCashback += (item.final_price * item.cashback) / 100));
   if (promoCodeDiscount) {
-    totalCashback = (totalCashback * promoCodeDiscount) / 100;
+    totalCashback = totalCashback - (totalCashback * promoCodeDiscount) / 100;
   }
   return totalCashback;
 }
