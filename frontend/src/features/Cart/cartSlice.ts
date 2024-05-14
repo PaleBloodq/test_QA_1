@@ -9,6 +9,7 @@ type State = {
   reciptEmail: string;
   rememberData: boolean;
   promocode: string;
+  totalPrice: number;
 };
 
 const initialState: State = {
@@ -19,6 +20,7 @@ const initialState: State = {
   reciptEmail: "",
   rememberData: false,
   promocode: "",
+  totalPrice: 0,
 };
 
 const cartSlice = createSlice({
@@ -54,6 +56,9 @@ const cartSlice = createSlice({
     setPromocode: (state, action) => {
       state.promocode = action.payload;
     },
+    setTotalPrice: (state, action) => {
+      state.totalPrice = action.payload;
+    },
   },
 });
 
@@ -67,6 +72,7 @@ export const {
   setReciptEmail,
   setRememberData,
   clearCart,
+  setTotalPrice,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

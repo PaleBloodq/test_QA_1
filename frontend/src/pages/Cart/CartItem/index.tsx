@@ -22,7 +22,7 @@ export default function CartItem({ item }: { item: CartItemType }) {
                 <h1 className="text-subtitle-info font-medium">{item.title}</h1>
                 <p className="text-subtitle text-[12px]">{item.publication} - {item.platform}</p>
                 <div className="flex gap-3">
-                    <h2 className="price-small">{item.discount ? getDiscount(item.price, item.discount) : item.price} ₽</h2>
+                    <h2 className="price-small">{item.discount ? item.final_price : item.price} ₽</h2>
                     {item.discount ? <Tag type="discount">-{item.discount}%</Tag> : null}
                 </div>
             </div>

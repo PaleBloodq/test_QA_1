@@ -11,7 +11,7 @@ import { userSelector } from "../../features/User/userSelectors";
 import Order from "./Order";
 import calcCashback from "../../helpers/calcCashback";
 import axios from "axios";
-import { addToCart } from "../../features/Cart/cartSlice";
+import { addToCart, setTotalPrice } from "../../features/Cart/cartSlice";
 
 export default function Cart() {
 
@@ -29,39 +29,46 @@ export default function Cart() {
         }
     };
 
-    function calculateTotalPrice(cartItems: CartItemType[]): number {
-        return cartItems.reduce((total, { price, discount }) => total + getDiscount(price, discount), 0);
+    function calcStartPrice(cartItems: CartItemType[]): number {
+        return cartItems.reduce((total, { final_price }) => total + final_price, 0);
     }
 
     function calculateTotalCashback(cartItems: CartItemType[]): number {
         return cartItems.reduce((total, item) => total + calcCashback(item.price, item.cashback), 0);
     }
 
-    const { items }: { items: CartItemType[] } = useSelector(cartSelector)
+    const { items, totalPrice }: { items: CartItemType[], totalPrice: number } = useSelector(cartSelector)
 
-    const [totalPrice, setTotalPrice] = useState(0)
     const [totalCashback, setTotalCashback] = useState(0)
     const [useCashback, setUseCashback] = useState(false)
 
     const { userData } = useSelector(userSelector)
 
     useEffect(() => {
-        setTotalPrice(calculateTotalPrice(items))
+        dispatch(setTotalPrice(calcStartPrice(items)))
         setTotalCashback(calculateTotalCashback(items))
     }, [items])
 
-    useEffect(() => {
-        let newTotalPrice = calculateTotalPrice(items);
-        if (isLoggined && useCashback) {
-            const cashbackLimit = userData.cashback;
-            if (newTotalPrice < cashbackLimit) {
-                newTotalPrice = 0;
-            } else {
-                newTotalPrice -= cashbackLimit;
-            }
-        }
-        setTotalPrice(newTotalPrice);
-    }, [isLoggined, useCashback, items, userData]);
+    // useEffect(() => {
+    //     let newTotalPrice = calculateTotalPrice(items);
+    //     if (isLoggined && useCashback) {
+    //         const cashbackLimit = userData.cashback;
+    //         if (newTotalPrice < cashbackLimit) {
+    //             newTotalPrice = 0;
+    //         } else {
+    //             newTotalPrice -= cashbackLimit;
+    //         }
+    //     }
+    //     setTotalPrice(newTotalPrice);
+    // }, [isLoggined, useCashback, items, userData]);
+
+    // useEffect(() => {
+    //     if (useCashback) {
+    //         setTotalPrice(totalPrice - userData?.cashback)
+    //     } else if (!useCashback) {
+    //         setTotalPrice(totalPrice + userData?.cashback)
+    //     }
+    // }, [useCashback])
 
     useEffect(() => {
         if (items.length === 0) {
@@ -113,7 +120,7 @@ export default function Cart() {
                     </div>
                 </div>
             </div>
-            <Order totalPrice={totalPrice} setTotalPrice={setTotalPrice} useCashback={useCashback} />
+            <Order useCashback={useCashback} />
         </Container>
     )
 }

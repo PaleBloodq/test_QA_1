@@ -10,6 +10,7 @@ import { setUserName, updateAccountMail, updateAccountPassword, updateBillMail }
 import { userSelector } from "../../features/User/userSelectors";
 import Navigation from "../../components/common/Navigation";
 import { useNavigate } from "react-router";
+import Avatar from "../../components/Profile/Avatar";
 
 export default function Profile() {
     const dispatch = useDispatch()
@@ -24,12 +25,12 @@ export default function Profile() {
     }
 
 
-    useEffect(() => {
-        dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
-    }, [])
     // useEffect(() => {
-    //     dispatch(setUserName(`123`))
+    //     dispatch(setUserName(`${window.Telegram?.WebApp.initDataUnsafe.user.first_name || ''} ${window.Telegram?.WebApp.initDataUnsafe.user.last_name || ''}`))
     // }, [])
+    useEffect(() => {
+        dispatch(setUserName(`123`))
+    }, [])
 
 
 
@@ -62,7 +63,7 @@ export default function Profile() {
                 <div className="w-full h-[100px] custom-border px-6 flex items-center justify-start">
                     {!isOrdersLoading &&
                         <>
-                            <div className="w-14 h-14 rounded-full bg-blue-400 mr-6"></div>
+                            <Avatar />
                             <div className="flex flex-col gap-[10px]">
                                 <h1 className="text-title-xl">{username}</h1>
                                 <div className="flex gap-4">
@@ -90,9 +91,12 @@ export default function Profile() {
                         <Input localValue={false} hardlyEditable={true} placeholder="Пароль" type="password" value={updatedData.psPassword} setValue={updateAccountPassword} />
                         <p className="text-subtitle mb-3">E-mail для чеков:</p>
                         <Input localValue={false} hardlyEditable={true} placeholder="E-Mail" type="email" value={updatedData.billEmail} setValue={updateBillMail} />
-                        <span className="mt-36">
-                            <Button onClick={handleUpdateUserData}>Сохранить изменения</Button>
-                        </span>
+                        <div className='h-16'></div>
+                        <div className="w-full h-[80px] fixed bottom-3 left-0 flex justify-center items-start">
+                            <div className='w-[345px] relative'>
+                                <Button onClick={handleUpdateUserData}>Сохранить изменения</Button>
+                            </div>
+                        </div>
                     </div>
                     :
                     <div className="w-full flex flex-col mt-7 gap-[13px]">

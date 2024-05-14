@@ -34,7 +34,7 @@ export default function SelectSubscription({ publications }: { publications: Pub
                 >
                   <h1 className="text-subtitle">{pub.title}</h1>
                   <h2 className="price-small">
-                    {pub.original_price} ₽
+                    {pub.final_price} ₽
                   </h2>
                 </button>
               )

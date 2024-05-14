@@ -7,16 +7,19 @@ import CheckBox from "../../../components/common/CheckBox";
 import { useEffect, useState } from "react";
 import Button from "../../../components/common/Button";
 import { useCheckPromocodeMutation, useMakeOrderMutation } from "../../../services/userApi";
+import { userSelector } from "../../../features/User/userSelectors";
+import { setTotalPrice } from "../../../features/Cart/cartSlice";
 
-export default function Order({ useCashback, totalPrice, setTotalPrice }: { useCashback: boolean, totalPrice: number, setTotalPrice: (arg1: number) => void }) {
+export default function Order({ useCashback }: { useCashback: boolean }) {
 
 
-    const { hasAccount, accountEmail, accountPassword, reciptEmail, rememberData, promocode, items } = useSelector(cartSelector)
+    const { hasAccount, accountEmail, accountPassword, reciptEmail, rememberData, promocode, items, totalPrice } = useSelector(cartSelector)
     const [makeOrder, { data: orderData, error: orderErorr }] = useMakeOrderMutation();
     const [checkPromocode, { data: promoData, error: promoError }] = useCheckPromocodeMutation();
     const [sameEmail, setSameEmail] = useState(false)
     const dispatch = useDispatch()
     const [promocodeSelected, setPromocodeSelected] = useState(false)
+    const { userData } = useSelector(userSelector)
 
     useEffect(() => {
         sameEmail ? dispatch(setReciptEmail(accountEmail)) : dispatch(setReciptEmail(""))
@@ -55,7 +58,7 @@ export default function Order({ useCashback, totalPrice, setTotalPrice }: { useC
 
     useEffect(() => {
         if (promocodeSelected === false && promoData?.result === true && promoData?.discount) {
-            setTotalPrice((totalPrice - (promoData?.discount / 100) * totalPrice))
+            dispatch(setTotalPrice((totalPrice - (promoData?.discount / 100) * totalPrice)))
             setPromocodeSelected(true)
         }
     }, [promoData])
