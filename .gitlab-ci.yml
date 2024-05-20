@@ -4,7 +4,7 @@ stages:
 
 .deploy_template: &deploy_template
   before_script:
-    - mkdir -p /root/CICD/$CI_PROJECT_NAME
+    - sudo mkdir -p /root/CICD/$CI_PROJECT_NAME
     - sudo chmod 777 /root/CICD/$CI_PROJECT_NAME
   script:
     - export FRONTEND_TAG=$FRONTEND_TAG
