@@ -131,6 +131,8 @@ deploy_prod:
   stage: deploy
   variables:
     FRONTEND_TAG: production
+  environment:
+    name: production
   <<: *deploy_template
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
