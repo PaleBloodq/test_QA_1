@@ -27,7 +27,8 @@ def hash_product_publication(sender, instance: models.ProductPublication, create
 
 @receiver(signals.post_migrate)
 def hash_product_publication(sender, **kwargs):
-    logging.warning()
+    if sender.name != 'api':
+        return
     models.Tag.objects.get_or_create(name='Подписки EA Play', database_name='eaPlay')
     models.Tag.objects.get_or_create(name='Подписки PS Plus', database_name='psPlus')
     models.Tag.objects.get_or_create(name='Офферы', database_name='offers')
