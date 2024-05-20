@@ -11,9 +11,9 @@ stages:
     - export CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - sudo cp -a ./* /root/CICD/$CI_PROJECT_NAME/
-    - sudo envsubst < /root/CICD/$CI_PROJECT_NAME/example.env > /root/CICD/$CI_PROJECT_NAME/local.env
-    - sudo envsubst < /root/CICD/$CI_PROJECT_NAME/docker-compose.yaml > /root/CICD/$CI_PROJECT_NAME/docker-compose.processed.yaml
-    - sudo env BACKEND_PORT=$BACKEND_PORT envsubst '\$BACKEND_PORT' < /root/CICD/$CI_PROJECT_NAME/nginx.conf > /root/CICD/$CI_PROJECT_NAME/nginx.processed.conf
+    - sudo -E envsubst < /root/CICD/$CI_PROJECT_NAME/example.env > /root/CICD/$CI_PROJECT_NAME/local.env
+    - sudo -E envsubst < /root/CICD/$CI_PROJECT_NAME/docker-compose.yaml > /root/CICD/$CI_PROJECT_NAME/docker-compose.processed.yaml
+    - sudo -E env BACKEND_PORT=$BACKEND_PORT envsubst '\$BACKEND_PORT' < /root/CICD/$CI_PROJECT_NAME/nginx.conf > /root/CICD/$CI_PROJECT_NAME/nginx.processed.conf
     - sudo mv /root/CICD/$CI_PROJECT_NAME/docker-compose.processed.yaml /root/CICD/$CI_PROJECT_NAME/docker-compose.yaml
     - sudo mv /root/CICD/$CI_PROJECT_NAME/nginx.processed.conf /root/CICD/$CI_PROJECT_NAME/nginx.conf
     - if [ ! -d "/root/CICD/$CI_PROJECT_NAME/rsa" ]; then sudo mkdir -p /root/CICD/$CI_PROJECT_NAME/rsa && sudo openssl genpkey -algorithm RSA -out /root/CICD/$CI_PROJECT_NAME/rsa/private.pem && sudo openssl rsa -pubout -in /root/CICD/$CI_PROJECT_NAME/rsa/private.pem -out /root/CICD/$CI_PROJECT_NAME/rsa/public.pem; fi
