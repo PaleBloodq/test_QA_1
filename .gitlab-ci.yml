@@ -5,7 +5,8 @@ stages:
 .deploy_template: &deploy_template
   before_script:
     - sudo mkdir -p /root/CICD/$CI_PROJECT_NAME
-    - sudo chmod 777 /root/CICD/$CI_PROJECT_NAME
+    - sudo chown -R gitlab-runner:gitlab-runner /root/CICD/$CI_PROJECT_NAME
+    - sudo chmod -R 777 /root/CICD/$CI_PROJECT_NAME
   script:
     - export FRONTEND_TAG=$FRONTEND_TAG
     - export CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE
