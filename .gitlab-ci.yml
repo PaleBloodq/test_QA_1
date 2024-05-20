@@ -107,7 +107,7 @@ build_frontend_production:
     - docker pull $CI_REGISTRY_IMAGE/frontend:production || true
     - echo "VITE_BASE_URL=$VITE_BASE_URL" > ./frontend/.env.production
     - echo "VITE_API_URL=$VITE_API_URL" >> ./frontend/.env.production
-    - docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
+    - docker build -t $CI_REGISTRY_IMAGE/frontend:production ./frontend
     - docker push $CI_REGISTRY_IMAGE/frontend:production
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
