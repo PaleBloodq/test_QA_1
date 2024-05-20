@@ -18,7 +18,7 @@ OrderWin = [
     Window(
         Format('📦Заказ от *{order.date}*'),
         Format('ℹ️Статус заказа: *{order_extra.status_text} {order_extra.emoji}*'),
-        Format('🆔Идентификатор заказа: ||{data.order_id}||'),
+        Format('🆔Идентификатор заказа: ||{order.order_id}||'),
         Format('💰Общая стоимость: *{order.amount}₽*'),
         Format('🛒Состав заказа: \n{order_products}'),
         Format('_{order_extra.text}_'),
