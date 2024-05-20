@@ -2,94 +2,68 @@ stages:
   - build
   - deploy
 
+.deploy_template: &deploy_template
+  before_script:
+    - mkdir -p /root/CICD/$CI_PROJECT_NAME
+    - sudo chmod 777 /root/CICD/$CI_PROJECT_NAME
+  script:
+    - export FRONTEND_TAG=$FRONTEND_TAG
+    - export CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - cp -a ./* /root/CICD/$CI_PROJECT_NAME/
+    - cd /root/CICD/$CI_PROJECT_NAME
+    - envsubst < example.env > local.env
+    - envsubst < docker-compose.yaml > docker-compose.processed.yaml
+    - env BACKEND_PORT=$BACKEND_PORT envsubst '$BACKEND_PORT' < nginx.conf > nginx.processed.conf
+    - mv docker-compose.processed.yaml docker-compose.yaml
+    - mv nginx.processed.conf nginx.conf
+    - if [ ! -d "rsa" ]; then mkdir -p rsa && openssl genpkey -algorithm RSA -out rsa/private.pem && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem; fi
+    - docker compose pull
+    - docker compose down
+    - docker compose up -d
+    - docker image prune -a -f
+
+.build_template: &build_template
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+      - /var/lib/docker
+  before_script:
+    - docker info
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE/$SERVICE:latest || true
+    - docker build -t $CI_REGISTRY_IMAGE/$SERVICE ./$SERVICE
+    - docker push $CI_REGISTRY_IMAGE/$SERVICE
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      changes:
+        - $SERVICE/requirements.txt
+    - when: never
 
 build_backend:
-  stage: build
-  image: docker:latest
-  services:
-    - docker:dind
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - /var/lib/docker
-  before_script:
-    - docker info
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $CI_REGISTRY_IMAGE/backend:latest || true
-    - docker build -t $CI_REGISTRY_IMAGE/backend ./backend
-    - docker push $CI_REGISTRY_IMAGE/backend
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-      changes:
-        - backend/requirements.txt
-    - when: never
+  variables:
+    SERVICE: backend
+  <<: *build_template
 
 build_product_parser:
-  stage: build
-  image: docker:latest
-  services:
-    - docker:dind
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - /var/lib/docker
-  before_script:
-    - docker info
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $CI_REGISTRY_IMAGE/product_parser:latest || true
-    - docker build -t $CI_REGISTRY_IMAGE/product_parser ./product_parser
-    - docker push $CI_REGISTRY_IMAGE/product_parser
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-      changes:
-        - product_parser/requirements.txt
-    - when: never
+  variables:
+    SERVICE: product_parser
+  <<: *build_template
 
 build_payments:
-  stage: build
-  image: docker:latest
-  services:
-    - docker:dind
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - /var/lib/docker
-  before_script:
-    - docker info
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $CI_REGISTRY_IMAGE/payments:latest || true
-    - docker build -t $CI_REGISTRY_IMAGE/payments ./payments
-    - docker push $CI_REGISTRY_IMAGE/payments
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-      changes:
-        - payments/requirements.txt
-    - when: never
+  variables:
+    SERVICE: payments
+  <<: *build_template
 
 build_tg_bot:
-  stage: build
-  image: docker:latest
-  services:
-    - docker:dind
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - /var/lib/docker
-  before_script:
-    - docker info
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $CI_REGISTRY_IMAGE/tg_bot:latest || true
-    - docker build -t $CI_REGISTRY_IMAGE/tg_bot ./tg_bot
-    - docker push $CI_REGISTRY_IMAGE/tg_bot
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-      changes:
-        - tg_bot/requirements.txt
-    - when: never
+  variables:
+    SERVICE: tg_bot
+  <<: *build_template
 
 build_frontend:
   stage: build
@@ -115,27 +89,48 @@ build_frontend:
         - frontend/**/*
     - when: never
 
-deploy:
-  tags:
-  - dev
-  stage: deploy
+build_frontend_production:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+      - /var/lib/docker
+  environment:
+    name: production
   before_script:
-    - mkdir -p /root/CICD/$CI_PROJECT_NAME
-    - sudo chmod 777 /root/CICD/$CI_PROJECT_NAME
-  script:
-    - export CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE
+    - docker info
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - cp -a ./* /root/CICD/$CI_PROJECT_NAME/
-    - cd /root/CICD/$CI_PROJECT_NAME
-    - envsubst < example.env > local.env
-    - envsubst < docker-compose.yaml > docker-compose.processed.yaml
-    - env BACKEND_PORT=$BACKEND_PORT envsubst '$BACKEND_PORT' < nginx.conf > nginx.processed.conf
-    - mv docker-compose.processed.yaml docker-compose.yaml
-    - mv nginx.processed.conf nginx.conf
-    - if [ ! -d "rsa" ]; then mkdir -p rsa and openssl genpkey -algorithm RSA -out rsa/private.pem && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem; fi
-    - docker compose pull
-    - docker compose down
-    - docker compose up -d
-    - docker image prune -a -f
+  script:
+    - docker pull $CI_REGISTRY_IMAGE/frontend:production || true
+    - echo "VITE_BASE_URL=$VITE_BASE_URL" > ./frontend/.env.production
+    - echo "VITE_API_URL=$VITE_API_URL" >> ./frontend/.env.production
+    - docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
+    - docker push $CI_REGISTRY_IMAGE/frontend:production
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "prod"'
+      changes:
+        - frontend/**/*
+    - when: never
+
+deploy_dev:
+  tags:
+    - dev
+  stage: deploy
+  variables:
+    FRONTEND_TAG: latest
+  <<: *deploy_template
   rules:
     - if: '$CI_COMMIT_BRANCH == "dev"'
+
+deploy_prod:
+  tags:
+    - prod
+  stage: deploy
+  variables:
+    FRONTEND_TAG: production
+  <<: *deploy_template
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "prod"'

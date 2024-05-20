@@ -15,10 +15,6 @@ async def getter_order(dialog_manager: DialogManager, **kwargs):
     return {'order': order, 'order_extra': order_extra, 'order_products': order.get_normalized_products()}
 
 
-async def view_id(callback: CallbackQuery, __, manager: DialogManager):
-    order_id = UserData(manager).data.selected_order.order_id
-    await callback.answer(text=f'Идентификатор заказа: {order_id}', show_alert=True)
-
 
 async def resending(message: Message, __, manager: DialogManager):
     order_id = UserData(manager).data.selected_order.order_id
