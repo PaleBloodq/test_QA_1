@@ -4,17 +4,17 @@ stages:
 
 .deploy_template: &deploy_template
   before_script:
-    - mkdir -p /root/CICD/$CI_PROJECT_NAME
-    - sudo chmod 777 /root/CICD/$CI_PROJECT_NAME
+    - mkdir -p /home/gitlab-runner/deployments/$CI_PROJECT_NAME
+    - chmod 777 /home/gitlab-runner/deployments/$CI_PROJECT_NAME
   script:
     - export FRONTEND_TAG=$FRONTEND_TAG
     - export CI_REGISTRY_IMAGE=$CI_REGISTRY_IMAGE
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - cp -a ./* /root/CICD/$CI_PROJECT_NAME/
-    - cd /root/CICD/$CI_PROJECT_NAME
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - cp -a ./* /home/gitlab-runner/deployments/$CI_PROJECT_NAME/
+    - cd /home/gitlab-runner/deployments/$CI_PROJECT_NAME
     - envsubst < example.env > local.env
     - envsubst < docker-compose.yaml > docker-compose.processed.yaml
-    - env BACKEND_PORT=$BACKEND_PORT envsubst '$BACKEND_PORT' < nginx.conf > nginx.processed.conf
+    - env BACKEND_PORT=$BACKEND_PORT envsubst '\$BACKEND_PORT' < nginx.conf > nginx.processed.conf
     - mv docker-compose.processed.yaml docker-compose.yaml
     - mv nginx.processed.conf nginx.conf
     - if [ ! -d "rsa" ]; then mkdir -p rsa && openssl genpkey -algorithm RSA -out rsa/private.pem && openssl rsa -pubout -in rsa/private.pem -out rsa/public.pem; fi
