@@ -3,7 +3,7 @@ from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import WebApp, Button, Start, Url, Back, Next
 from aiogram_dialog.widgets.text import Const, Format
 
-from .methods import getter_order, view_id, resending
+from .methods import getter_order, resending
 from states.states import OrderSG, MainSG, TwoFaSG
 from ...custom_widgets import ScrollingOrdersGroup
 from ...filters import is_can_pay, is_can_send_message
