@@ -17,8 +17,5 @@ async def create_bg_manager(user_id: int) -> BgManager:
 
 
 def escape_markdown(text):
-    """
-    Escape special markdown characters in the provided text.
-    """
-    escape_chars = r"_*[]()~`"
+    escape_chars = r'\_*[]()~`>#+-=|{}.!'
     return re.sub(f"([{re.escape(escape_chars)}])", r"\\\1", text)

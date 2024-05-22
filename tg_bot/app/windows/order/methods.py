@@ -8,12 +8,14 @@ from aiogram_dialog import DialogManager
 import bootstrap
 from service.managers.user_data_manager import UserData
 
+from utils import escape_markdown
+
 
 async def getter_order(dialog_manager: DialogManager, **kwargs):
     order = UserData(dialog_manager).data.selected_order
     order_extra = order.get_order_extra()
     return {'order': order,
-            "order_id": order.order_id.replace('-', '\-'),
+            "order_id": escape_markdown(order.order_id),
             'order_extra': order_extra,
             'order_products': order.get_normalized_products()}
 
