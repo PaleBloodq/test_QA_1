@@ -12,7 +12,10 @@ from service.managers.user_data_manager import UserData
 async def getter_order(dialog_manager: DialogManager, **kwargs):
     order = UserData(dialog_manager).data.selected_order
     order_extra = order.get_order_extra()
-    return {'order': order, 'order_extra': order_extra, 'order_products': order.get_normalized_products()}
+    return {'order': order,
+            "order_id": order.order_id.replace('-', '/-'),
+            'order_extra': order_extra,
+            'order_products': order.get_normalized_products()}
 
 
 
