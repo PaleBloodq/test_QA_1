@@ -20,8 +20,8 @@ bot = bootstrap.MyBot().getInstance()
 async def send_message_manager(request: Request) -> Response:
     data = await request.json()
     try:
-        order_id = data.order_id.replace('-', '\-')
         data = NewMessage(**data)
+        order_id = escape_markdown(data.order_id)
         text = f"*Сообщение от менеджера по вашему заказу ||{order_id}|| :*\n```📨 " + escape_markdown(data.text)
         text += '```\n\n_Чтобы ответить на сообщение, потяните его вправо, если вы с телефона, напишите текст и отправьте\n' \
                 'В ином случае нажмите правой кнопкой мыши на сообщение и нажмите "Ответить"_'
