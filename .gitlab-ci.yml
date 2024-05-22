@@ -80,7 +80,7 @@ build_frontend:
   script:
     - docker pull $CI_REGISTRY_IMAGE/frontend:latest || true
     - echo "VITE_BASE_URL=/$CI_PROJECT_NAME/frontend/" > ./frontend/.env.production
-    - echo "VITE_API_URL=$HOSTNAME/$CI_PROJECT_NAME/backend/api/" >> ./frontend/.env.production
+    - echo "VITE_API_URL=$HOSTNAME/$CI_PROJECT_NAME/backend/" >> ./frontend/.env.production
     - docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
     - docker push $CI_REGISTRY_IMAGE/frontend
   rules:
@@ -106,7 +106,7 @@ build_frontend_production:
   script:
     - docker pull $CI_REGISTRY_IMAGE/frontend:production || true
     - echo "VITE_BASE_URL=/$CI_PROJECT_NAME/frontend/" > ./frontend/.env.production
-    - echo "VITE_API_URL=$HOSTNAME/$CI_PROJECT_NAME/backend/api/" >> ./frontend/.env.production
+    - echo "VITE_API_URL=$HOSTNAME/$CI_PROJECT_NAME/backend/" >> ./frontend/.env.production
     - docker build -t $CI_REGISTRY_IMAGE/frontend:production ./frontend
     - docker push $CI_REGISTRY_IMAGE/frontend:production
   rules:
