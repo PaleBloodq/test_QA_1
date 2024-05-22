@@ -12,7 +12,8 @@ class OrderExtra:
     status_text: str
     emoji: str
     text: str
-
+    def __post_init__(self):
+        self.text = utils.escape_markdown(self.text)
 
 class NewMessage(BaseModel):
     order_id: str
@@ -41,7 +42,7 @@ class Order(BaseModel):
             return utils.escape_markdown(value)
         return value
     def get_order_extra(self) -> Optional[OrderExtra]:
-        match self.status:
+        match self.status.replace('\\', ''):
             case 'IN_PROGRESS':
                 return OrderExtra(status_text='В обработке', emoji='⏳', text=texts.IN_PROGRESS_TEXT)
             case 'COMPLETED':
