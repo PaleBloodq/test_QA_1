@@ -1,6 +1,6 @@
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import WebApp, Button, Start, Url, Back, Next
+from aiogram_dialog.widgets.kbd import Start, Url, Back, Next
 from aiogram_dialog.widgets.text import Const, Format
 
 from .methods import getter_order, resending
@@ -26,7 +26,7 @@ OrderWin = [
         Next(Const('💬Написать менеджеру'), id='next', when=is_can_send_message),
         Start(Const('🔒Как включить 2FA?'), state=TwoFaSG.show, id='2FA'),
         Back(Const('Назад')),
-        parse_mode='markdown',
+        parse_mode='MarkdownV2',
         getter=getter_order,
         state=OrderSG.order,
     ),

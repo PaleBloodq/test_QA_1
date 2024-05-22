@@ -79,8 +79,8 @@ build_frontend:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY_IMAGE/frontend:latest || true
-    - echo "VITE_BASE_URL=$VITE_BASE_URL" > ./frontend/.env.production
-    - echo "VITE_API_URL=$VITE_API_URL" >> ./frontend/.env.production
+    - echo "VITE_BASE_URL=/$CI_PROJECT_NAME/frontend/" > ./frontend/.env.production
+    - echo "VITE_API_URL=$HOSTNAME/$CI_PROJECT_NAME/backend/api/" >> ./frontend/.env.production
     - docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
     - docker push $CI_REGISTRY_IMAGE/frontend
   rules:
@@ -105,8 +105,8 @@ build_frontend_production:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY_IMAGE/frontend:production || true
-    - echo "VITE_BASE_URL=$VITE_BASE_URL" > ./frontend/.env.production
-    - echo "VITE_API_URL=$VITE_API_URL" >> ./frontend/.env.production
+    - echo "VITE_BASE_URL=/$CI_PROJECT_NAME/frontend/" > ./frontend/.env.production
+    - echo "VITE_API_URL=$HOSTNAME/$CI_PROJECT_NAME/backend/api/" >> ./frontend/.env.production
     - docker build -t $CI_REGISTRY_IMAGE/frontend:production ./frontend
     - docker push $CI_REGISTRY_IMAGE/frontend:production
   rules:
