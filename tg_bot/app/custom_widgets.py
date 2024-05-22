@@ -13,42 +13,6 @@ from states.states import OrderSG
 from web.api.models import OrderList
 
 
-class InterestSelector(Keyboard):
-    def __init__(
-            self,
-            id: str = 'INTEREST_SELECTOR',
-
-    ):
-        super().__init__(id=id)
-        self.interests_list = None
-        self.interests_user = set()
-
-    async def _render_keyboard(
-            self,
-            data: Dict,
-            manager: DialogManager,
-    ) -> List[List[InlineKeyboardButton]]:
-        translates = await UserData(manager).get_translations()
-        self.interests_list = translates.INTERESTS_LIST
-        kbd = [[InlineKeyboardButton(text=translate, callback_data=key)] for key, translate in
-               self.interests_list.__dict__.items()]
-        kbd = await regroup_buttons(kbd, limit=20)
-        if kbd:
-            return kbd
-        return []
-
-    async def process_callback(self, callback: CallbackQuery, dialog: DialogProtocol,
-                               manager: DialogManager) -> bool:
-        if callback.data in list(self.interests_list.__dict__.keys()):
-            if callback.data in self.interests_user:
-                self.interests_user.remove(callback.data)
-            else:
-                self.interests_user.add(callback.data)
-            manager.current_context().dialog_data.update({'INTEREST_SELECTOR': list(self.interests_user)})
-            await manager.show(ShowMode.AUTO)
-            return True
-        else:
-            return False
 
 
 
@@ -87,7 +51,7 @@ class ScrollingOrdersGroup(Group):
 
         if response:
             self.orders = OrderList(**{'orders': response})
-            kbd.extend([[InlineKeyboardButton(text=str(order.date) + order.get_order_extra().emoji,
+            kbd.extend([[InlineKeyboardButton(text=str(order.date.replace('\\', '')) + order.get_order_extra().emoji,
                                               callback_data=order.order_id)] for order in self.orders.orders])
         else:
             return [[InlineKeyboardButton(text='Заказов пока нет', callback_data='empty')]]
