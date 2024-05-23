@@ -15,7 +15,6 @@ async def getter_order(dialog_manager: DialogManager, **kwargs):
     order = UserData(dialog_manager).data.selected_order
     order_extra = order.get_order_extra()
     return {'order': order,
-            "order_id": escape_markdown(order.order_id),
             'order_extra': order_extra,
             'order_products': order.get_normalized_products()}
 
