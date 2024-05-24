@@ -185,7 +185,7 @@
         // Create message element
         const messageDiv = document.createElement("div");
         messageDiv.classList.add("message", message.manager_id ? "manager" : "client");
-        messageDiv.innerHTML = message.text.replace(/\n/g, "<br>");
+        messageDiv.innerHTML = message.text.replace(/\\n/g, "<br>");
         container.appendChild(messageDiv);
 
         return container;

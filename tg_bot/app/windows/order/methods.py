@@ -8,16 +8,16 @@ from aiogram_dialog import DialogManager
 import bootstrap
 from service.managers.user_data_manager import UserData
 
+from utils import escape_markdown
+
 
 async def getter_order(dialog_manager: DialogManager, **kwargs):
     order = UserData(dialog_manager).data.selected_order
     order_extra = order.get_order_extra()
-    return {'order': order, 'order_extra': order_extra, 'order_products': order.get_normalized_products()}
+    return {'order': order,
+            'order_extra': order_extra,
+            'order_products': order.get_normalized_products()}
 
-
-async def view_id(callback: CallbackQuery, __, manager: DialogManager):
-    order_id = UserData(manager).data.selected_order.order_id
-    await callback.answer(text=f'Идентификатор заказа: {order_id}', show_alert=True)
 
 
 async def resending(message: Message, __, manager: DialogManager):
