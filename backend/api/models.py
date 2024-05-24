@@ -195,8 +195,8 @@ class OrderProduct(BaseModel):
     product = models.CharField('Позиция', max_length=255)
     product_id = models.CharField('ID товара', max_length=255)
     description = models.CharField('Описание', max_length=255)
-    original_price = models.IntegerField('Полная стоимость')
-    final_price = models.IntegerField('Конечная стоимость')
+    original_price = models.DecimalField('Полная стоимость', max_digits=10, decimal_places=2)
+    final_price = models.DecimalField('Конечная стоимость', max_digits=10, decimal_places=2)
 
 
 class PromoCode(BaseModel):

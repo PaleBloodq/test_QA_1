@@ -1,4 +1,5 @@
 import os
+import logging
 import hashlib
 import aiohttp
 from pydantic import BaseModel, UUID4, NonNegativeFloat, Field
@@ -14,11 +15,20 @@ API_URL = 'https://securepay.tinkoff.ru/v2/'
 PAYMENT_WEBHOOK_URL = os.environ.get("PAYMENT_WEBHOOK_URL")
 
 
+class OrderItem(BaseModel):
+    name: str
+    price: NonNegativeFloat
+    quantity: int
+    amount: NonNegativeFloat
+
+
 class Order(BaseModel):
     order_id: UUID4
     amount: NonNegativeFloat
     description: str
     customer_telegram_id: int
+    bill_email: str
+    items: list[OrderItem]
 
 
 class Payment(BaseModel):
@@ -60,13 +70,30 @@ async def create_payment(order: Order) -> Payment | None:
         'NotificationURL': PAYMENT_WEBHOOK_URL,
     }
     payment_data['Token'] = await get_token(payment_data)
+    payment_data['Receipt'] = {
+        'FfdVersion': '1.2',
+        'Taxation': 'usn_income',
+        'Email': order.bill_email,
+        'Items': [
+            {
+                'Name': item.name,
+                'Price': int(item.price * 100),
+                'Quantity': 1,
+                'Amount': int(item.amount * 100),
+                'Tax': 'none',
+                'PaymentMethod': 'partial_payment',
+                'PaymentObject': 'commodity',
+                'MeasurementUnit': 'шт.',
+            } for item in order.items
+        ],
+    }
     async with aiohttp.ClientSession() as session:
         try:
             async with session.post(API_URL+'Init', json=payment_data) as response:
                 data = await response.json()
                 return Payment(**data)
-        except:
-            pass
+        except Exception as e:
+            logging.exception((e, data))
 
 
 async def get_payment(payment_id: str) -> dict:

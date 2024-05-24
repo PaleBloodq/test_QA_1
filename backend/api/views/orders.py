@@ -1,4 +1,5 @@
 import logging
+from decimal import Decimal
 import os
 from datetime import date
 from dataclasses import dataclass
@@ -95,18 +96,20 @@ class OrderInfo:
     
     def fill_order(self, order: models.Order, promo_code_discount: int) -> models.Order:
         self.update_profile()
+        order_products: list[models.OrderProduct] = []
         order.cashback = 0
         for publication in self.cart:
             if not self.spend_cashback:
                 order.cashback += publication.final_price * publication.cashback / 100
-            models.OrderProduct.objects.get_or_create(
+            order_product, created = models.OrderProduct.objects.get_or_create(
                 order=order,
                 product=publication.product.title,
                 product_id=publication.id,
                 description=self.get_description(publication),
                 original_price=publication.original_price,
-                final_price=publication.final_price,
+                final_price=Decimal(publication.final_price - publication.final_price * promo_code_discount / 100),
             )
+            order_products.append(order_product)
         if order.promo_code_discount:
             order.cashback -= order.cashback * promo_code_discount / 100
         payment = serializers.PaymentSerializer(
@@ -115,6 +118,15 @@ class OrderInfo:
                 'amount': order.amount,
                 'description': str(order),
                 'customer_telegram_id': order.profile.telegram_id,
+                'bill_email': order.bill_email,
+                'items': [
+                    {
+                        'name': item.product,
+                        'price': float(item.final_price),
+                        'quantity': 1,
+                        'amount': float(item.final_price),
+                    } for item in order_products
+                ],
             }).json()
         )
         if payment.is_valid():
