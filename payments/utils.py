@@ -87,6 +87,7 @@ async def create_payment(order: Order) -> Payment | None:
             } for item in order.items
         ],
     }
+    logging.debug(payment_data)
     async with aiohttp.ClientSession() as session:
         try:
             async with session.post(API_URL+'Init', json=payment_data) as response:

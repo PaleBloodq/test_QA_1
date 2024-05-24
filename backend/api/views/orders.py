@@ -96,20 +96,24 @@ class OrderInfo:
     
     def fill_order(self, order: models.Order, promo_code_discount: int) -> models.Order:
         self.update_profile()
-        order_products: list[models.OrderProduct] = []
         order.cashback = 0
+        cart_sum = 0
         for publication in self.cart:
+            final_price = publication.final_price - publication.final_price * promo_code_discount / 100
+            if self.spend_cashback:
+                if cart_sum + final_price > order.amount:
+                    final_price = order.amount - cart_sum
+                cart_sum += final_price
             if not self.spend_cashback:
                 order.cashback += publication.final_price * publication.cashback / 100
-            order_product, created = models.OrderProduct.objects.get_or_create(
+            models.OrderProduct.objects.get_or_create(
                 order=order,
                 product=publication.product.title,
                 product_id=publication.id,
                 description=self.get_description(publication),
                 original_price=publication.original_price,
-                final_price=Decimal(publication.final_price - publication.final_price * promo_code_discount / 100),
+                final_price=Decimal(final_price),
             )
-            order_products.append(order_product)
         if order.promo_code_discount:
             order.cashback -= order.cashback * promo_code_discount / 100
         payment = serializers.PaymentSerializer(
