@@ -113,21 +113,9 @@ class OrderInfo:
         if order.promo_code_discount:
             order.cashback -= order.cashback * promo_code_discount / 100
         payment = serializers.PaymentSerializer(
-            data=requests.post(f'{PAYMENTS_URL}/create_payment', json={
-                'order_id': str(order.id),
-                'amount': order.amount,
-                'description': str(order),
-                'customer_telegram_id': order.profile.telegram_id,
-                'bill_email': order.bill_email,
-                'items': [
-                    {
-                        'name': item.product,
-                        'price': float(item.final_price),
-                        'quantity': 1,
-                        'amount': float(item.final_price),
-                    } for item in order_products
-                ],
-            }).json()
+            data=requests.post(f'{PAYMENTS_URL}/create_payment',
+                json=serializers.CreatePaymentSerializer(order).data,
+            ).json()
         )
         if payment.is_valid():
             order.payment_id = payment.validated_data.get('payment_id')
