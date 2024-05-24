@@ -19,7 +19,7 @@ export default function SelectSubscription({ publications }: { publications: Pub
   }, [currentDurationPublications])
 
   return (
-    <div className="flex flex-col mt-2">
+    <div className="flex flex-col mt-2 w-full mx-auto">
       <h1 className="text-title mb-5">Издания</h1>
       <div>
         <SubscriptionPeriodSelector selected={currentDuration} />
@@ -34,7 +34,7 @@ export default function SelectSubscription({ publications }: { publications: Pub
                 >
                   <h1 className="text-subtitle">{pub.title}</h1>
                   <h2 className="price-small">
-                    {pub.original_price} ₽
+                    {pub.final_price} ₽
                   </h2>
                 </button>
               )

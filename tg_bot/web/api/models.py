@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from typing import Literal, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 import texts
+import utils
 
 
 @dataclass
@@ -11,7 +12,8 @@ class OrderExtra:
     status_text: str
     emoji: str
     text: str
-
+    def __post_init__(self):
+        self.text = utils.escape_markdown(self.text)
 
 class NewMessage(BaseModel):
     order_id: str
@@ -34,7 +36,11 @@ class Order(BaseModel):
     payment_url: Optional[str]
     need_account: bool
     status: Literal['IN_PROGRESS', 'COMPLETED', 'ERROR', 'PAID', 'PAYMENT']
-
+    @field_validator('order_id', 'date')
+    def process_text_fields(cls, value):
+        if isinstance(value, str):
+            return utils.escape_markdown(value)
+        return value
     def get_order_extra(self) -> Optional[OrderExtra]:
         match self.status:
             case 'IN_PROGRESS':

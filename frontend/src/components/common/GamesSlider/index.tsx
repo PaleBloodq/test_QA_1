@@ -19,6 +19,8 @@ type GamesSliderProps = {
 
 const GamesSlider = React.memo(({ data, isLoading, type }: GamesSliderProps) => {
 
+    console.log(data)
+
 
     return (
         <>
@@ -32,11 +34,6 @@ const GamesSlider = React.memo(({ data, isLoading, type }: GamesSliderProps) => 
                 >
                     {data.map((item, index) => {
                         return <SwiperSlide key={index}>
-                            {/* {type === "GAME" ? (
-                                <GameCard game={item} />
-                            ) : type === "DONATION" ? (
-                                <DonationCard donation={item} />
-                            ) : null} */}
                             {type === "GAME" && <GameCard game={item} />}
                             {type === "DONATION" && <DonationCard donation={item} />}
                             {type === "SUBSCRIPTION" && <SubscriptionCard subscription={item} />}

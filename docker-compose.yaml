@@ -69,7 +69,7 @@ services:
 
   
   frontend:
-    image: $CI_REGISTRY_IMAGE/frontend:latest
+    image: $CI_REGISTRY_IMAGE/frontend:$FRONTEND_TAG
     env_file:
       - ./local.env
     ports:

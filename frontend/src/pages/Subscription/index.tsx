@@ -12,6 +12,7 @@ import AddToCartButton from "../../components/common/AddToCartButton";
 import { Publication } from "../../types/PublicationType";
 import { replaceUrl } from "../../helpers/replaceUrl";
 import { ProductType } from "../../types/ProductType";
+import Tag from "../../components/common/Tag";
 
 
 export default function Subscription() {
@@ -36,8 +37,7 @@ export default function Subscription() {
     }, [selectedSubscription])
 
 
-    const currentPrice = currentSubscription?.original_price
-
+    const currentPrice = currentSubscription?.final_price
 
 
     const cartItem: CartItemType = {
@@ -48,6 +48,7 @@ export default function Subscription() {
         publication: `${currentDuration} мес`,
         platform: data?.title?.includes('PS') ? 'PS' : "EA",
         price: currentPrice,
+        final_price: currentPrice,
         discount: currentSubscription?.discount,
         cashback: currentSubscription?.cashback
     }
@@ -63,11 +64,12 @@ export default function Subscription() {
         <Container>
             <div className="flex flex-col items-center">
                 {!isLoading && currentSubscription !== undefined ? (
-                    <div className="flex flex-col items-start">
-                        <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentSubscription?.photo)} alt="subscription image" />
+                    <div className="flex flex-col items-start w-full">
+                        <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentSubscription?.photo)} alt="subscription image" />
                         <h1 className="text-header mb-2">{data?.title.includes('PS') ? 'PS Plus' : 'EA Play'} {currentSubscription?.title}</h1>
-                        <div className="flex items-center">
+                        <div className="flex items-center gap-2">
                             <h1 className="price-big">{currentPrice} ₽</h1>
+                            {currentSubscription?.discount !== 0 && <Tag type="discount">-{currentSubscription.discount}%</Tag>}
                         </div>
                         <SelectSubscription publications={data?.publications} />
                         <div className="mt-8 w-full">
@@ -83,7 +85,7 @@ export default function Subscription() {
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Язык:</p>
-                                <p className='text-title text-[14px]'>{data?.languages?.map((lang) => lang).join(', ')}</p>
+                                <p className='text-title text-[14px]'>{currentSubscription?.languages?.map((lang) => lang).join(', ')}</p>
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Дата релиза:</p>

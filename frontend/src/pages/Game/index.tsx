@@ -10,7 +10,6 @@ import { setCurrentPrice } from '../../features/Game/currentPriceSlice';
 import { setSelectedPlatform, setSelectedPublication } from '../../features/Game/publicationSlice';
 import { selectedPlatformSelector, selectedPublicationSelector } from '../../features/Game/publicationSelectors';
 import { isNew } from '../../hooks/useIsNew';
-import { getDiscount } from '../../hooks/getDiscount';
 import { isDatePassed } from '../../hooks/isDatePassed';
 import ReleaseTimer from '../../components/common/ReleaseTimer';
 import Line from '../../components/common/Line';
@@ -66,6 +65,7 @@ export default function Game() {
         publication: currentPublication?.title,
         platform: selectedPlatform,
         price: currentPrice,
+        final_price: currentPublication?.final_price,
         discount: currentPublication?.discount,
         cashback: currentPublication?.cashback,
     };
@@ -76,11 +76,13 @@ export default function Game() {
         return <div>Publication not found</div>;
     }
 
+    console.log(currentPublication)
+
     return (
         <Container>
             <div className="flex flex-col items-center">
-                <div className="flex flex-col items-start">
-                    <img className="w-[346px] h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentPublication?.photo)} alt="game image" />
+                <div className="flex flex-col items-start w-full">
+                    <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentPublication?.photo)} alt="game image" />
                     <div className='flex items-center mb-2 gap-2'>
                         <h1 className="text-header">{title && title}</h1>
                         {isNew(data?.release_date) && <Tag type="new">Новинка</Tag>}
@@ -88,7 +90,7 @@ export default function Game() {
                     <div className="flex items-center flex-wrap w-full gap-2">
                         {!isPsPlus ? (
                             <h1 className="price-big">
-                                {getDiscount(currentPrice, currentPublication?.ps_plus_discount || currentPublication?.discount || 0)} ₽
+                                {currentPublication?.final_price || 0} ₽
                             </h1>
                         ) : (
                             <SelectPrice price={currentPrice} discount={currentPublication?.ps_plus_discount} />
@@ -129,7 +131,7 @@ export default function Game() {
                         </div>
                         <div className='w-full flex justify-between'>
                             <p className='text-subtitle'>Язык:</p>
-                            <p className='text-title text-[14px]'>{data?.languages?.map((lang) => lang)?.join(', ')}</p>
+                            <p className='text-title text-[14px]'>{currentPublication?.languages?.map((lang) => lang)?.join(', ')}</p>
                         </div>
                         <div className='w-full flex justify-between'>
                             <p className='text-subtitle'>Дата релиза:</p>

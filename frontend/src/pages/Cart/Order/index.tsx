@@ -2,13 +2,17 @@ import SelectType from "./SelectType";
 import { cartSelector } from "../../../features/Cart/cartSelectors";
 import Input from "../../../components/common/Input";
 import { useDispatch, useSelector } from "react-redux";
-import { clearCart, setAccountEmail, setAccountPassword, setHasAccount, setPromocode, setReciptEmail, setRememberData } from "../../../features/Cart/cartSlice";
+import { clearCart, setAccountEmail, setAccountPassword, setHasAccount, setPromocode, setReciptEmail, setRememberData, setTotalCashback } from "../../../features/Cart/cartSlice";
 import CheckBox from "../../../components/common/CheckBox";
 import { useEffect, useState } from "react";
 import Button from "../../../components/common/Button";
 import { useCheckPromocodeMutation, useMakeOrderMutation } from "../../../services/userApi";
+import { userSelector } from "../../../features/User/userSelectors";
+import { setTotalPrice } from "../../../features/Cart/cartSlice";
+import calcTotalPrice from "../../../helpers/calcTotalPrice";
+import calcOrderCashback from "../../../helpers/calcOrderCashback";
 
-export default function Order({ useCashback, totalPrice, setTotalPrice }: { useCashback: boolean, totalPrice: number, setTotalPrice: (arg1: number) => void }) {
+export default function Order({ useCashback }: { useCashback: boolean }) {
 
 
     const { hasAccount, accountEmail, accountPassword, reciptEmail, rememberData, promocode, items } = useSelector(cartSelector)
@@ -16,7 +20,8 @@ export default function Order({ useCashback, totalPrice, setTotalPrice }: { useC
     const [checkPromocode, { data: promoData, error: promoError }] = useCheckPromocodeMutation();
     const [sameEmail, setSameEmail] = useState(false)
     const dispatch = useDispatch()
-    const [promocodeSelected, setPromocodeSelected] = useState(false)
+
+    const { userData } = useSelector(userSelector)
 
     useEffect(() => {
         sameEmail ? dispatch(setReciptEmail(accountEmail)) : dispatch(setReciptEmail(""))
@@ -53,18 +58,21 @@ export default function Order({ useCashback, totalPrice, setTotalPrice }: { useC
         }
     }, [orderData])
 
-    useEffect(() => {
-        if (promocodeSelected === false && promoData?.result === true && promoData?.discount) {
-            setTotalPrice((totalPrice - (promoData?.discount / 100) * totalPrice))
-            setPromocodeSelected(true)
-        }
-    }, [promoData])
 
     useEffect(() => {
         if (orderErorr || promoError) {
             window.Telegram.WebApp.showAlert('Произошла ошибка! Попробуйте еще раз или перезайдите в приложение.');
         }
     }, [orderErorr, promoError])
+
+
+    useEffect(() => {
+        dispatch(setTotalPrice(calcTotalPrice(items, (promoData?.result === true && promoData?.discount), (useCashback ? userData.cashback : 0))))
+    }, [items, promoData, useCashback])
+
+    useEffect(() => {
+        dispatch(setTotalCashback(calcOrderCashback(items, (promoData?.result === true ? promoData?.discount : 0))))
+    }, [items, promoData])
 
 
     return (
@@ -84,7 +92,7 @@ export default function Order({ useCashback, totalPrice, setTotalPrice }: { useC
                         </>
                     )
                     : (<></>)}
-                <Input value={reciptEmail} setValue={setReciptEmail} placeholder="Введите E-mail для чека" type="text" />
+                <Input value={reciptEmail} setValue={setReciptEmail} placeholder="Введите E-mail для чека" type="email" />
                 <div className="mt-6">
                     <CheckBox checked={rememberData} onClick={() => dispatch(setRememberData(!rememberData))}>Запомнить данные для следующих заказов</CheckBox>
                 </div>
