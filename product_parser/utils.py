@@ -86,7 +86,7 @@ class Edition:
     @staticmethod
     def _calculate_discount(original_price: Optional[int], final_price: int) -> Optional[int]:
         if original_price and original_price > final_price:
-            return round((original_price / final_price - 1) * 100)
+            return round((final_price / original_price - 1) * -100)
         return None
 
 

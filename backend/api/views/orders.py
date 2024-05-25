@@ -1,4 +1,5 @@
 import logging
+from decimal import Decimal
 import os
 from datetime import date
 from dataclasses import dataclass
@@ -96,7 +97,13 @@ class OrderInfo:
     def fill_order(self, order: models.Order, promo_code_discount: int) -> models.Order:
         self.update_profile()
         order.cashback = 0
+        cart_sum = 0
         for publication in self.cart:
+            final_price = publication.final_price - publication.final_price * promo_code_discount / 100
+            if self.spend_cashback:
+                if cart_sum + final_price > order.amount:
+                    final_price = order.amount - cart_sum
+                cart_sum += final_price
             if not self.spend_cashback:
                 order.cashback += publication.final_price * publication.cashback / 100
             models.OrderProduct.objects.get_or_create(
@@ -105,17 +112,14 @@ class OrderInfo:
                 product_id=publication.id,
                 description=self.get_description(publication),
                 original_price=publication.original_price,
-                final_price=publication.final_price,
+                final_price=Decimal(final_price),
             )
         if order.promo_code_discount:
             order.cashback -= order.cashback * promo_code_discount / 100
         payment = serializers.PaymentSerializer(
-            data=requests.post(f'{PAYMENTS_URL}/create_payment', json={
-                'order_id': str(order.id),
-                'amount': order.amount,
-                'description': str(order),
-                'customer_telegram_id': order.profile.telegram_id,
-            }).json()
+            data=requests.post(f'{PAYMENTS_URL}/create_payment',
+                json=serializers.CreatePaymentSerializer(order).data,
+            ).json()
         )
         if payment.is_valid():
             order.payment_id = payment.validated_data.get('payment_id')
