@@ -13,6 +13,7 @@ async def create_payment(request: web.Request):
     payment = await utils.create_payment(data)
     if payment:
         return web.json_response(payment.model_dump(mode='json'))
+    return web.json_response({}, status=400)
 
 
 async def get_payment(request: web.Request):

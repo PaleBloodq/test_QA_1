@@ -34,9 +34,10 @@ def periodic_parse_product_publications_task():
     logging.warning("Periodic pars product")
     async_to_sync(send_admin_notification)({'text': 'Начинается парсинг каталога...',
                                                     'level': NotifyLevels.INFO.value})
-    date = datetime.datetime.now() - datetime.timedelta(hours=12)
-    all_products = list(models.Product.objects.filter(updated_at__lt=date.isoformat()).all())
-    half_count = len(all_products) // 2
+    #date = datetime.datetime.now() - datetime.timedelta(hours=12)
+    #all_products = list(models.Product.objects.filter(updated_at__lt=date.isoformat()).all())
+    all_products = list(models.Product.objects.all())
+    half_count = (len(all_products) + 1) // 2
     queryset = random.sample(all_products, half_count)
     data = serializers.ProductToParseSerializer(queryset, many=True).data
     parse_product_publications_task.delay(data, False)

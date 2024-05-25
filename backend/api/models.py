@@ -169,7 +169,7 @@ class Order(BaseModel):
 
     profile = models.ForeignKey(Profile, verbose_name='Пользователь', on_delete=models.CASCADE, related_name='order')
     date = models.DateField('Дата заказа')
-    amount = models.IntegerField('Сумма заказа')
+    amount = models.DecimalField('Сумма заказа', max_digits=10, decimal_places=2)
     bill_email = models.EmailField('E-mail для чека')
     spend_cashback = models.BooleanField('Списать баллы')
     spend_cashback_amount = models.IntegerField('Списание кэшбека', default=0)
@@ -179,7 +179,7 @@ class Order(BaseModel):
     email = models.EmailField('E-mail', null=True, blank=True)
     password = models.CharField('Пароль', max_length=255, null=True, blank=True)
     promo_code = models.CharField('Промокод', max_length=255, null=True, blank=True)
-    promo_code_discount = models.IntegerField('Скидка по промокоду', null=True, blank=True)
+    promo_code_discount = models.DecimalField('Скидка по промокоду', max_digits=10, decimal_places=2, null=True, blank=True)
     payment_id = models.CharField('ID платежа', null=True, blank=True)
     payment_url = models.URLField('Ссылка на оплату', null=True, blank=True)
 
@@ -195,8 +195,8 @@ class OrderProduct(BaseModel):
     product = models.CharField('Позиция', max_length=255)
     product_id = models.CharField('ID товара', max_length=255)
     description = models.CharField('Описание', max_length=255)
-    original_price = models.IntegerField('Полная стоимость')
-    final_price = models.IntegerField('Конечная стоимость')
+    original_price = models.DecimalField('Полная стоимость', max_digits=10, decimal_places=2)
+    final_price = models.DecimalField('Конечная стоимость', max_digits=10, decimal_places=2)
 
 
 class PromoCode(BaseModel):

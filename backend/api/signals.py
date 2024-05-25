@@ -36,7 +36,7 @@ def hash_product_publication(sender, **kwargs):
     models.Tag.objects.get_or_create(name='Лидеры продаж', database_name='leaders')
     schedule, created = CrontabSchedule.objects.get_or_create(
         minute='*',
-        hour='*/12',
+        hour='12',
         day_of_week='*',
         day_of_month='*',
         month_of_year='*',
