@@ -14,17 +14,6 @@ def ready():
     print('api signals are ready')
 
 
-@receiver(signals.post_save, sender=models.ProductPublication)
-def hash_product_publication(sender, instance: models.ProductPublication, created: bool, **kwargs):
-    if created:
-        instance.hash = utils.hash_product_publication(
-            instance.product.id,
-            instance.title,
-            [platform.name for platform in instance.platforms.all()]
-        )
-        instance.save()
-
-
 @receiver(signals.post_migrate)
 def hash_product_publication(sender, **kwargs):
     if sender.name != 'api':

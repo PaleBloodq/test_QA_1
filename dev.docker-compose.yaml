@@ -66,20 +66,6 @@ services:
     command: celery -A settings beat --loglevel=info
     restart: unless-stopped
 
-  product_parser:
-    image: registry.gitlab.com/chat-labs/aoki-bot/product_parser:latest
-    build: product_parser/
-    depends_on:
-      - backend
-    env_file:
-      - ./local.env
-    volumes:
-      - ./product_parser:/product_parser
-    environment:
-      - BACKEND_HOST=backend
-    command: [ "python", "main.py" ]
-    restart: unless-stopped
-
   payments:
     image: registry.gitlab.com/chat-labs/aoki-bot/payments:latest
     depends_on:

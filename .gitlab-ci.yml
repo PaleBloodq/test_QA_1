@@ -50,11 +50,6 @@ build_backend:
     SERVICE: backend
   <<: *build_template
 
-build_product_parser:
-  variables:
-    SERVICE: product_parser
-  <<: *build_template
-
 build_payments:
   variables:
     SERVICE: payments
