@@ -22,10 +22,10 @@ services:
 
   backend:
     image: registry.gitlab.com/chat-labs/aoki-bot/backend:latest
-    build: backend/
     depends_on:
       - postgres
       - redis
+      - celery_worker
     env_file:
       - ./local.env
     environment:
@@ -34,14 +34,37 @@ services:
     volumes:
       - ./backend:/backend
       - ./rsa:/backend/rsa
-    command: sh -c "nohup celery -A settings worker --concurrency=2 --pool=threads --loglevel=info & \
-                      nohup celery -A settings beat --loglevel=info & \
-                      python manage.py makemigrations && \
+    command: sh -c "python manage.py makemigrations && \
                       python manage.py migrate && \
                       (python manage.py createsuperuser --username admin --email admin@mail.ru --noinput || true) && \
                       python manage.py collectstatic --noinput && \
                       nohup python start_service.py & \
                       wait"
+  celery_worker:
+    image: registry.gitlab.com/chat-labs/aoki-bot/backend:latest
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/backend
+      - ./rsa:/backend/rsa
+    env_file:
+      - ./local.env
+    command: celery -A settings worker --concurrency=2 --pool=threads --loglevel=info
+    restart: unless-stopped
+
+  celery_beat:
+    image: registry.gitlab.com/chat-labs/aoki-bot/backend:latest
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/backend
+      - ./rsa:/backend/rsa
+    env_file:
+      - ./local.env
+    command: celery -A settings beat --loglevel=info
+    restart: unless-stopped
 
   product_parser:
     image: registry.gitlab.com/chat-labs/aoki-bot/product_parser:latest
@@ -56,7 +79,7 @@ services:
     environment:
       - BACKEND_HOST=backend
     command: [ "python", "main.py" ]
-
+    restart: unless-stopped
 
   payments:
     image: registry.gitlab.com/chat-labs/aoki-bot/payments:latest
@@ -68,7 +91,7 @@ services:
     volumes:
       - ./payments:/payments
     command: [ "python", "main.py" ]
-
+    restart: unless-stopped
   
   frontend:
     image: registry.gitlab.com/chat-labs/aoki-bot/frontend:latest
