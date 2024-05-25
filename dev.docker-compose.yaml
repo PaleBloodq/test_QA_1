@@ -47,7 +47,6 @@ services:
     image: registry.gitlab.com/chat-labs/aoki-bot/product_parser:latest
     build: product_parser/
     depends_on:
-      - postgres
       - backend
     env_file:
       - ./local.env
@@ -61,7 +60,6 @@ services:
   payments:
     image: registry.gitlab.com/chat-labs/aoki-bot/payments:latest
     depends_on:
-      - postgres
       - backend
     env_file:
       - ./local.env
