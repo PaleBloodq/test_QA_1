@@ -91,22 +91,3 @@ class SearchProducts(APIView):
             many=True,
         ).data
         return Response(response)
-
-
-class UpdateProductPublications(APIView):
-    def post(self, request: Request, product_id: str):
-        product = models.Product.objects.filter(id=product_id).first()
-        if request.data.get('need_notify'):
-            async_to_sync(send_admin_notification)({'text': 'Парсинг окончен!',
-                                                    'level': NotifyLevels.INFO.value})
-        if product:
-            logging.warning(request.data.get('publications'))
-            for publication in request.data.get('publications', []):
-                serializer = serializers.UpdateProductPublicationSerializer(
-                    data=publication,
-                    instance=None,
-                )
-                if serializer.is_valid():
-                    serializer.save(product)
-            return Response(status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)

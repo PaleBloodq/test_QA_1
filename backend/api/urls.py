@@ -16,9 +16,6 @@ urlpatterns = [
     ])),
     path('product/', include([
         path('<str:product_id>/', include([
-            path('publications/', include([
-                path('update/', views.UpdateProductPublications.as_view()),
-            ])),
             path('', views.GetProduct.as_view()),
         ])),
     ])),
