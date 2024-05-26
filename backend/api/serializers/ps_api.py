@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 from datetime import datetime
 from dataclasses import dataclass
 from decimal import Decimal
@@ -31,7 +32,7 @@ class ProductSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
     price = PriceSerializer()
-    edition = EditionSerializer()
+    edition = EditionSerializer(allow_null=True)
     media = MediaSerializer(many=True)
     platforms = serializers.ListField(child=serializers.CharField())
     releaseDate = serializers.DateTimeField()
@@ -51,25 +52,17 @@ class ProductRetrieveSerializer(serializers.Serializer):
 
 @dataclass
 class Price:
-    base_price: Decimal
-    discounted_price: Decimal
+    base_price: Optional[Decimal]
+    discounted_price: Optional[Decimal]
     discount: int
     discount_deadline: datetime
-
-
-@dataclass
-class Edition:
-    id: str
-    name: str
-    price: Price
-    platforms: list[str]
-    image: str
-    release_date: datetime
-
-
-class Data(serializers.Serializer):
-    conceptRetrieve = ConceptRetrieveSerializer(required=False)
-    productRetrieve = ProductRetrieveSerializer(required=False)
+    
+    @staticmethod
+    def _normalize_price(price: int) -> Optional[Decimal]:
+        try:
+            return Decimal(price) / Decimal(100)
+        except:
+            return None
     
     @staticmethod
     def _normalize_discount(discount: str) -> int:
@@ -78,6 +71,21 @@ class Data(serializers.Serializer):
         except:
             return 0
     
+    def __post_init__(self):
+        self.base_price = self._normalize_price(self.base_price)
+        self.discounted_price = self._normalize_price(self.discounted_price)
+        self.discount = self._normalize_discount(self.discount)
+
+
+@dataclass
+class Edition:
+    id: str
+    name: str
+    price: Price
+    platforms: list[str]
+    image: Optional[str]
+    release_date: datetime
+    
     @staticmethod
     def _get_image(media: list[dict]) -> str:
         for media_ in media:
@@ -85,25 +93,42 @@ class Data(serializers.Serializer):
                 return media_.get('url')
         return ''
     
+    def __post_init__(self):
+        self.image = self._get_image(self.image)
+
+
+class Data(serializers.Serializer):
+    conceptRetrieve = ConceptRetrieveSerializer(required=False)
+    productRetrieve = ProductRetrieveSerializer(required=False)
+    
     def get_editions(self) -> list[Edition]:
         concept = self.validated_data.get('conceptRetrieve')
         if concept is None:
             concept = self.validated_data.get('productRetrieve').get('concept')
-        editions = concept.get('selectableProducts').get('purchasableProducts')
-        logging.warning(editions)
-        return [
-            Edition(
-                edition.get('id'),
-                edition.get('edition').get('name') or edition.get('name'),
-                Price(
-                    Decimal(edition.get('price').get('basePriceValue')) / Decimal(100),
-                    Decimal(edition.get('price').get('discountedValue')) / Decimal(100),
-                    self._normalize_discount(edition.get('price').get('discountText')),
-                    edition.get('price').get('endTime'),
-                ),
-                edition.get('platforms'),
-                self._get_image(edition.get('media')),
-                edition.get('releaseDate'),
+        editions_list = concept.get('selectableProducts').get('purchasableProducts')
+        editions = []
+        for edition in editions_list:
+            price = Price(
+                edition.get('price').get('basePriceValue'),
+                edition.get('price').get('discountedValue'),
+                edition.get('price').get('discountText'),
+                edition.get('price').get('endTime'),
             )
-            for edition in editions
-        ]
+            if price.base_price is None or price.discounted_price is None:
+                continue
+            if edition.get('edition') and edition.get('edition').get('name'):
+                name = edition.get('edition').get('name')
+            else:
+                name = edition.get('name')
+            editions.append(
+                Edition(
+                    edition.get('id'),
+                    name,
+                    price,
+                    edition.get('platforms'),
+                    edition.get('media'),
+                    edition.get('releaseDate'),
+                )
+            )
+        logging.info(f'{len(editions)} editions found.')
+        return editions
