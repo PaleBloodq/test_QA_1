@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 from hashlib import md5
 import uuid
+from decimal import Decimal
 
 import requests
 from rest_framework.request import Request
@@ -95,3 +96,18 @@ def check_promo_code(profile: models.Profile, promo_code: str | None) -> int | N
 
 def send_order_to_bot(order: models.Order):
     requests.post(BOT_URL, json=serializers.OrderSerializer(order).data)
+
+
+def normalize_price(price: Decimal, exchange: bool = False) -> Decimal:
+    if exchange:
+        if price <= 899:
+            exchange_rate = Decimal(5.0)
+        elif 900 <= price <= 1699:
+            exchange_rate = Decimal(4.5)
+        else:
+            exchange_rate = Decimal(4.0)
+        price *= exchange_rate
+    if price >= 1000 and price % 1000 < 25:
+        price -= price % Decimal(1000) + Decimal(5)
+    price = price - price % Decimal(5)
+    return price

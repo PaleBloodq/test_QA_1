@@ -79,7 +79,7 @@ class ProductPublication(BaseModel):
     languages = models.ManyToManyField(Language, verbose_name='Языки', blank=True)
     parsing_enabled = models.BooleanField('Парсить', default=True)
     price_changed = models.BooleanField('Цена изменилась', default=False, editable=False)
-    hash = models.CharField('Хэш', max_length=255, null=True, blank=True, editable=False)
+    ps_store_id = models.CharField('PS Store ID', max_length=100, null=True, editable=False)
     title = models.CharField('Заголовок', max_length=255, null=True)
     duration = models.IntegerField('Длительность в месяцах', null=True)
     quantity = models.IntegerField('Количество игровой валюты', null=True)
@@ -91,15 +91,8 @@ class ProductPublication(BaseModel):
     ps_plus_discount = models.IntegerField('Скидка PS Plus %', default=0, validators=percent_validator)
     discount = models.IntegerField('Скидка %', default=0, validators=percent_validator)
     discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
-
-    def _normalize_price(self, price: float) -> int:
-        if price >= 1000 and price % 1000 < 25:
-            price -= price % 1000 + 5
-        return price - price % 5
     
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.final_price = self.original_price - self.original_price * self.discount / 100
-        self.final_price = self._normalize_price(self.final_price)
         return super().save(force_insert, force_update, using, update_fields)
 
     def set_photo_from_url(self, url):
@@ -119,6 +112,7 @@ class ProductPublication(BaseModel):
         except Exception as e:
             logging.error(e)
             pass
+    
     def __str__(self) -> str:
         return f'{self.product}: {self.title}'
 

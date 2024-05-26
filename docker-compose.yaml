@@ -8,7 +8,6 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - backend
-      - product_parser
       - payments
       
   postgres:
@@ -28,7 +27,6 @@ services:
     env_file:
       - ./local.env
     environment:
-      - PRODUCT_PARSER_HOST=product_parser
       - POSTGRES_HOST=postgres
     volumes:
       - ./backend:/backend
@@ -64,20 +62,6 @@ services:
       - ./local.env
     command: celery -A settings beat --loglevel=info
     restart: unless-stopped
-
-  product_parser:
-    image: $CI_REGISTRY_IMAGE/product_parser:latest
-    depends_on:
-      - postgres
-      - backend
-    env_file:
-      - ./local.env
-    volumes:
-      - ./product_parser:/product_parser
-    environment:
-      - BACKEND_HOST=backend
-    command: [ "python", "main.py" ]
-
 
   payments:
     image: $CI_REGISTRY_IMAGE/payments:latest

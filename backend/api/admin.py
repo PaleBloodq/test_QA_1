@@ -1,20 +1,9 @@
-import logging
-import os
-
 from django.contrib import admin
 from django.db.models import QuerySet, ImageField, ManyToManyField
 from django.http import HttpRequest
 from django.utils.safestring import mark_safe
-
-from api import models, serializers, forms
+from api import models, forms
 from settings import settings
-
-
-PRODUCT_PARSER_URL = f'{os.environ.get("PRODUCT_PARSER_SCHEMA")}://{os.environ.get("PRODUCT_PARSER_HOST")}'
-if os.environ.get("PRODUCT_PARSER_PORT"):
-    PRODUCT_PARSER_URL += f':{os.environ.get("PRODUCT_PARSER_PORT")}'
-PRODUCT_PARSER_URL += '/parse'
-
 
 class ProductPublicationInline(admin.TabularInline):
     model = models.ProductPublication
@@ -74,12 +63,9 @@ class ProductAdmin(admin.ModelAdmin):
     def price_changed(self, obj: models.Product):
         return obj.publications.filter(price_changed=True).exists()
 
-
     def parse_product_publications(self, request, queryset: QuerySet[models.Product]):
         from api import tasks
-        data = serializers.ProductToParseSerializer(queryset, many=True).data
-        tasks.parse_product_publications_task.delay(data)
-
+        tasks.parse_product_publications_task.delay([str(product.id) for product in queryset])
     parse_product_publications.short_description = 'Спарсить издания'
 
     inlines = [ProductPublicationInline]
