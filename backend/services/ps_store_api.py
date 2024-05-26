@@ -35,5 +35,7 @@ class PS_StoreAPI:
                 serializer = serializers.Data(data=data)
                 if serializer.is_valid():
                     return serializer.get_editions()
+                else:
+                    logging.warning(serializer.errors)
             logging.warning('Data not found.')
         return []

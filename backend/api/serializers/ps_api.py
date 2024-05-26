@@ -32,7 +32,7 @@ class ProductSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
     price = PriceSerializer()
-    edition = EditionSerializer()
+    edition = EditionSerializer(allow_null=True)
     media = MediaSerializer(many=True)
     platforms = serializers.ListField(child=serializers.CharField())
     releaseDate = serializers.DateTimeField()
@@ -116,10 +116,14 @@ class Data(serializers.Serializer):
             )
             if price.base_price is None or price.discounted_price is None:
                 continue
+            if edition.get('edition') and edition.get('edition').get('name'):
+                name = edition.get('edition').get('name')
+            else:
+                name = edition.get('name')
             editions.append(
                 Edition(
                     edition.get('id'),
-                    edition.get('edition').get('name') or edition.get('name'),
+                    name,
                     price,
                     edition.get('platforms'),
                     edition.get('media'),
