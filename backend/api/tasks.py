@@ -41,10 +41,13 @@ def parse_product_publications_task(product_ids: list[str], need_notify=True):
                     discount=edition.price.discount,
                     discount_deadline=edition.price.discount_deadline,
                 )
+                publication.set_photo_from_url(edition.image)
+                if edition.release_date != product.release_date:
+                    product.release_date = edition.release_date
+                    product.save()
             publication.save()
             for platform in edition.platforms:
                 publication.platforms.add(models.Platform.objects.get_or_create(name=platform)[0])
-            logging.warning(publication)
     async_to_sync(send_admin_notification)({
         'text': f'Парсинг завершился',
         'level': NotifyLevels.WARN.value,

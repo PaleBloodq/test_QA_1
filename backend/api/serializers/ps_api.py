@@ -21,12 +21,20 @@ class EditionSerializer(serializers.Serializer):
     name = serializers.CharField(allow_null=True, allow_blank=True)
 
 
+class MediaSerializer(serializers.Serializer):
+    role = serializers.CharField()
+    type = serializers.CharField()
+    url = serializers.URLField()
+
+
 class ProductSerializer(serializers.Serializer):
     id = serializers.CharField()
     name = serializers.CharField()
     price = PriceSerializer()
     edition = EditionSerializer()
+    media = MediaSerializer(many=True)
     platforms = serializers.ListField(child=serializers.CharField())
+    releaseDate = serializers.DateTimeField()
 
 
 class SelectableProductsSerializer(serializers.Serializer):
@@ -55,6 +63,8 @@ class Edition:
     name: str
     price: Price
     platforms: list[str]
+    image: str
+    release_date: datetime
 
 
 class Data(serializers.Serializer):
@@ -67,6 +77,13 @@ class Data(serializers.Serializer):
             return int(discount.replace('-', '').replace('%', ''))
         except:
             return 0
+    
+    @staticmethod
+    def _get_image(media: list[dict]) -> str:
+        for media_ in media:
+            if media_.get('type') == 'IMAGE' and media_.get('role') == 'PORTRAIT_BANNER':
+                return media_.get('url')
+        return ''
     
     def get_editions(self) -> list[Edition]:
         concept = self.validated_data.get('conceptRetrieve')
@@ -84,7 +101,9 @@ class Data(serializers.Serializer):
                     self._normalize_discount(edition.get('price').get('discountText')),
                     edition.get('price').get('endTime'),
                 ),
-                edition.get('platforms')
+                edition.get('platforms'),
+                self._get_image(edition.get('media')),
+                edition.get('releaseDate'),
             )
             for edition in editions
         ]

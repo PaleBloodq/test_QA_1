@@ -91,15 +91,8 @@ class ProductPublication(BaseModel):
     ps_plus_discount = models.IntegerField('Скидка PS Plus %', default=0, validators=percent_validator)
     discount = models.IntegerField('Скидка %', default=0, validators=percent_validator)
     discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
-
-    def _normalize_price(self, price: float) -> int:
-        if price >= 1000 and price % 1000 < 25:
-            price -= price % 1000 + 5
-        return price - price % 5
     
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        # self.final_price = self.original_price - self.original_price * self.discount / 100
-        # self.final_price = self._normalize_price(self.final_price)
         return super().save(force_insert, force_update, using, update_fields)
 
     def set_photo_from_url(self, url):
@@ -119,6 +112,7 @@ class ProductPublication(BaseModel):
         except Exception as e:
             logging.error(e)
             pass
+    
     def __str__(self) -> str:
         return f'{self.product}: {self.title}'
 
