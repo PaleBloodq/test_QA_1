@@ -10,11 +10,17 @@ from services.ps_store_api import PS_StoreAPI
 
 @celery_app.task(base=Singleton, on_unique=["ignore"])
 def parse_product_publications_task(product_ids: list[str], need_notify=True):
-    logging.warning("Parse product")
     api = PS_StoreAPI()
     products = models.Product.objects.filter(id__in=product_ids)
     for product in products:
-        for edition in api.get_by_url(product.ps_store_url):
+        logging.warning(f'Parse product {product.title}')
+        if product.ps_store_url is None:
+            logging.warning('No url found.')
+            continue
+        editions = api.get_by_url(product.ps_store_url)
+        logging.warning(f'{len(editions)} editions found.')
+        logging.warning(f'{editions=}')
+        for edition in editions:
             publication = models.ProductPublication.objects.filter(ps_store_id=edition.id).first()
             if publication:
                 if not publication.parsing_enabled:
@@ -28,23 +34,28 @@ def parse_product_publications_task(product_ids: list[str], need_notify=True):
                 if publication.final_price != edition.price.discounted_price:
                     publication.price_changed = True
                 publication.final_price = utils.normalize_price(edition.price.discounted_price, True)
-                publication.original_price = utils.normalize_price(edition.price.base_price, True)
-                publication.discount_deadline = edition.price.discount
+                publication.discount = edition.price.discount
                 publication.discount_deadline = edition.price.discount_deadline
+                publication.ps_plus_final_price = utils.normalize_price(edition.ps_plus_price.discounted_price, True)
+                publication.ps_plus_discount = edition.ps_plus_price.discount
+                publication.ps_plus_discount_deadline = edition.ps_plus_price.discount_deadline
             else:
                 publication = models.ProductPublication(
                     product=product,
                     title=edition.name,
                     ps_store_id=edition.id,
                     final_price=utils.normalize_price(edition.price.discounted_price, True),
-                    original_price=utils.normalize_price(edition.price.base_price, True),
                     discount=edition.price.discount,
                     discount_deadline=edition.price.discount_deadline,
+                    ps_plus_final_price=utils.normalize_price(edition.ps_plus_price.discounted_price, True),
+                    ps_plus_discount=edition.ps_plus_price.discount,
+                    ps_plus_discount_deadline=edition.ps_plus_price.discount_deadline,
                 )
-                publication.set_photo_from_url(edition.image)
                 if edition.release_date != product.release_date:
                     product.release_date = edition.release_date
                     product.save()
+            if not all((publication.photo, publication.preview)):
+                publication.set_photo_from_url(edition.image)
             publication.save()
             for platform in edition.platforms:
                 publication.platforms.add(models.Platform.objects.get_or_create(name=platform)[0])

@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 from datetime import datetime, timedelta
 from hashlib import md5
 import uuid
@@ -98,16 +99,17 @@ def send_order_to_bot(order: models.Order):
     requests.post(BOT_URL, json=serializers.OrderSerializer(order).data)
 
 
-def normalize_price(price: Decimal, exchange: bool = False) -> Decimal:
-    if exchange:
-        if price <= 899:
-            exchange_rate = Decimal(5.0)
-        elif 900 <= price <= 1699:
-            exchange_rate = Decimal(4.5)
-        else:
-            exchange_rate = Decimal(4.0)
-        price *= exchange_rate
-    if price >= 1000 and price % 1000 < 25:
-        price -= price % Decimal(1000) + Decimal(5)
-    price = price - price % Decimal(5)
+def normalize_price(price: Optional[Decimal], exchange: bool = False) -> Optional[Decimal]:
+    if price:
+        if exchange:
+            if price <= 899:
+                exchange_rate = Decimal(5.0)
+            elif 900 <= price <= 1699:
+                exchange_rate = Decimal(4.5)
+            else:
+                exchange_rate = Decimal(4.0)
+            price *= exchange_rate
+        if price >= 1000 and price % 1000 < 25:
+            price -= price % Decimal(1000) + Decimal(5)
+        price = price - price % Decimal(5)
     return price

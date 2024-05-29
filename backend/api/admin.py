@@ -8,7 +8,7 @@ from settings import settings
 class ProductPublicationInline(admin.TabularInline):
     model = models.ProductPublication
     extra = 0
-    readonly_fields = ('final_price', 'price_changed',)
+    readonly_fields = ('price_changed',)
     ordering = ('title',)
     exclude = ['hash']
     formfield_overrides = {
@@ -29,8 +29,6 @@ class ProductPublicationInline(admin.TabularInline):
                 case models.Product.TypeChoices.GAME:
                     fields.remove('duration')
                     fields.remove('quantity')
-        fields.remove('final_price')
-        fields.insert(2, 'final_price')
         fields.remove('price_changed')
         fields.insert(3, 'price_changed')
         return fields

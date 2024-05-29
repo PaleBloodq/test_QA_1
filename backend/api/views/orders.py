@@ -111,7 +111,6 @@ class OrderInfo:
                 product=publication.product.title,
                 product_id=publication.id,
                 description=self.get_description(publication),
-                original_price=publication.original_price,
                 final_price=Decimal(final_price),
             )
         if order.promo_code_discount:
