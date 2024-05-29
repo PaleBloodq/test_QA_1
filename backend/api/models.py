@@ -74,8 +74,12 @@ class ProductPublication(BaseModel):
     product = models.ForeignKey(Product, verbose_name='Товар', on_delete=models.CASCADE, related_name='publications')
     is_main = models.BooleanField('Отображать как основное', default=False)
     platforms = models.ManyToManyField(Platform, verbose_name='Платформы', blank=True)
-    final_price = models.IntegerField('Конечная стоимость', editable=False)
-    original_price = models.IntegerField('Полная стоимость')
+    final_price = models.IntegerField('Конечная стоимость')
+    discount = models.IntegerField('Скидка %', default=0, validators=percent_validator)
+    discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
+    ps_plus_final_price = models.IntegerField('Конечная стоимость PS Plus', null=True, blank=True)
+    ps_plus_discount = models.IntegerField('Скидка PS Plus %', default=0, validators=percent_validator)
+    ps_plus_discount_deadline = models.DateField('Окончание скидки PS Plus', null=True, blank=True)
     languages = models.ManyToManyField(Language, verbose_name='Языки', blank=True)
     parsing_enabled = models.BooleanField('Парсить', default=True)
     price_changed = models.BooleanField('Цена изменилась', default=False, editable=False)
@@ -88,20 +92,15 @@ class ProductPublication(BaseModel):
     photo = ProcessedImageField(verbose_name='Изображение', format='WEBP', options={'quality': 60}, null=True,
                                 blank=True)
     cashback = models.IntegerField('Кэшбек %', default=3, validators=percent_validator)
-    ps_plus_discount = models.IntegerField('Скидка PS Plus %', default=0, validators=percent_validator)
-    discount = models.IntegerField('Скидка %', default=0, validators=percent_validator)
-    discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
     
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         return super().save(force_insert, force_update, using, update_fields)
 
-    def set_photo_from_url(self, url):
+    def set_photo_from_url(self, url: str):
         try:
             response = requests.get(url)
             if response.status_code == 200:
-                img = Image.open(BytesIO(response.content))
-                img = img.convert("RGB")
-
+                img = Image.open(BytesIO(response.content)).convert("RGB")
                 img_io = BytesIO()
                 img.save(img_io, format="WEBP", quality=10)
                 img_io.seek(0)
@@ -111,7 +110,6 @@ class ProductPublication(BaseModel):
                 self.preview.save(f"photo_{uuid.uuid4().hex}.webp", ContentFile(img_io.getvalue()), save=False)
         except Exception as e:
             logging.error(e)
-            pass
     
     def __str__(self) -> str:
         return f'{self.product}: {self.title}'
@@ -189,7 +187,6 @@ class OrderProduct(BaseModel):
     product = models.CharField('Позиция', max_length=255)
     product_id = models.CharField('ID товара', max_length=255)
     description = models.CharField('Описание', max_length=255)
-    original_price = models.DecimalField('Полная стоимость', max_digits=10, decimal_places=2)
     final_price = models.DecimalField('Конечная стоимость', max_digits=10, decimal_places=2)
 
 
