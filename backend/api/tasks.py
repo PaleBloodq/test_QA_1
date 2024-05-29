@@ -11,7 +11,7 @@ from services.ps_store_api import PS_StoreAPI
 @celery_app.task(base=Singleton, on_unique=["ignore"])
 def parse_product_publications_task(product_ids: list[str], need_notify=True):
     api = PS_StoreAPI()
-    products = models.Product.objects.filter(id__in=product_ids)
+    products = models.Product.objects.filter(id__in=product_ids, type=models.Product.TypeChoices.GAME)
     for product in products:
         logging.warning(f'Parse product {product.title}')
         if product.ps_store_url is None:
