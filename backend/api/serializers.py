@@ -45,8 +45,9 @@ class ProductPublicationSerializer(serializers.ModelSerializer):
             'quantity',
             'includes',
             'platforms',
-            'preview',
-            'photo',
+            'product_page_image',
+            'search_image',
+            'offer_image',
             'cashback',
             'is_main',
             'languages',
@@ -101,8 +102,9 @@ class SingleProductPublicationSerializer(serializers.ModelSerializer):
             'quantity',
             'includes',
             'platforms',
-            'preview',
-            'photo',
+            'product_page_image',
+            'search_image',
+            'offer_image',
             'cashback',
             'product',
             'languages',
@@ -162,18 +164,6 @@ class ChatMessageSerializer(serializers.ModelSerializer):
             'order_id',
             'manager_id',
             'text',
-        )
-
-
-class ProductToParseSerializer(serializers.ModelSerializer):
-    product_id = serializers.UUIDField(source='id')
-    url = serializers.CharField(source='ps_store_url')
-    
-    class Meta:
-        model = models.Product
-        fields = (
-            'product_id',
-            'url',
         )
 
 

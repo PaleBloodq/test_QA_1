@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 from api import models, forms
 from settings import settings
 
-class ProductPublicationInline(admin.TabularInline):
+class ProductPublicationInline(admin.StackedInline):
     model = models.ProductPublication
     extra = 0
     readonly_fields = ('price_changed',)
