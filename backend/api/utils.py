@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Optional
 from datetime import datetime, timedelta
@@ -113,3 +114,19 @@ def normalize_price(price: Optional[Decimal], exchange: bool = False) -> Optiona
             price -= price % Decimal(1000) + Decimal(5)
         price = price - price % Decimal(5)
     return price
+
+
+def update_sales_leaders(order: models.Order):
+    for product in models.OrderProduct.objects.filter(order=order):
+        publication = models.ProductPublication.objects.filter(id=product.product_id).first()
+        if publication:
+            publication.product.orders += 1
+            publication.product.save()
+    current_leaders = models.Tag.objects.get(database_name='leaders').products
+    actual_leaders = models.Product.objects.order_by('-orders')[:30]
+    for product in current_leaders.all():
+        if product not in actual_leaders:
+            current_leaders.remove(product)
+    for product in actual_leaders:
+        if product not in current_leaders.all():
+            current_leaders.add(product)

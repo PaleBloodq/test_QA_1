@@ -57,6 +57,7 @@ class Product(BaseModel):
     release_date = models.DateField('Дата релиза', null=True, blank=True)
     ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True)
     parse_release_date = models.BooleanField('Парсить дату релиза', default=True)
+    orders = models.IntegerField('Оплаченных заказов', default=0, editable=False)
 
     def clean(self):
         if not self.type in (self.TypeChoices.SUBSCRIPTION, self.TypeChoices.DONATION):
@@ -179,8 +180,8 @@ class Order(BaseModel):
     password = models.CharField('Пароль', max_length=255, null=True, blank=True)
     promo_code = models.CharField('Промокод', max_length=255, null=True, blank=True)
     promo_code_discount = models.DecimalField('Скидка по промокоду', max_digits=10, decimal_places=2, null=True, blank=True)
-    payment_id = models.CharField('ID платежа', null=True, blank=True)
-    payment_url = models.URLField('Ссылка на оплату', null=True, blank=True)
+    payment_id = models.CharField('ID платежа', null=True, blank=True, editable=False)
+    payment_url = models.URLField('Ссылка на оплату', null=True, blank=True, editable=False)
 
     def __str__(self) -> str:
         return f'{self.id} от {self.date}'
@@ -192,7 +193,7 @@ class Order(BaseModel):
 class OrderProduct(BaseModel):
     order = models.ForeignKey(Order, verbose_name='Заказ', on_delete=models.CASCADE, related_name='order_products')
     product = models.CharField('Позиция', max_length=255)
-    product_id = models.CharField('ID товара', max_length=255)
+    product_id = models.UUIDField('ID товара', max_length=255)
     description = models.CharField('Описание', max_length=255)
     final_price = models.DecimalField('Конечная стоимость', max_digits=10, decimal_places=2)
 

@@ -69,6 +69,7 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductPublicationInline]
     list_filter = [PriceChangedListFilter]
     list_display = ['title', 'type', 'release_date', 'count_publications', 'price_changed']
+    readonly_fields = ['orders']
     actions = [parse_product_publications]
     formfield_overrides = {
         ManyToManyField: {'widget': forms.ManyToManyForm},
@@ -105,7 +106,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderProductInline]
     list_display = ['date', 'status', 'profile', 'amount']
     list_filter = ['date', 'status', 'profile', 'amount']
-    readonly_fields = ['id']
+    readonly_fields = ['id', 'payment_id', 'payment_url']
     search_fields = ['id', 'profile__telegram_id', 'amount']
 
     def render_change_form(self, request, context, add, change, form_url, obj):
