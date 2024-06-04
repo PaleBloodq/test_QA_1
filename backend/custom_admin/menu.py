@@ -16,6 +16,7 @@ class CustomMenu(Menu):
                 'Приложения',
                 exclude=('django.contrib.*',)
             ),
+            items.MenuItem('Заказы', reverse('order_manager')),
             items.AppList(
                 'Администрирование',
                 models=('django.contrib.*',)

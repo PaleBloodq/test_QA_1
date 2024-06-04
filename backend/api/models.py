@@ -182,6 +182,7 @@ class Order(BaseModel):
     promo_code_discount = models.DecimalField('Скидка по промокоду', max_digits=10, decimal_places=2, null=True, blank=True)
     payment_id = models.CharField('ID платежа', null=True, blank=True, editable=False)
     payment_url = models.URLField('Ссылка на оплату', null=True, blank=True, editable=False)
+    manager = models.ForeignKey(User, related_name='Менеджер', on_delete=models.SET_NULL, null=True, blank=True, default=None)
 
     def __str__(self) -> str:
         return f'{self.id} от {self.date}'
@@ -212,7 +213,7 @@ class PromoCode(BaseModel):
 
 
 class ChatMessage(BaseModel):
-    order = models.ForeignKey(Order, verbose_name='Сообщение', on_delete=models.CASCADE, related_name='chat_message')
+    order = models.ForeignKey(Order, verbose_name='Сообщение', on_delete=models.CASCADE, related_name='chat_messages')
     manager = models.ForeignKey(User, verbose_name='Менеджер', on_delete=models.CASCADE, null=True, blank=True)
     text = models.TextField('Текст сообщения')
 
