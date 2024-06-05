@@ -45,7 +45,7 @@ export default function Game() {
     useEffect(() => {
         const publication = data?.publications?.find(pub => pub?.id === selectedPublication);
         if (publication) {
-            dispatch(setCurrentPrice(publication.original_price));
+            dispatch(setCurrentPrice(publication.final_price));
         }
     }, [selectedPublication, selectedPlatform, data, dispatch]);
 
@@ -60,7 +60,7 @@ export default function Game() {
     const cartItem: CartItemType = {
         id: currentPublication?.id,
         type: data?.type,
-        img: currentPublication?.preview,
+        img: currentPublication?.product_page_image,
         title: data?.title,
         publication: currentPublication?.title,
         platform: selectedPlatform,
@@ -82,7 +82,7 @@ export default function Game() {
         <Container>
             <div className="flex flex-col items-center">
                 <div className="flex flex-col items-start w-full">
-                    <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentPublication?.photo)} alt="game image" />
+                    <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentPublication?.product_page_image)} alt="game image" />
                     <div className='flex items-center mb-2 gap-2'>
                         <h1 className="text-header">{title && title}</h1>
                         {isNew(data?.release_date) && <Tag type="new">Новинка</Tag>}

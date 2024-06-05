@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux"
-import { Publication } from "../../../../types/PublicationType"
+import { PublicationType } from "../../../../types/PublicationType"
 import { selectedPlatformSelector } from "../../../../features/Game/publicationSelectors"
 import { setSelectedPlatform } from "../../../../features/Game/publicationSlice"
 import { useCallback, useEffect, useState } from "react"
 
 type SelectPlatformType = {
-    publications: Publication[],
+    publications: PublicationType[],
 }
 
 
@@ -16,7 +16,7 @@ export default function SelectPlatform({ publications }: SelectPlatformType) {
     const selectedPlatform = useSelector(selectedPlatformSelector)
 
     const haveIdenticalPlatforms = useCallback(
-        (publications: Publication[]) => {
+        (publications: PublicationType[]) => {
             if (publications.length === 0) {
                 return true;
             }

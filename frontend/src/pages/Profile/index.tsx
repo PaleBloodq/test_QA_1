@@ -15,7 +15,7 @@ import Avatar from "../../components/Profile/Avatar";
 export default function Profile() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { data: ordersData = [], isLoading: isOrdersLoading, error: ordersError } = useGetOrdersQuery({})
+    const { data: ordersData = [], isLoading: isOrdersLoading } = useGetOrdersQuery({})
     const [showOrderHistory, setShowOrderHistory] = useState(false)
     const { userData, updatedData, username, isLoggined } = useSelector(userSelector)
     const [updateUserData] = useUpdateUserDataMutation();

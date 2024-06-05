@@ -8,7 +8,7 @@ import { CartItemType } from "../../types/cartItem";
 import AddToCartButton from "../../components/common/AddToCartButton";
 import { ProductType } from "../../types/ProductType";
 import { replaceUrl } from "../../helpers/replaceUrl";
-import { Publication } from "../../types/PublicationType";
+import { PublicationType } from "../../types/PublicationType";
 import Tag from "../../components/common/Tag";
 
 export default function DonationPage() {
@@ -31,7 +31,7 @@ export default function DonationPage() {
     const cartItem: CartItemType = {
         id: currentPublicaton?.id,
         type: "DONATION",
-        img: currentPublicaton?.preview,
+        img: currentPublicaton?.product_page_image,
         title: data?.title,
         publication: `${selectedQuantity} шт`,
         platform: currentPublicaton?.platforms?.map((platform) => platform).join(', '),
@@ -48,9 +48,9 @@ export default function DonationPage() {
             <div className="flex flex-col items-center">
                 {!isLoading &&
                     <div className="flex flex-col items-start w-full">
-                        <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(data?.publications[0]?.photo)} alt="donation image" />
+                        <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(data?.publications[0]?.product_page_image)} alt="donation image" />
                         <h1 className="text-header mb-2">{data?.title}</h1>
-                        <DonationQuantity selectedQuantity={selectedQuantity} setSelectedQuantity={setSelectedQuantity} quantitys={data?.publications?.map((pub: Publication) => pub?.quantity)} />
+                        <DonationQuantity selectedQuantity={selectedQuantity} setSelectedQuantity={setSelectedQuantity} quantitys={data?.publications?.map((pub: PublicationType) => pub?.quantity)} />
                         <h2 className="text-subtitle mt-8 mb-2">Цена:</h2>
                         <div className="flex gap-2 items-center">
                             <h1 className="price-big">{currentPrice} ₽</h1>

@@ -29,7 +29,7 @@ export default function SearchPage() {
         inputRef.current.focus();
     }, [])
 
-    const inputRef = createRef();
+    const inputRef = createRef<HTMLInputElement>();
 
 
     return (
