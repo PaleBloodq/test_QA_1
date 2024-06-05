@@ -1,25 +1,14 @@
-import logging
-import os
-
 from django.contrib import admin
 from django.db.models import QuerySet, ImageField, ManyToManyField
 from django.http import HttpRequest
 from django.utils.safestring import mark_safe
-
-from api import models, serializers, forms
+from api import models, forms
 from settings import settings
 
-
-PRODUCT_PARSER_URL = f'{os.environ.get("PRODUCT_PARSER_SCHEMA")}://{os.environ.get("PRODUCT_PARSER_HOST")}'
-if os.environ.get("PRODUCT_PARSER_PORT"):
-    PRODUCT_PARSER_URL += f':{os.environ.get("PRODUCT_PARSER_PORT")}'
-PRODUCT_PARSER_URL += '/parse'
-
-
-class ProductPublicationInline(admin.TabularInline):
+class ProductPublicationInline(admin.StackedInline):
     model = models.ProductPublication
     extra = 0
-    readonly_fields = ('final_price', 'price_changed',)
+    readonly_fields = ('price_changed',)
     ordering = ('title',)
     exclude = ['hash']
     formfield_overrides = {
@@ -40,8 +29,6 @@ class ProductPublicationInline(admin.TabularInline):
                 case models.Product.TypeChoices.GAME:
                     fields.remove('duration')
                     fields.remove('quantity')
-        fields.remove('final_price')
-        fields.insert(2, 'final_price')
         fields.remove('price_changed')
         fields.insert(3, 'price_changed')
         return fields
@@ -74,17 +61,15 @@ class ProductAdmin(admin.ModelAdmin):
     def price_changed(self, obj: models.Product):
         return obj.publications.filter(price_changed=True).exists()
 
-
     def parse_product_publications(self, request, queryset: QuerySet[models.Product]):
         from api import tasks
-        data = serializers.ProductToParseSerializer(queryset, many=True).data
-        tasks.parse_product_publications_task.delay(data)
-
+        tasks.parse_product_publications_task.delay([str(product.id) for product in queryset])
     parse_product_publications.short_description = 'Спарсить издания'
 
     inlines = [ProductPublicationInline]
     list_filter = [PriceChangedListFilter]
     list_display = ['title', 'type', 'release_date', 'count_publications', 'price_changed']
+    readonly_fields = ['orders']
     actions = [parse_product_publications]
     formfield_overrides = {
         ManyToManyField: {'widget': forms.ManyToManyForm},
@@ -121,7 +106,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderProductInline]
     list_display = ['date', 'status', 'profile', 'amount']
     list_filter = ['date', 'status', 'profile', 'amount']
-    readonly_fields = ['id']
+    readonly_fields = ['id', 'payment_id', 'payment_url']
     search_fields = ['id', 'profile__telegram_id', 'amount']
 
     def render_change_form(self, request, context, add, change, form_url, obj):

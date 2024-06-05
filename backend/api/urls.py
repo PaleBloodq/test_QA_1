@@ -16,9 +16,6 @@ urlpatterns = [
     ])),
     path('product/', include([
         path('<str:product_id>/', include([
-            path('publications/', include([
-                path('update/', views.UpdateProductPublications.as_view()),
-            ])),
             path('', views.GetProduct.as_view()),
         ])),
     ])),
@@ -34,6 +31,14 @@ urlpatterns = [
         path('buy/', views.CreateOrder.as_view()),
         path('chat/', views.ChatMessages.as_view()),
         path('update_status/', views.UpdateOrderStatus.as_view()),
+    ])),
+    path('order_manager/', include([
+        path('orders/', include([
+            path('my/', views.order_manager.MyOrders.as_view()),
+            path('paid/', views.order_manager.PaidOrders.as_view()),
+            path('completed/', views.order_manager.CompletedOrders.as_view()),
+            path('get/', views.order_manager.Order.as_view()),
+        ])),
     ])),
     path('profile/', include([
         path('update/', views.UpdateProfile.as_view()),

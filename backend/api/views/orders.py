@@ -1,4 +1,5 @@
 import logging
+from decimal import Decimal
 import os
 from datetime import date
 from dataclasses import dataclass
@@ -11,8 +12,9 @@ from rest_framework import status
 from django.db.models import Sum
 from django.db.models.manager import BaseManager
 from api import models, serializers, utils
-from api.senders import send_admin_notification, NotifyLevels
+from api.senders import send_admin_notification, NotifyLevels, send_order_created
 from api.utils import send_order_to_bot
+
 
 PAYMENTS_URL = f'{os.environ.get("PAYMENTS_SCHEMA")}://{os.environ.get("PAYMENTS_HOST")}'
 if os.environ.get("PAYMENTS_PORT"):
@@ -96,7 +98,13 @@ class OrderInfo:
     def fill_order(self, order: models.Order, promo_code_discount: int) -> models.Order:
         self.update_profile()
         order.cashback = 0
+        cart_sum = 0
         for publication in self.cart:
+            final_price = publication.final_price - publication.final_price * promo_code_discount / 100
+            if self.spend_cashback:
+                if cart_sum + final_price > order.amount:
+                    final_price = order.amount - cart_sum
+                cart_sum += final_price
             if not self.spend_cashback:
                 order.cashback += publication.final_price * publication.cashback / 100
             models.OrderProduct.objects.get_or_create(
@@ -104,18 +112,14 @@ class OrderInfo:
                 product=publication.product.title,
                 product_id=publication.id,
                 description=self.get_description(publication),
-                original_price=publication.original_price,
-                final_price=publication.final_price,
+                final_price=Decimal(final_price),
             )
         if order.promo_code_discount:
             order.cashback -= order.cashback * promo_code_discount / 100
         payment = serializers.PaymentSerializer(
-            data=requests.post(f'{PAYMENTS_URL}/create_payment', json={
-                'order_id': str(order.id),
-                'amount': order.amount,
-                'description': str(order),
-                'customer_telegram_id': order.profile.telegram_id,
-            }).json()
+            data=requests.post(f'{PAYMENTS_URL}/create_payment',
+                json=serializers.CreatePaymentSerializer(order).data,
+            ).json()
         )
         if payment.is_valid():
             order.payment_id = payment.validated_data.get('payment_id')
@@ -232,12 +236,16 @@ class UpdateOrderStatus(APIView):
                     case 'CONFIRMED':
                         if order.status == models.Order.StatusChoices.PAID:
                             return Response('OK')
-                        async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} оплачен',
-                                                                'level': NotifyLevels.SUCCESS.value})
                         order.status = models.Order.StatusChoices.PAID
                         order.profile.cashback += order.cashback
                         order.profile.save()
                         order.save()
+                        utils.update_sales_leaders(order)
+                        async_to_sync(send_admin_notification)({
+                            'text': f'Заказ {order.id} оплачен',
+                            'level': NotifyLevels.SUCCESS.value
+                        })
+                        async_to_sync(send_order_created)(order)
                     case 'REJECTED'| 'REVERSED' | 'PARTIAL_REVERSED'| 'PARTIAL_REFUNDED'| 'REFUNDED':
                         async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
                                                                 'level': NotifyLevels.ERROR.value})

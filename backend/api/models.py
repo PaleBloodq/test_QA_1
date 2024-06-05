@@ -56,6 +56,8 @@ class Product(BaseModel):
     type = models.CharField('Тип', max_length=32, choices=TypeChoices.choices)
     release_date = models.DateField('Дата релиза', null=True, blank=True)
     ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True)
+    parse_release_date = models.BooleanField('Парсить дату релиза', default=True)
+    orders = models.IntegerField('Оплаченных заказов', default=0, editable=False)
 
     def clean(self):
         if not self.type in (self.TypeChoices.SUBSCRIPTION, self.TypeChoices.DONATION):
@@ -74,51 +76,49 @@ class ProductPublication(BaseModel):
     product = models.ForeignKey(Product, verbose_name='Товар', on_delete=models.CASCADE, related_name='publications')
     is_main = models.BooleanField('Отображать как основное', default=False)
     platforms = models.ManyToManyField(Platform, verbose_name='Платформы', blank=True)
-    final_price = models.IntegerField('Конечная стоимость', editable=False)
-    original_price = models.IntegerField('Полная стоимость')
+    final_price = models.IntegerField('Конечная стоимость')
+    discount = models.IntegerField('Скидка %', default=0, validators=percent_validator)
+    discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
+    ps_plus_final_price = models.IntegerField('Конечная стоимость PS Plus', null=True, blank=True)
+    ps_plus_discount = models.IntegerField('Скидка PS Plus %', default=0, validators=percent_validator)
+    ps_plus_discount_deadline = models.DateField('Окончание скидки PS Plus', null=True, blank=True)
     languages = models.ManyToManyField(Language, verbose_name='Языки', blank=True)
-    parsing_enabled = models.BooleanField('Парсить', default=True)
     price_changed = models.BooleanField('Цена изменилась', default=False, editable=False)
-    hash = models.CharField('Хэш', max_length=255, null=True, blank=True, editable=False)
+    ps_store_id = models.CharField('PS Store ID', max_length=100, null=True, editable=False)
     title = models.CharField('Заголовок', max_length=255, null=True)
     duration = models.IntegerField('Длительность в месяцах', null=True)
     quantity = models.IntegerField('Количество игровой валюты', null=True)
     includes = models.TextField('Включает', null=True, blank=True)
-    preview = ProcessedImageField(verbose_name='Превью', format='WEBP', options={'quality': 40}, null=True, blank=True)
-    photo = ProcessedImageField(verbose_name='Изображение', format='WEBP', options={'quality': 60}, null=True,
-                                blank=True)
+    product_page_image = ProcessedImageField(verbose_name='Изображение (Страница товара)', format='WEBP', options={'quality': 60}, null=True, blank=True)
+    search_image = ProcessedImageField(verbose_name='Изображение (Поиск / главная)', format='WEBP', options={'quality': 40}, null=True, blank=True)
+    offer_image = ProcessedImageField(verbose_name='Изображение (Оффер)', format='WEBP', options={'quality': 40}, null=True, blank=True)
     cashback = models.IntegerField('Кэшбек %', default=3, validators=percent_validator)
-    ps_plus_discount = models.IntegerField('Скидка PS Plus %', default=0, validators=percent_validator)
-    discount = models.IntegerField('Скидка %', default=0, validators=percent_validator)
-    discount_deadline = models.DateField('Окончание скидки', null=True, blank=True)
-
-    def _normalize_price(self, price: float) -> int:
-        if price >= 1000 and price % 1000 < 25:
-            price -= price % 1000 + 5
-        return price - price % 5
+    parse_image = models.BooleanField('Парсить изображение', default=True)
+    parse_ps_plus_price = models.BooleanField('Парсить цену c PS Plus', default=True)
+    parse_title = models.BooleanField('Парсить заголовок', default=True)
+    parse_price = models.BooleanField('Парсить цену', default=True)
+    parse_platforms = models.BooleanField('Парсить платформы', default=True)
     
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.final_price = self.original_price - self.original_price * self.discount / 100
-        self.final_price = self._normalize_price(self.final_price)
         return super().save(force_insert, force_update, using, update_fields)
 
-    def set_photo_from_url(self, url):
+    def set_photo_from_url(self, url: str):
         try:
             response = requests.get(url)
             if response.status_code == 200:
-                img = Image.open(BytesIO(response.content))
-                img = img.convert("RGB")
-
+                img = Image.open(BytesIO(response.content)).convert("RGB")
                 img_io = BytesIO()
                 img.save(img_io, format="WEBP", quality=10)
                 img_io.seek(0)
-                self.photo.save(f"photo_{uuid.uuid4().hex}.webp", ContentFile(img_io.getvalue()), save=False)
+                self.product_page_image.save(f"photo_{uuid.uuid4().hex}.webp", ContentFile(img_io.getvalue()), save=False)
                 img.save(img_io, format="WEBP", quality=5)
                 img_io.seek(0)
-                self.preview.save(f"photo_{uuid.uuid4().hex}.webp", ContentFile(img_io.getvalue()), save=False)
+                self.search_image.save(f"photo_{uuid.uuid4().hex}.webp", ContentFile(img_io.getvalue()), save=False)
+                img_io.seek(0)
+                self.offer_image.save(f"photo_{uuid.uuid4().hex}.webp", ContentFile(img_io.getvalue()), save=False)
         except Exception as e:
             logging.error(e)
-            pass
+    
     def __str__(self) -> str:
         return f'{self.product}: {self.title}'
 
@@ -169,7 +169,7 @@ class Order(BaseModel):
 
     profile = models.ForeignKey(Profile, verbose_name='Пользователь', on_delete=models.CASCADE, related_name='order')
     date = models.DateField('Дата заказа')
-    amount = models.IntegerField('Сумма заказа')
+    amount = models.DecimalField('Сумма заказа', max_digits=10, decimal_places=2)
     bill_email = models.EmailField('E-mail для чека')
     spend_cashback = models.BooleanField('Списать баллы')
     spend_cashback_amount = models.IntegerField('Списание кэшбека', default=0)
@@ -179,9 +179,10 @@ class Order(BaseModel):
     email = models.EmailField('E-mail', null=True, blank=True)
     password = models.CharField('Пароль', max_length=255, null=True, blank=True)
     promo_code = models.CharField('Промокод', max_length=255, null=True, blank=True)
-    promo_code_discount = models.IntegerField('Скидка по промокоду', null=True, blank=True)
-    payment_id = models.CharField('ID платежа', null=True, blank=True)
-    payment_url = models.URLField('Ссылка на оплату', null=True, blank=True)
+    promo_code_discount = models.DecimalField('Скидка по промокоду', max_digits=10, decimal_places=2, null=True, blank=True)
+    payment_id = models.CharField('ID платежа', null=True, blank=True, editable=False)
+    payment_url = models.URLField('Ссылка на оплату', null=True, blank=True, editable=False)
+    manager = models.ForeignKey(User, related_name='Менеджер', on_delete=models.SET_NULL, null=True, blank=True, default=None)
 
     def __str__(self) -> str:
         return f'{self.id} от {self.date}'
@@ -193,10 +194,9 @@ class Order(BaseModel):
 class OrderProduct(BaseModel):
     order = models.ForeignKey(Order, verbose_name='Заказ', on_delete=models.CASCADE, related_name='order_products')
     product = models.CharField('Позиция', max_length=255)
-    product_id = models.CharField('ID товара', max_length=255)
+    product_id = models.UUIDField('ID товара', max_length=255)
     description = models.CharField('Описание', max_length=255)
-    original_price = models.IntegerField('Полная стоимость')
-    final_price = models.IntegerField('Конечная стоимость')
+    final_price = models.DecimalField('Конечная стоимость', max_digits=10, decimal_places=2)
 
 
 class PromoCode(BaseModel):
@@ -213,7 +213,7 @@ class PromoCode(BaseModel):
 
 
 class ChatMessage(BaseModel):
-    order = models.ForeignKey(Order, verbose_name='Сообщение', on_delete=models.CASCADE, related_name='chat_message')
+    order = models.ForeignKey(Order, verbose_name='Сообщение', on_delete=models.CASCADE, related_name='chat_messages')
     manager = models.ForeignKey(User, verbose_name='Менеджер', on_delete=models.CASCADE, null=True, blank=True)
     text = models.TextField('Текст сообщения')
 
