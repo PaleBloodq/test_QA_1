@@ -1,5 +1,6 @@
 import logging
 import random
+from time import sleep
 from asgiref.sync import async_to_sync
 from celery_singleton import Singleton
 from api import models, utils
@@ -19,49 +20,44 @@ def parse_product_publications_task(product_ids: list[str], need_notify=True):
             continue
         editions = api.get_by_url(product.ps_store_url)
         logging.warning(f'{len(editions)} editions found.')
-        logging.warning(f'{editions=}')
         for edition in editions:
             try:
+                if product.parse_release_date and product.release_date != edition.release_date:
+                    product.release_date = edition.release_date
+                    product.save()
                 publication = models.ProductPublication.objects.filter(ps_store_id=edition.id).first()
-                if publication:
-                    if not publication.parsing_enabled:
+                if publication is None:
+                    publication = models.ProductPublication(
+                        product=product,
+                        ps_store_id=edition.id,
+                    )
+                if publication.parse_title:
+                    publication.title = edition.name
+                if publication.parse_price:
+                    if publication.final_price != edition.price.discounted_price:
+                        publication.price_changed = True
                         async_to_sync(send_admin_notification)({
                             'text': f'Цена на издание товара {publication.product.title} изменилась',
                             'level': NotifyLevels.WARN.value,
                         })
-                        publication.price_changed = False
-                        publication.save()
-                        return publication
-                    if publication.final_price != edition.price.discounted_price:
-                        publication.price_changed = True
                     publication.final_price = utils.normalize_price(edition.price.discounted_price, True)
                     publication.discount = edition.price.discount
                     publication.discount_deadline = edition.price.discount_deadline
+                if publication.parse_ps_plus_price:
                     publication.ps_plus_final_price = utils.normalize_price(edition.ps_plus_price.discounted_price, True)
                     publication.ps_plus_discount = edition.ps_plus_price.discount
                     publication.ps_plus_discount_deadline = edition.ps_plus_price.discount_deadline
-                else:
-                    publication = models.ProductPublication(
-                        product=product,
-                        title=edition.name,
-                        ps_store_id=edition.id,
-                        final_price=utils.normalize_price(edition.price.discounted_price, True),
-                        discount=edition.price.discount,
-                        discount_deadline=edition.price.discount_deadline,
-                        ps_plus_final_price=utils.normalize_price(edition.ps_plus_price.discounted_price, True),
-                        ps_plus_discount=edition.ps_plus_price.discount,
-                        ps_plus_discount_deadline=edition.ps_plus_price.discount_deadline,
-                    )
-                    if edition.release_date != product.release_date:
-                        product.release_date = edition.release_date
-                        product.save()
-                if not all((publication.photo, publication.preview)):
-                    publication.set_photo_from_url(edition.image)
+                if publication.parse_image:
+                    if not all((publication.product_page_image, publication.search_image, publication.offer_image)):
+                        publication.set_photo_from_url(edition.image)
                 publication.save()
-                for platform in edition.platforms:
-                    publication.platforms.add(models.Platform.objects.get_or_create(name=platform)[0])
+                if publication.parse_platforms:
+                    for platform in edition.platforms:
+                        platform = models.Platform.objects.get_or_create(name=platform)[0]
+                        publication.platforms.add(platform)
             except Exception as exc:
                 logging.exception(exc)
+        sleep(random.randint(3, 5))
     async_to_sync(send_admin_notification)({
         'text': f'Парсинг завершился',
         'level': NotifyLevels.WARN.value,
