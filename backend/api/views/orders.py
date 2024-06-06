@@ -13,7 +13,6 @@ from django.db.models import Sum
 from django.db.models.manager import BaseManager
 from api import models, serializers, utils
 from api.senders import send_admin_notification, NotifyLevels, send_order_created
-from api.utils import send_order_to_bot
 
 
 PAYMENTS_URL = f'{os.environ.get("PAYMENTS_SCHEMA")}://{os.environ.get("PAYMENTS_HOST")}'
@@ -245,7 +244,7 @@ class UpdateOrderStatus(APIView):
                             'text': f'Заказ {order.id} оплачен',
                             'level': NotifyLevels.SUCCESS.value
                         })
-                        async_to_sync(send_order_created)(order)
+                        send_order_created(order)
                     case 'REJECTED'| 'REVERSED' | 'PARTIAL_REVERSED'| 'PARTIAL_REFUNDED'| 'REFUNDED':
                         async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
                                                                 'level': NotifyLevels.ERROR.value})

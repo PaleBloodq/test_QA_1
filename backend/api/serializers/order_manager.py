@@ -26,11 +26,16 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):
+    order_id = serializers.SerializerMethodField()
     manager = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    
+    def get_order_id(self, obj: models.ChatMessage) -> str:
+        return str(obj.order.id)
     
     class Meta:
         model = models.ChatMessage
         fields = (
+            'order_id',
             'created_at',
             'manager',
             'text',
