@@ -5,6 +5,7 @@ from api import models
 __all__ = [
     'OrderSerializer',
     'ChatMessageSerializer',
+    'OrderPreviewSerializer',
 ]
 
 
@@ -26,12 +27,40 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):
+    order_id = serializers.SerializerMethodField()
     manager = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    
+    def get_order_id(self, obj: models.ChatMessage) -> str:
+        return str(obj.order.id)
     
     class Meta:
         model = models.ChatMessage
         fields = (
+            'order_id',
             'created_at',
             'manager',
             'text',
         )
+
+
+class OrderPreviewSerializer(serializers.ModelSerializer):
+    last_message = serializers.SerializerMethodField()
+    telegram_id = serializers.SerializerMethodField()
+    
+    def get_last_message(self, obj: models.Order) -> str:
+        try:
+            return models.ChatMessage.objects.filter(order=obj).latest('created_at').text
+        except:
+            return 'Заказ создан'
+    
+    def get_telegram_id(self, obj: models.Order) -> int:
+        return obj.profile.telegram_id
+    
+    class Meta:
+        model = models.Order
+        fields = [
+            'telegram_id',
+            'status',
+            'date',
+            'last_message',
+        ]

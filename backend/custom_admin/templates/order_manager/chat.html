@@ -6,7 +6,7 @@
       <button class="w-fit bg-green-500 text-white py-2 px-4 rounded">Готово</button>
     </div>
   </div>
-  <div class="flex-1 p-4 overflow-y-auto bg-gray-50 flex-col">
+  <div id="chat" class="flex-1 p-4 overflow-y-auto bg-gray-50 flex-col">
     {% include "order_manager/message.html" with text='Ничего не работает' %}
     {% include "order_manager/message.html" with manager=True text='Все работает!' %}
     {% include "order_manager/message.html" with text='Вот скрин' media='https://img.wattpad.com/789d452ed075a4e5a7e46a2464e6d35a9f40bc0b/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f4239364c6844346630344d6867413d3d2d3635393730363731382e313661363966333030633064383634333939313435373933353137312e6a7067' %}

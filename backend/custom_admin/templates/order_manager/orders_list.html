@@ -1,12 +1,13 @@
 <div class="lg:w-1/5 w-full flex flex-col bg-gray-200 border-r border-gray-300">
   <div class="p-4 border-b border-gray-300">
     <div class="mb-4">
-      <button class="w-full bg-blue-500 text-white py-2 px-4 rounded">Все заказы</button>
+      {% include "order_manager/orders_list_button.html" with text="Все заказы" name="all" %}
     </div>
     <div class="mb-4">
-      <button class="w-full bg-blue-500 text-white py-2 px-4 rounded">Мои заказы</button>
+      {% include "order_manager/orders_list_button.html" with text="Мои заказы" name="my" %}
     </div>
     <div>
+<<<<<<< HEAD
       <button class="w-full bg-blue-500 text-white py-2 px-4 rounded">Выполненные заказы</button>
     </div>
   </div>
@@ -15,5 +16,13 @@
     {% include "order_manager/order_button.html" with order_id="81273871238712" order_status="Оплачено" order_date="24.05.2024" %}
     {% include "order_manager/order_button.html" with order_id="81273871238712" order_status="Оплачено" order_date="24.05.2024" %}
     {% include "order_manager/order_button.html" with order_id="81273871238712" order_status="Оплачено" order_date="24.05.2024" %}
+=======
+      {% include "order_manager/orders_list_button.html" with text="Выполненные заказы" name="completed" %}
+    </div>
+  </div>
+  <div id='orders-list' class="flex flex-col p-4 overflow-y-auto lg:overflow-y-scroll scrollbar-thin h-[200px] lg:h-full">
+    {% include "order_manager/order_button.html" with id="ff17dd02-982e-4a7f-a2a5-509ec05ebd72" status="Оплачен" date="11.03.2024" last_message="Что-то не работает" %}
+    {% include "order_manager/order_button.html" with id="e51f3aaf-ed27-464a-9d98-e24dd5adf74f" status="В работе" date="17.12.2024" last_message="Как успехи?" %}
+>>>>>>> origin/dev
   </div>
 </div>
