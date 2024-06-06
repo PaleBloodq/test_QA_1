@@ -8,8 +8,8 @@
       console.log(data);
     };
     socket.onopen = ()=>{
-      {% comment %} socket.send('{"type": "my_orders_tab", "limit": 20, offset: 0}'); {% endcomment %}
-      {% comment %} socket.send('{"type": "all_orders_tab, "limit": 20, offset: 0"}'); {% endcomment %}
+      socket.send('{"type": "my_orders_tab", "limit": 20, "offset": 0}');
+      socket.send('{"type": "all_orders_tab", "limit": 20, "offset": 0}');
       {% comment %} socket.send('{"type": "get_order", "order_id": "ff17dd02-982e-4a7f-a2a5-509ec05ebd72"}'); {% endcomment %}
       {% comment %} socket.send('{"type": "accept_order", "order_id": "ff17dd02-982e-4a7f-a2a5-509ec05ebd72"}'); {% endcomment %}
       {% comment %} socket.send('{"type": "order_completed", "order_id": "ff17dd02-982e-4a7f-a2a5-509ec05ebd72"}'); {% endcomment %}
