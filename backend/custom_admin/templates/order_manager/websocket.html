@@ -1,0 +1,19 @@
+<script>
+  const managerId = {{ user.id }};
+  if (!window.hasInitializedSocket) {
+    const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const socket = new WebSocket(`${wsProtocol}//` + window.location.host + "{{ FORCE_SCRIPT_NAME }}/ws/order_manager/");
+    socket.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      console.log(data);
+    };
+    socket.onopen = ()=>{
+      {% comment %} socket.send('{"type": "my_orders_tab", "limit": 20, offset: 0}'); {% endcomment %}
+      {% comment %} socket.send('{"type": "all_orders_tab, "limit": 20, offset: 0"}'); {% endcomment %}
+      {% comment %} socket.send('{"type": "get_order", "order_id": "ff17dd02-982e-4a7f-a2a5-509ec05ebd72"}'); {% endcomment %}
+      {% comment %} socket.send('{"type": "accept_order", "order_id": "ff17dd02-982e-4a7f-a2a5-509ec05ebd72"}'); {% endcomment %}
+      {% comment %} socket.send('{"type": "order_completed", "order_id": "ff17dd02-982e-4a7f-a2a5-509ec05ebd72"}'); {% endcomment %}
+      {% comment %} socket.send('{"type": "new_message", "order_id": "ff17dd02-982e-4a7f-a2a5-509ec05ebd72", "text": "Тестовое сообщение через сокеты", "manager": null}'); {% endcomment %}
+    };
+  }
+</script>

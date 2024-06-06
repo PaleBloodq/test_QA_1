@@ -25,24 +25,90 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.channel_layer.group_add('order_manager', self.channel_name)
         await self.accept()
-        await self.send(text_data='SOME DATA')
-
-    async def disconnect(self, close_code):
-        await self.channel_layer.group_discard('order_manager', self.channel_name)
-
+    
     async def receive(self, text_data):
-        from api import models
+        from api import models, senders
         data = json.loads(text_data)
         match data.get('type'):
             case 'new_message':
-                await sync_to_async(models.ChatMessage.objects.create)(
+                await models.ChatMessage.objects.acreate(
                     order_id=data.get('order_id'),
                     text=data.get('text'),
-                    manager=data.get('manager')
+                    manager=data.get('manager'),   
                 )
+            case 'accept_order':
+                order = await models.Order.objects.aget(id=data.get('order_id'))
+                order.status = models.Order.StatusChoices.IN_PROGRESS
+                order.manager = self.scope['user']
+                await order.asave()
+                await senders._send_order_manager(
+                    'accept_order',
+                    order_id=str(order.id),
+                    manager_id=self.scope['user'].id
+                )
+            case 'order_completed':
+                order = await models.Order.objects.aget(id=data.get('order_id'))
+                order.status = models.Order.StatusChoices.COMPLETED
+                await order.asave()
+                await senders._send_order_manager(
+                    'order_completed',
+                    order_id=str(order.id),
+                    manager_id=self.scope['user'].id
+                )
+            case 'my_orders_tab':
+                await self.send(text_data=json.dumps({
+                    'type': 'my_orders',
+                    'orders': await sync_to_async(self.get_orders)(
+                        status=models.Order.StatusChoices.IN_PROGRESS,
+                        manager=self.scope['user'].pk,
+                        limit=data.get('limit', 20),
+                        offset=data.get('offset', 0),
+                    ),
+                }))
+            case 'all_orders_tab':
+                await self.send(text_data=json.dumps({
+                    'type': 'all_orders',
+                    'orders': await sync_to_async(self.get_orders)(
+                        status=models.Order.StatusChoices.PAID,
+                        manager=None,
+                        limit=data.get('limit', 20),
+                        offset=data.get('offset', 0),
+                    ),
+                }))
+            case 'get_order':
+                await self.send(text_data=json.dumps({
+                    'type': 'get_order',
+                    'order': await sync_to_async(self.get_order_by_id)(
+                        order_id=data.get('order_id')
+                    ),
+                }))
     
     async def chat_message(self, event: dict):
         await self.send(text_data=json.dumps(event))
     
     async def new_order(self, event: dict):
         await self.send(text_data=json.dumps(event))
+    
+    async def accept_order(self, event: dict):
+        await self.send(text_data=json.dumps(event))
+    
+    async def order_completed(self, event: dict):
+        await self.send(text_data=json.dumps(event))
+    
+    def get_orders(self, status, manager, limit: int, offset: int):
+        from api import models
+        from api.serializers.order_manager import OrderPreviewSerializer
+        return OrderPreviewSerializer(
+            models.Order.objects.filter(
+                status=status,
+                manager=manager,
+            )[offset:limit],
+            many=True,
+        ).data
+    
+    def get_order_by_id(self, order_id: str) -> dict:
+        from api import models
+        from api.serializers.order_manager import OrderSerializer
+        return OrderSerializer(
+            models.Order.objects.get(id=order_id)
+        ).data
