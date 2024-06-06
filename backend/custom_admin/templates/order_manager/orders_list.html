@@ -7,24 +7,13 @@
       <button class="w-full bg-blue-500 text-white py-2 px-4 rounded">Мои заказы</button>
     </div>
     <div>
-      <button class="w-full bg-blue-500 text-white py-2 px-4 rounded">
-        Выполненные заказы
-      </button>
+      <button class="w-full bg-blue-500 text-white py-2 px-4 rounded">Выполненные заказы</button>
     </div>
   </div>
-  <div
-    class="flex flex-col p-4 overflow-y-auto lg:overflow-y-scroll scrollbar-thin h-[200px] lg:h-full">
-    <button
-      class="p-2 mb-2 bg-white border border-gray-300 rounded flex gap-2 items-center select-text flex-wrap">
-      <p>ID: 3213421</p>
-      <p>Статус: Ошибка оплаты</p>
-      <p class="text-gray-500 text-md">21.12.2024</p>
-    </button>
-    <button
-      class="p-2 mb-2 bg-white border border-gray-300 rounded flex gap-2 items-center select-text flex-wrap">
-      <p>ID: 3213421</p>
-      <p>Статус: /</p>
-      <p class="text-gray-500 text-md">21.12.2024</p>
-    </button>
+  <div class="flex flex-col p-4 overflow-y-auto lg:overflow-y-scroll scrollbar-thin h-[200px] lg:h-full">
+    {% include "order_manager/order_button.html" with order_id="123123123123123" order_status="Ожидает оплаты" order_date="24.05.2024" %}
+    {% include "order_manager/order_button.html" with order_id="81273871238712" order_status="Оплачено" order_date="24.05.2024" %}
+    {% include "order_manager/order_button.html" with order_id="81273871238712" order_status="Оплачено" order_date="24.05.2024" %}
+    {% include "order_manager/order_button.html" with order_id="81273871238712" order_status="Оплачено" order_date="24.05.2024" %}
   </div>
 </div>
