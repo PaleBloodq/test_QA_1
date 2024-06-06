@@ -6,26 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Менеджер заказов</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{% static "order_manager/js/script.js" %}"></script>
+    {% include "order_manager/websocket.html" %}
     <link rel="stylesheet" href="{% static "order_manager/css/styles.css" %}" />
   </head>
   <body class="h-screen flex flex-col lg:flex-row">
     {% include "order_manager/orders_list.html" %}
     {% include "order_manager/chat.html" %}
     {% include "order_manager/order_info.html" %}
-    <script src="{% static "order_manager/js/script.js" %}"></script>
-    <script>
-      const managerId = {{ user.id }};
-      if (!window.hasInitializedSocket) {
-        const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-        const socket = new WebSocket(`${wsProtocol}//` + window.location.host + "{{ FORCE_SCRIPT_NAME }}/ws/order_manager/");
-        socket.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-            console.log(data);
-        };
-        socket.onopen = ()=>{
-            socket.send('{"type": "new_message", "order_id": "ff17dd02-982e-4a7f-a2a5-509ec05ebd72", "text": "Тестовое сообщение через сокеты", "manager": null}');
-        };
-      }
-    </script>
   </body>
 </html>
