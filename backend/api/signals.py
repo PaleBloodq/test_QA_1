@@ -1,12 +1,10 @@
 import json
-import logging
-import pathlib
-
 from django.db.models import signals
 from django.dispatch import receiver
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
-from api import models, utils
+from api import models
 from api.utils import send_order_to_bot
+from api.senders import send_chat_message
 from settings import settings
 
 
@@ -56,3 +54,9 @@ def delete_photo_product_publication(instance: models.ProductPublication, **kwar
 def change_order_status(sender, instance: models.Order, created: bool, **kwargs):
     if not created:
         send_order_to_bot(instance)
+
+
+@receiver(signals.post_save, sender=models.ChatMessage)
+def post_save_message(sender, instance: models.ChatMessage, created: bool, **kwargs):
+    if created:
+        send_chat_message(instance)
