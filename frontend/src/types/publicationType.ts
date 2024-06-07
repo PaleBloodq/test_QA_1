@@ -1,7 +1,6 @@
-export type Publication = {
+export type PublicationType = {
   id: string;
   title: string;
-  original_price: number;
   final_price: number;
   duration: number;
   quantity: number;
@@ -12,7 +11,8 @@ export type Publication = {
   languages: string[];
   ps_plus_discount: number;
   platforms: string[];
-  preview: string;
-  photo: string;
+  product_page_image: string;
+  search_image: string;
+  offer_image: string;
   discount_deadline: string;
 };

@@ -1,9 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { searchSelector } from "../../../features/Search/searchSelectors"
 import { setSearchValue } from "../../../features/Search/searchSlice";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
 
 export default function Search() {
     const dispatch = useDispatch();

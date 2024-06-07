@@ -1,12 +1,12 @@
 <div class="lg:w-1/5 w-full flex flex-col bg-gray-200 border-r border-gray-300">
   <div class="p-4 border-b border-gray-300">
-    <div class="mb-4">
+    <div onclick="getAllOrders()" id="all-orders" class="mb-4">
       {% include "order_manager/orders_list_button.html" with text="Все заказы" name="all" %}
     </div>
-    <div class="mb-4">
+    <div onclick="getMyOrders()" id="my-orders" class="mb-4">
       {% include "order_manager/orders_list_button.html" with text="Мои заказы" name="my" %}
     </div>
-    <div>
+    <div id="completed-orders">
       {% include "order_manager/orders_list_button.html" with text="Выполненные заказы" name="completed" %}
     </div>
   </div>

@@ -1,11 +1,11 @@
-import { Publication } from "../../../types/PublicationType"
+import { PublicationType } from "../../../types/PublicationType"
 import SelectPlatform from "./SelectPlatform"
 import { useDispatch, useSelector } from "react-redux"
 import { selectedPlatformSelector, selectedPublicationSelector } from "../../../features/Game/publicationSelectors"
 import { setSelectedPublication } from "../../../features/Game/publicationSlice"
 
 type SelectPublicationType = {
-    publications: Publication[],
+    publications: PublicationType[],
 }
 
 export default function SelectPublication({ publications }: SelectPublicationType) {

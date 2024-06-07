@@ -20,7 +20,7 @@ export default function SearchItem({ item }: { item: any }) {
 
     return (
         <Link to={baseLink} className="w-[164px] h-fit flex flex-col justify-between items-start">
-            <img className="w-[165px] h-[210px] object-cover rounded-xl" src={replaceUrl(item.product.type === 'GAME' ? item.preview : item.photo)} alt="Картинка" />
+            <img className="w-[165px] h-[210px] object-cover rounded-xl" src={replaceUrl(item.product.type === 'GAME' ? item.search_image : item.product_page_image)} alt="Картинка" />
             <h1 className="mt-5 text-title">{item.product.title}</h1>
             <h2 className="text-subtitle">{item.title} {item.product.type === "SUBSCRIPTION" && item.duration + ' мес'}</h2>
             {
