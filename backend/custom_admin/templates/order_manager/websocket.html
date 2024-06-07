@@ -39,11 +39,42 @@
 
     const lastMessageParagraph = document.createElement('p');
     lastMessageParagraph.textContent = order.last_message;
+    lastMessageParagraph.classList = 'truncate';
 
     button.append(dateParagraph, statusParagraph, idParagraph, lastMessageParagraph);
 
     return button;
   }
+
+  function createNewMessage(message) {
+    const { manager, text, media } = message;
+
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('flex', 'p-2', 'rounded-lg', 'flex-col', 'mb-2', 'w-fit');
+
+    if (manager) {
+        messageDiv.classList.add('bg-green-100', 'ml-auto');
+    } else {
+        messageDiv.classList.add('bg-blue-100', 'gap-2');
+    }
+
+    const textParagraph = document.createElement('p');
+    textParagraph.classList.add('text-black');
+    textParagraph.textContent = text;
+
+    messageDiv.appendChild(textParagraph);
+
+    if (media) {
+        const imgElement = document.createElement('img');
+        imgElement.classList.add('rounded-lg', 'max-w-[350px]', 'lg:max-w-[400px]', 'max-h-[400px]');
+        imgElement.src = media;
+        imgElement.alt = '';
+
+        messageDiv.appendChild(imgElement);
+    }
+
+    return messageDiv;
+}
 
   function updateOrdersList(orders) {
     const ordersList = document.getElementById('orders-list');
@@ -96,8 +127,15 @@
       } else if (data.type === 'new_order') {
         addNewOrder(data.order);
       } else if (data.type === 'get_order') {
-        updateOrderInfo(data.order)
-      }
+        const chatDiv = document.getElementById('chat');
+        chatDiv.innerHTML = '';
+        updateOrderInfo(data.order);
+
+        data.order.chat.forEach(message => {
+            const messageElement = createNewMessage(message);
+            chatDiv.appendChild(messageElement);
+        });
+    }
     };
 
     function getAllOrders() {
