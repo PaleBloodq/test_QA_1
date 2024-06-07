@@ -20,7 +20,13 @@
     ];
 
     if(id==='accept-order-button') {
-      document.getElementById('accept-order-button').classList.toggle('bg-violet-300')
+      document.getElementById('accept-order-button').classList.add('bg-violet-300')
+      return null
+    }
+
+    if(id==='complete-order-button') {
+      const button = document.getElementById('complete-order-button')
+      button.classList.add('bg-green-300')
       return null
     }
 
@@ -168,12 +174,15 @@
         updateOrderInfo(data.order);
         toggleShowElements(true)
         // ДОБАВИТЬ СКРЫТИЕ КНОПКИ ДЛЯ COMPLETED
-        if(data.order.status === 'В работе' || data.order.status === 'IN_PROGRESS') {
+        if(data.order.status === 'В работе') {
           document.getElementById('accept-order-button').classList.add('hidden')
           document.getElementById('complete-order-button').classList.remove('hidden')
         } else {
           document.getElementById('accept-order-button').classList.remove('hidden')
           document.getElementById('complete-order-button').classList.add('hidden')
+        }
+        if(data.order.status === 'Выполнен') {
+          document.getElementById('accept-order-button').classList.add('hidden')
         }
         //
         data.order.chat.forEach(message => {
@@ -193,21 +202,25 @@
     function getAllOrders() {
       socket.send(JSON.stringify({ type: "all_orders_tab", limit: 20, offset: 0 }));
       makeButtonActive('orders-list-button-all');
+      document.getElementById('chat-input-container').classList.add('hidden')
     }
 
     function getMyOrders() {
       socket.send(JSON.stringify({ type: "my_orders_tab", limit: 20, offset: 0 }));
       makeButtonActive('orders-list-button-my');
+      document.getElementById('chat-input-container').classList.remove('hidden')
     }
 
     function getCompletedOrders() {
       socket.send(JSON.stringify({ type: "completed_orders_tab", limit: 20, offset: 0 }));
       makeButtonActive('orders-list-button-completed');
+      document.getElementById('chat-input-container').classList.remove('hidden')
     }
 
     function getOrder(event) {
-      const orderId = event.currentTarget.id
+      const orderId = event?.currentTarget?.id || currentChat
       currentChat = orderId
+      console.log(JSON.stringify({type: "get_order", order_id: orderId}))
       socket.send(JSON.stringify({type: "get_order", order_id: orderId}));
       setTimeout(scrollChatDown, 100)
     }
@@ -224,11 +237,15 @@
     function acceptOrder() {
       socket.send(JSON.stringify({type: "accept_order", order_id: currentChat}));
       makeButtonActive('accept-order-button');
+      getMyOrders()
+      getOrder()
     }
 
     function completeOrder() {
       socket.send(JSON.stringify({type: "order_completed", order_id: currentChat}));
-      makeButtonActive('accept-order-button');
+      makeButtonActive('complete-order-button');
+      getCompletedOrders()
+      getOrder()
     }
 
     window.hasInitializedSocket = true;
