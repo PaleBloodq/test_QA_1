@@ -60,29 +60,35 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
                 await self.send(text_data=json.dumps({
                     'type': 'my_orders',
                     'orders': await sync_to_async(self.get_orders)(
-                        status=models.Order.StatusChoices.IN_PROGRESS,
-                        manager=self.scope['user'].pk,
                         limit=data.get('limit', 20),
                         offset=data.get('offset', 0),
+                        query=dict(
+                            status=models.Order.StatusChoices.IN_PROGRESS,
+                            manager=self.scope['user'].pk,
+                        )
                     ),
                 }))
             case 'all_orders_tab':
                 await self.send(text_data=json.dumps({
                     'type': 'all_orders',
                     'orders': await sync_to_async(self.get_orders)(
-                        status=models.Order.StatusChoices.PAID,
-                        manager=None,
                         limit=data.get('limit', 20),
                         offset=data.get('offset', 0),
+                        query=dict(
+                            status=models.Order.StatusChoices.PAID,
+                            manager=None,
+                        )
                     ),
                 }))
             case 'completed_orders_tab':
                 await self.send(text_data=json.dumps({
                     'type': 'completed_orders',
                     'orders': await sync_to_async(self.get_orders)(
-                        status=models.Order.StatusChoices.COMPLETED,
                         limit=data.get('limit', 20),
                         offset=data.get('offset', 0),
+                        query=dict(
+                            status=models.Order.StatusChoices.COMPLETED,
+                        )
                     ),
                 }))
             case 'get_order':
@@ -105,16 +111,10 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
     async def order_completed(self, event: dict):
         await self.send(text_data=json.dumps(event))
     
-    def get_orders(self, status, manager, limit: int, offset: int):
+    def get_orders(self, limit: int, offset: int, query: dict = {}):
         from api import models
         from api.serializers.order_manager import OrderPreviewSerializer
-        return OrderPreviewSerializer(
-            models.Order.objects.filter(
-                status=status,
-                manager=manager,
-            )[offset:limit],
-            many=True,
-        ).data
+        return OrderPreviewSerializer(models.Order.objects.filter(**query)[offset:limit], many=True).data
     
     def get_order_by_id(self, order_id: str) -> dict:
         from api import models
