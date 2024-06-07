@@ -177,12 +177,16 @@
         if(data.order.status === 'В работе') {
           document.getElementById('accept-order-button').classList.add('hidden')
           document.getElementById('complete-order-button').classList.remove('hidden')
-        } else {
+          document.getElementById('chat-input-container').classList.remove('hidden')
+        } else if(data.order.status === 'Оплачен') {
           document.getElementById('accept-order-button').classList.remove('hidden')
           document.getElementById('complete-order-button').classList.add('hidden')
+          document.getElementById('chat-input-container').classList.add('hidden')
         }
         if(data.order.status === 'Выполнен') {
           document.getElementById('accept-order-button').classList.add('hidden')
+          document.getElementById('complete-order-button').classList.add('hidden')
+          document.getElementById('chat-input-container').classList.remove('hidden')
         }
         //
         data.order.chat.forEach(message => {
@@ -202,25 +206,21 @@
     function getAllOrders() {
       socket.send(JSON.stringify({ type: "all_orders_tab", limit: 20, offset: 0 }));
       makeButtonActive('orders-list-button-all');
-      document.getElementById('chat-input-container').classList.add('hidden')
     }
 
     function getMyOrders() {
       socket.send(JSON.stringify({ type: "my_orders_tab", limit: 20, offset: 0 }));
       makeButtonActive('orders-list-button-my');
-      document.getElementById('chat-input-container').classList.remove('hidden')
     }
 
     function getCompletedOrders() {
       socket.send(JSON.stringify({ type: "completed_orders_tab", limit: 20, offset: 0 }));
       makeButtonActive('orders-list-button-completed');
-      document.getElementById('chat-input-container').classList.remove('hidden')
     }
 
     function getOrder(event) {
       const orderId = event?.currentTarget?.id || currentChat
       currentChat = orderId
-      console.log(JSON.stringify({type: "get_order", order_id: orderId}))
       socket.send(JSON.stringify({type: "get_order", order_id: orderId}));
       setTimeout(scrollChatDown, 100)
     }
