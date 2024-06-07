@@ -59,6 +59,7 @@ class OrderPreviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Order
         fields = [
+            'id',
             'telegram_id',
             'status',
             'date',
