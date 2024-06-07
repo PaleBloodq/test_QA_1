@@ -8,18 +8,22 @@
       'orders-list-button-completed'
     ];
 
+    if(id==='accept-order-button') {
+      document.getElementById('accept-order-button').classList.toggle('bg-violet-300')
+      return null
+    }
+
     buttons.forEach(buttonId => {
       const button = document.getElementById(buttonId);
       button.classList.toggle('bg-blue-300', buttonId === id);
     });
 
-    if(id==='accept-order-button') {
-      document.getElementById('accept-order-button').classList.add('bg-violet-300')
-    }
   }
 
   function createOrderButton(order) {
     const button = document.createElement('button');
+    button.id = order.id
+    button.onclick = getOrder
     button.className = 'p-2 mb-2 bg-white border border-gray-300 rounded flex gap-2 items-center select-text flex-wrap';
 
     const dateParagraph = document.createElement('p');
@@ -67,7 +71,7 @@
     socket.onmessage = function (event) {
       const data = JSON.parse(event.data);
       console.log(data)
-      if (data.type === 'all_orders') {
+      if (data.type === 'all_orders' || data.type === 'my_orders' || data.type === 'completed_orders') {
         updateOrdersList(data.orders);
       } else if (data.type === 'new_order') {
         addNewOrder(data.order);
@@ -85,7 +89,8 @@
     }
 
     function getOrder(event) {
-      const id = event.target.id
+      const orderId = event.currentTarget.id
+      socket.send(JSON.stringify({"type": "get_order", "order_id": orderId}));
     }
 
     function acceptOrder(orderId) {
