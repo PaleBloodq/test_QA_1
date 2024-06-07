@@ -46,7 +46,7 @@
     return button;
   }
 
-  function createNewMessage(message) {
+  function showMessage(message) {
     const { manager, text, media } = message;
 
     const messageDiv = document.createElement('div');
@@ -74,7 +74,12 @@
     }
 
     return messageDiv;
-}
+  }
+
+  function addNewMessage(message) {
+    const newMessage = showMessage(message)
+    return newMessage
+  }
 
   function updateOrdersList(orders) {
     const ordersList = document.getElementById('orders-list');
@@ -132,10 +137,14 @@
         updateOrderInfo(data.order);
 
         data.order.chat.forEach(message => {
-            const messageElement = createNewMessage(message);
+            const messageElement = showMessage(message);
             chatDiv.appendChild(messageElement);
         });
-    }
+      } else if(data.type === 'chat_message') {
+        const newMessage = addNewMessage(data.message)
+        const chatDiv = document.getElementById('chat');
+        chatDiv.appendChild(newMessage);
+      }
     };
 
     function getAllOrders() {
