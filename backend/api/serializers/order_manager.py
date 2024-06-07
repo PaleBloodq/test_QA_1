@@ -12,9 +12,18 @@ __all__ = [
 class OrderSerializer(serializers.ModelSerializer):
     profile = serializers.SlugRelatedField(slug_field='telegram_id', read_only=True)
     status = serializers.SerializerMethodField()
+    chat = serializers.SerializerMethodField()
     
-    def get_status(self, obj: models.Order):
+    def get_status(self, obj: models.Order) -> str:
         return obj.get_status_display()
+    
+    def get_chat(self, obj: models.Order) -> list[dict]:
+        return ChatMessageSerializer(
+            models.ChatMessage.objects.filter(
+                order=obj
+            ),
+            many=True
+        ).data
     
     class Meta:
         model = models.Order
