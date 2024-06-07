@@ -1,7 +1,16 @@
 <script>
   const managerId = {{ user.id }};
+  let currentChat = ''
+
+
+
 
   // ФУНКЦИИ
+
+  function scrollChatDown() {
+    const chatDiv = document.getElementById('chat')
+    chatDiv.scrollTop = 9999;
+  }
 
   function makeButtonActive(id) {
     const buttons = [
@@ -32,14 +41,16 @@
     dateParagraph.textContent = order.date;
 
     const statusParagraph = document.createElement('p');
-    statusParagraph.textContent = `Статус: ${order.status}`;
+    statusParagraph.className = 'bg-yellow-500 px-2 rounded-full'
+    statusParagraph.textContent = `${order.status}`;
 
     const idParagraph = document.createElement('p');
     idParagraph.textContent = `ID: ${order.telegram_id}`;
-
+    
     const lastMessageParagraph = document.createElement('p');
     lastMessageParagraph.textContent = order.last_message;
     lastMessageParagraph.classList = 'truncate';
+    lastMessageParagraph.id = order.id + '-paragraph'
 
     button.append(dateParagraph, statusParagraph, idParagraph, lastMessageParagraph);
 
@@ -112,7 +123,26 @@
     document.getElementById('order-info-payment-id').innerHTML = `<strong>ID Платежа:</strong> ${order.payment_url || 'Нет данных'}`;
     document.getElementById('order-info-account-email').innerHTML = `<strong>E-mail:</strong> ${order.email || 'Нет данных'}`;
     document.getElementById('order-info-account-password').innerHTML = `<strong>Пароль:</strong> ${order.password || 'Нет данных'}`;
-}
+  }
+
+  function toggleShowElements(isShow) {
+    const elements = ["accept-order-button", "complete-order-button", "uploadButton", "send-message-button", "messageInput", "order-info"]
+    if(!isShow) {
+      elements.forEach(button => {
+          const elem = document.getElementById(button);
+          if (elem) {
+              elem.classList.add('hidden');
+          }
+      })
+    } else {
+      elements.forEach(button => {
+          const elem = document.getElementById(button);
+          if (elem) {
+              elem.classList.remove('hidden');
+          }
+      })
+    }
+  }
 
   
   // ТУТ НАЧИНАЮТСЯ СОКЕТЫ
@@ -122,6 +152,7 @@
 
     window.addEventListener('load', () => {
      getAllOrders()
+     toggleShowElements(false)
     })
 
     socket.onmessage = function (event) {
@@ -135,15 +166,27 @@
         const chatDiv = document.getElementById('chat');
         chatDiv.innerHTML = '';
         updateOrderInfo(data.order);
-
+        toggleShowElements(true)
+        // ДОБАВИТЬ СКРЫТИЕ КНОПКИ ДЛЯ COMPLETED
+        if(data.order.status === 'В работе' || data.order.status === 'IN_PROGRESS') {
+          document.getElementById('accept-order-button').classList.add('hidden')
+          document.getElementById('complete-order-button').classList.remove('hidden')
+        } else {
+          document.getElementById('accept-order-button').classList.remove('hidden')
+          document.getElementById('complete-order-button').classList.add('hidden')
+        }
+        //
         data.order.chat.forEach(message => {
             const messageElement = showMessage(message);
             chatDiv.appendChild(messageElement);
         });
       } else if(data.type === 'chat_message') {
-        const newMessage = addNewMessage(data.message)
-        const chatDiv = document.getElementById('chat');
-        chatDiv.appendChild(newMessage);
+          document.getElementById(data.message.order_id + '-paragraph').innerText = data.message.text
+          if(data.message.order_id === currentChat) {
+            const newMessage = addNewMessage(data.message)
+            const chatDiv = document.getElementById('chat');
+            chatDiv.appendChild(newMessage);
+          }
       }
     };
 
@@ -157,13 +200,34 @@
       makeButtonActive('orders-list-button-my');
     }
 
-    function getOrder(event) {
-      const orderId = event.currentTarget.id
-      socket.send(JSON.stringify({"type": "get_order", "order_id": orderId}));
+    function getCompletedOrders() {
+      socket.send(JSON.stringify({ type: "completed_orders_tab", limit: 20, offset: 0 }));
+      makeButtonActive('orders-list-button-completed');
     }
 
-    function acceptOrder(orderId) {
-      // socket.send(JSON.stringify({type: "accept_order", order_id: "ff17dd02-982e-4a7f-a2a5-509ec05ebd72"}));
+    function getOrder(event) {
+      const orderId = event.currentTarget.id
+      currentChat = orderId
+      socket.send(JSON.stringify({type: "get_order", order_id: orderId}));
+      setTimeout(scrollChatDown, 100)
+    }
+
+    function sendMessage(event) {
+      const input = document.getElementById('messageInput')
+      if(event?.key === 'Enter' || event === undefined) {
+        socket.send(JSON.stringify({type: "new_message", order_id: currentChat, text: input.value, manager: managerId}));
+        input.value = ''
+        scrollChatDown()
+      }
+    }
+
+    function acceptOrder() {
+      socket.send(JSON.stringify({type: "accept_order", order_id: currentChat}));
+      makeButtonActive('accept-order-button');
+    }
+
+    function completeOrder() {
+      socket.send(JSON.stringify({type: "order_completed", order_id: currentChat}));
       makeButtonActive('accept-order-button');
     }
 

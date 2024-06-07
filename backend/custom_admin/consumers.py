@@ -27,6 +27,7 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
         await self.accept()
     
     async def receive(self, text_data):
+        from django.contrib.auth.models import User
         from api import models, senders
         data = json.loads(text_data)
         match data.get('type'):
@@ -34,7 +35,7 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
                 await models.ChatMessage.objects.acreate(
                     order_id=data.get('order_id'),
                     text=data.get('text'),
-                    manager=data.get('manager'),   
+                    manager=await User.objects.aget(id=data.get('manager')),  
                 )
             case 'accept_order':
                 order = await models.Order.objects.aget(id=data.get('order_id'))
