@@ -1,6 +1,8 @@
 <script>
   const managerId = {{ user.id }};
 
+  // ФУНКЦИИ
+
   function makeButtonActive(id) {
     const buttons = [
       'orders-list-button-all',
@@ -17,7 +19,6 @@
       const button = document.getElementById(buttonId);
       button.classList.toggle('bg-blue-300', buttonId === id);
     });
-
   }
 
   function createOrderButton(order) {
@@ -60,6 +61,25 @@
     ordersList.appendChild(button);
   }
 
+  function updateOrderInfo(order) {
+    document.getElementById('order-info-user').innerHTML = `<strong>Пользователь:</strong> ${order.profile || 'Нет данных'}`;
+    document.getElementById('order-info-date').innerHTML = `<strong>Дата заказа:</strong> ${order.date || 'Нет данных'}`;
+    document.getElementById('order-info-total').innerHTML = `<strong>Сумма заказа:</strong> ${order.amount || 'Нет данных'}`;
+    document.getElementById('order-info-bill-email').innerHTML = `<strong>E-mail для чека:</strong> ${order.bill_email || 'Нет данных'}`;
+    document.getElementById('order-info-cashback-spent').innerHTML = `<strong>Списано баллов:</strong> ${order.spend_cashback_amount || 'Нет данных'}`;
+    document.getElementById('order-info-status').innerHTML = `<strong>Статус:</strong> ${order.status || 'Нет данных'}`;
+    document.getElementById('order-info-cashback-awarded').innerHTML = `<strong>Начислено кэшбэка:</strong> ${order.cashback || 'Нет данных'}`;
+    document.getElementById('order-info-promocode').innerHTML = `<strong>Промокод:</strong> ${order.promo_code || 'Нет данных'}`;
+    document.getElementById('order-info-promocode-discount').innerHTML = `<strong>Скидка по промокоду:</strong> ${order.promo_code_discount || 'Нет данных'}`;
+    document.getElementById('order-info-order-id').innerHTML = `<strong>ID Заказа:</strong> ${order.id || 'Нет данных'}`;
+    document.getElementById('chat-order-id-info').innerHTML = `Заказ: ${order.id || 'Нет данных'}`;
+    document.getElementById('order-info-payment-id').innerHTML = `<strong>ID Платежа:</strong> ${order.payment_url || 'Нет данных'}`;
+    document.getElementById('order-info-account-email').innerHTML = `<strong>E-mail:</strong> ${order.email || 'Нет данных'}`;
+    document.getElementById('order-info-account-password').innerHTML = `<strong>Пароль:</strong> ${order.password || 'Нет данных'}`;
+}
+
+  
+  // ТУТ НАЧИНАЮТСЯ СОКЕТЫ
   if (!window.hasInitializedSocket) {
     const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const socket = new WebSocket(`${wsProtocol}//${window.location.host}{{ FORCE_SCRIPT_NAME }}/ws/order_manager/`);
@@ -75,6 +95,8 @@
         updateOrdersList(data.orders);
       } else if (data.type === 'new_order') {
         addNewOrder(data.order);
+      } else if (data.type === 'get_order') {
+        updateOrderInfo(data.order)
       }
     };
 
