@@ -35,7 +35,7 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
                 await models.ChatMessage.objects.acreate(
                     order_id=data.get('order_id'),
                     text=data.get('text'),
-                    manager=await User.objects.aget(id=data.get('manager')),  
+                    manager=await User.objects.aget(id=data.get('manager')),   
                 )
             case 'accept_order':
                 order = await models.Order.objects.aget(id=data.get('order_id'))
@@ -72,6 +72,15 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
                     'orders': await sync_to_async(self.get_orders)(
                         status=models.Order.StatusChoices.PAID,
                         manager=None,
+                        limit=data.get('limit', 20),
+                        offset=data.get('offset', 0),
+                    ),
+                }))
+            case 'completed_orders_tab':
+                await self.send(text_data=json.dumps({
+                    'type': 'completed_orders',
+                    'orders': await sync_to_async(self.get_orders)(
+                        status=models.Order.StatusChoices.COMPLETED,
                         limit=data.get('limit', 20),
                         offset=data.get('offset', 0),
                     ),

@@ -55,6 +55,7 @@ class ChatMessageSerializer(serializers.ModelSerializer):
 class OrderPreviewSerializer(serializers.ModelSerializer):
     last_message = serializers.SerializerMethodField()
     telegram_id = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
     
     def get_last_message(self, obj: models.Order) -> str:
         try:
@@ -64,6 +65,9 @@ class OrderPreviewSerializer(serializers.ModelSerializer):
     
     def get_telegram_id(self, obj: models.Order) -> int:
         return obj.profile.telegram_id
+    
+    def get_status(self, obj: models.Order) -> str:
+        return obj.get_status_display()
     
     class Meta:
         model = models.Order

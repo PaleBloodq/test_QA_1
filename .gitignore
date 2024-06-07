@@ -39,3 +39,6 @@ migrations/
 *.pem
 *.pub
 *.env
+
+# Shortcuts
+/*.url
