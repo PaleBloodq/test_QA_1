@@ -12,6 +12,10 @@
       const button = document.getElementById(buttonId);
       button.classList.toggle('bg-blue-300', buttonId === id);
     });
+
+    if(id==='accept-order-button') {
+      document.getElementById('accept-order-button').classList.add('bg-violet-300')
+    }
   }
 
   function createOrderButton(order) {
@@ -56,8 +60,13 @@
     const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const socket = new WebSocket(`${wsProtocol}//${window.location.host}{{ FORCE_SCRIPT_NAME }}/ws/order_manager/`);
 
+    window.addEventListener('load', () => {
+     getAllOrders()
+    })
+
     socket.onmessage = function (event) {
       const data = JSON.parse(event.data);
+      console.log(data)
       if (data.type === 'all_orders') {
         updateOrdersList(data.orders);
       } else if (data.type === 'new_order') {
@@ -75,11 +84,16 @@
       makeButtonActive('orders-list-button-my');
     }
 
-    function acceptOrder(orderId) {
-      socket.send(JSON.stringify({"type": "accept_order", "order_id": "ff17dd02-982e-4a7f-a2a5-509ec05ebd72"}));
+    function getOrder(event) {
+      const id = event.target.id
     }
 
-    window.hasInitializedSocket = true; // Mark socket as initialized
+    function acceptOrder(orderId) {
+      // socket.send(JSON.stringify({type: "accept_order", order_id: "ff17dd02-982e-4a7f-a2a5-509ec05ebd72"}));
+      makeButtonActive('accept-order-button');
+    }
+
+    window.hasInitializedSocket = true;
   }
 </script>
 
