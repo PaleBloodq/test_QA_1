@@ -65,12 +65,18 @@ class ProductAdmin(admin.ModelAdmin):
         from api import tasks
         tasks.parse_product_publications_task.delay([str(product.id) for product in queryset])
     parse_product_publications.short_description = 'Спарсить издания'
+    
+    def delete_publications(self, request, queryset: QuerySet[models.Product]):
+        models.ProductPublication.objects.filter(
+            product__in=queryset
+        ).delete()
+    delete_publications.short_description = 'Удалить издания'
 
     inlines = [ProductPublicationInline]
     list_filter = [PriceChangedListFilter]
     list_display = ['title', 'type', 'release_date', 'count_publications', 'price_changed']
     readonly_fields = ['orders']
-    actions = [parse_product_publications]
+    actions = [parse_product_publications, delete_publications]
     formfield_overrides = {
         ManyToManyField: {'widget': forms.ManyToManyForm},
     }
