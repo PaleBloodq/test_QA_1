@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from imagekit.models import ProcessedImageField
 
 from api.validators import validate_ps_store_url
+from ps_store_api import models as ps_models
 
 percent_validator = MinValueValidator(0), MaxValueValidator(100)
 
@@ -58,6 +59,7 @@ class Product(BaseModel):
     ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True)
     parse_release_date = models.BooleanField('Парсить дату релиза', default=True)
     orders = models.IntegerField('Оплаченных заказов', default=0, editable=False)
+    ps_concept = models.OneToOneField(ps_models.Concept, verbose_name='Концепт PS', on_delete=models.SET_NULL, related_name='api_product', null=True, blank=True)
 
     def clean(self):
         if not self.type in (self.TypeChoices.SUBSCRIPTION, self.TypeChoices.DONATION):
@@ -98,7 +100,9 @@ class ProductPublication(BaseModel):
     parse_title = models.BooleanField('Парсить заголовок', default=True)
     parse_price = models.BooleanField('Парсить цену', default=True)
     parse_platforms = models.BooleanField('Парсить платформы', default=True)
-    
+    ps_product = models.OneToOneField(ps_models.Product, verbose_name='Товар PS', on_delete=models.SET_NULL, related_name='api_publication', null=True, blank=True)
+    ps_add_on = models.OneToOneField(ps_models.AddOn, verbose_name='Аддон PS', on_delete=models.SET_NULL, related_name='api_add_on', null=True, blank=True)
+
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         return super().save(force_insert, force_update, using, update_fields)
 

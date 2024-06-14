@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'rest_framework',
     'api',
+    'ps_store_api',
 ]
 
 MIDDLEWARE = [

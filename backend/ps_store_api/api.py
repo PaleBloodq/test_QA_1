@@ -1,4 +1,5 @@
 import logging
+import re
 import requests
 from . import serializers, models
 
@@ -91,3 +92,17 @@ class PS_StoreAPI:
             'a128042177bd93dd831164103d53b73ef790d56f51dae647064cb8f9d9fc9d1a'
         ).get('data').get('productRetrieve').get('concept').get('id')
         return self.parse_by_concept_id(concept_id)
+    
+    def parse_by_url(self, url: str) -> models.Concept | None:
+        try:
+            match = re.match(r'https://store.playstation.com/en-tr/(product|concept)/([a-zA-Z0-9\-\_]*)/?', url)
+            if match:
+                element_type = match.group(1)
+                element_id = match.group(2)
+            parse_func = {
+                'product': self.parse_by_product_id,
+                'concept': self.parse_by_concept_id
+            }.get(element_type)
+            return parse_func(element_id)
+        except Exception as exc:
+            logging.exception(exc)

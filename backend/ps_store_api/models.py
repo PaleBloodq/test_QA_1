@@ -1,9 +1,5 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from imagekit.models import ProcessedImageField
-
-
-percent_validator = MinValueValidator(0), MaxValueValidator(100)
 
 
 class Concept(models.Model):
@@ -27,7 +23,7 @@ class Mobilecta(models.Model):
     type = models.CharField('Тип', max_length=64)
     base_price = models.DecimalField('Цена без скидки', max_digits=10, decimal_places=2)
     discounted_price = models.DecimalField('Цена со скидкой', max_digits=10, decimal_places=2)
-    discount = models.IntegerField('Скидка %', validators=percent_validator, default=0)
+    discount = models.IntegerField('Скидка %', validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
     discount_deadline = models.DateTimeField('Окончание скидки', null=True, blank=True)
     
     def __str__(self) -> str:
@@ -41,7 +37,7 @@ class AbstractProduct(models.Model):
     platforms = models.ManyToManyField(Platform, verbose_name='Платформы', blank=True)
     price = models.OneToOneField(Mobilecta, verbose_name='Цена', on_delete=models.CASCADE, related_name='+')
     ps_plus_price = models.OneToOneField(Mobilecta, verbose_name='Цена PS Plus', on_delete=models.CASCADE, related_name='+', null=True, blank=True)
-    portrait_image = ProcessedImageField(verbose_name='Изображение', format='WEBP', options={'quality': 60}, null=True, blank=True)
+    portrait_image = models.URLField('Изображение', null=True, blank=True)
     
     def __str__(self) -> str:
         return f'{self.name}'

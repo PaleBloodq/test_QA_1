@@ -40,7 +40,7 @@ def hash_product_publication(sender, **kwargs):
 
 @receiver(signals.post_delete, sender=models.ProductPublication)
 def delete_photo_product_publication(instance: models.ProductPublication, **kwargs):
-    to_delete = (instance.photo, instance.preview)
+    to_delete = (instance.product_page_image, instance.offer_image, instance.search_image)
     for file in to_delete:
         try:
             if file.url:
