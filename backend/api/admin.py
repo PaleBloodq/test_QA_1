@@ -1,9 +1,6 @@
 from django.contrib import admin
 from django.db.models import QuerySet, ImageField, ManyToManyField
-from django.http import HttpRequest
-from django.utils.safestring import mark_safe
 from api import models, forms
-from settings import settings
 
 class ProductPublicationInline(admin.StackedInline):
     model = models.ProductPublication
@@ -87,39 +84,13 @@ class OrderProductInline(admin.TabularInline):
     extra = 0
 
 
-class ChatMessageInline(admin.TabularInline):
-    model = models.ChatMessage
-    extra = 0
-    ordering = ('-created_at',)
-    fields = ('created_at', 'sender', 'text',)
-    readonly_fields = ('created_at', 'sender', 'text',)
-    show_change_link = True
-
-    def sender(self, obj: models.ChatMessage):
-        if obj.manager:
-            return mark_safe(
-                f'<a href="{settings.FORCE_SCRIPT_NAME}/admin/auth/user/{obj.manager.pk}/">Менеджер {obj.manager}</a>')
-        return mark_safe(
-            f'<a href="{settings.FORCE_SCRIPT_NAME}/backend/admin/api/profile/{obj.order.profile.id}/">Клиент {obj.order.profile.telegram_id}</a>')
-
-    def has_change_permission(self, request: HttpRequest, obj) -> bool:
-        return False
-
-
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    change_form_template = 'admin/order.html'
     inlines = [OrderProductInline]
     list_display = ['date', 'status', 'profile', 'amount']
     list_filter = ['date', 'status', 'profile', 'amount']
     readonly_fields = ['id', 'payment_id', 'payment_url']
     search_fields = ['id', 'profile__telegram_id', 'amount']
-
-    def render_change_form(self, request, context, add, change, form_url, obj):
-        context.update({
-            'FORCE_SCRIPT_NAME': settings.FORCE_SCRIPT_NAME,
-        })
-        return super().render_change_form(request, context, add, change, form_url, obj)
 
 
 @admin.register(models.PromoCode)

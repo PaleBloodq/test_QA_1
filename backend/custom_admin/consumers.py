@@ -32,11 +32,12 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         match data.get('type'):
             case 'new_message':
-                await models.ChatMessage.objects.acreate(
+                message = await models.ChatMessage.objects.acreate(
                     order_id=data.get('order_id'),
                     text=data.get('text'),
                     manager=await User.objects.aget(id=data.get('manager')),   
                 )
+                logging.warning(message)
             case 'accept_order':
                 order = await models.Order.objects.aget(id=data.get('order_id'))
                 order.status = models.Order.StatusChoices.IN_PROGRESS

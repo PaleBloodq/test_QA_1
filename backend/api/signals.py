@@ -1,4 +1,6 @@
 import json
+import os
+import requests
 from django.db.models import signals
 from django.dispatch import receiver
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
@@ -60,3 +62,12 @@ def change_order_status(sender, instance: models.Order, created: bool, **kwargs)
 def post_save_message(sender, instance: models.ChatMessage, created: bool, **kwargs):
     if created:
         send_chat_message(instance)
+        if instance.manager:
+            requests.post(
+                f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/message/send/',
+                json={
+                    'user_id': instance.order.profile.telegram_id,
+                    'order_id': str(instance.order.id),
+                    'text': instance.text
+                }
+            )
