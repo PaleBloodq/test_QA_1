@@ -27,14 +27,14 @@ export default function SelectPublication({ publications }: SelectPublicationTyp
         <>
             <h2 className="text-title-xl mb-[18px]">Издания</h2>
             <SelectPlatform publications={publications} />
-            <div className="w-full gap-3 flex justify-between">
+            <div className="w-full gap-3 flex justify-start flex-wrap">
                 {publications
                     .filter((publication) => publication.platforms.includes(selectedPlatform))
                     .map((publication) => (
                         <button
                             key={publication.id}
                             onClick={() => dispatch(setSelectedPublication(publication.id))}
-                            className={`w-full h-20 flex flex-col justify-center items-center ${publication.id === selectedPublication ? 'custom-border__red' : 'custom-border'
+                            className={`w-full max-w-[160px] h-20 flex flex-col justify-center items-center ${publication.id === selectedPublication ? 'custom-border__red' : 'custom-border'
                                 }`}
                         >
                             <h1 className="text-subtitle">{publication.title}</h1>
