@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
 import Tag from "../../../components/common/Tag";
-import { getDiscount } from "../../../hooks/getDiscount";
 import { deleteFromCart } from "../../../features/Cart/cartSlice";
 import { CartItemType } from "../../../types/cartItem";
 import { replaceUrl } from "../../../helpers/replaceUrl";

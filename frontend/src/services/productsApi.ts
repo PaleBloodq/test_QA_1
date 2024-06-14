@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ProductType } from "../types/ProductType";
-import { Publication } from "../types/PublicationType";
+import { PublicationType } from "../types/PublicationType";
 
 export const productsApi = createApi({
   reducerPath: "productsApi",
@@ -12,7 +12,7 @@ export const productsApi = createApi({
     getAnyProduct: builder.query<ProductType, string>({
       query: (id) => `api/product/${id}`,
     }),
-    getAnyPublication: builder.query<Publication, string>({
+    getAnyPublication: builder.query<PublicationType, string>({
       query: (id) => `api/publication/${id}`,
     }),
     getSearchProducts: builder.mutation({

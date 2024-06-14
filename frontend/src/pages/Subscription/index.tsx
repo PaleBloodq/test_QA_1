@@ -9,7 +9,7 @@ import { setDuration, setSelectedSubscription } from "../../features/Subscriptio
 import Line from "../../components/common/Line";
 import { CartItemType } from "../../types/cartItem";
 import AddToCartButton from "../../components/common/AddToCartButton";
-import { Publication } from "../../types/PublicationType";
+import { PublicationType } from "../../types/PublicationType";
 import { replaceUrl } from "../../helpers/replaceUrl";
 import { ProductType } from "../../types/ProductType";
 import Tag from "../../components/common/Tag";
@@ -30,10 +30,10 @@ export default function Subscription() {
     const { data = {} as ProductType, isLoading } = useGetAnyProductQuery(subscriptionId);
     const selectedSubscription = useSelector(selectedSubscriptionSelector);
     const currentDuration = useSelector(durationSelector);
-    const [currentSubscription, setCurrentSubscription] = useState(data?.publications?.find((sub: Publication) => sub?.id === id))
+    const [currentSubscription, setCurrentSubscription] = useState(data?.publications?.find((sub: PublicationType) => sub?.id === id))
 
     useEffect(() => {
-        setCurrentSubscription(data?.publications?.find((sub: Publication) => sub?.id === selectedSubscription))
+        setCurrentSubscription(data?.publications?.find((sub: PublicationType) => sub?.id === selectedSubscription))
     }, [selectedSubscription])
 
 
@@ -43,7 +43,7 @@ export default function Subscription() {
     const cartItem: CartItemType = {
         id: currentSubscription?.id,
         type: "SUBSCRIPTION",
-        img: currentSubscription?.preview,
+        img: currentSubscription?.product_page_image,
         title: data?.title?.includes('PS') ? `PS Plus ${currentSubscription?.title}` : `EA Play ${currentSubscription?.title}`,
         publication: `${currentDuration} мес`,
         platform: data?.title?.includes('PS') ? 'PS' : "EA",
@@ -56,7 +56,7 @@ export default function Subscription() {
     useEffect(() => {
         if (!isLoading) {
             dispatch(setSelectedSubscription(id))
-            dispatch(setDuration(data?.publications?.find((sub: Publication) => sub?.id === id)?.duration))
+            dispatch(setDuration(data?.publications?.find((sub: PublicationType) => sub?.id === id)?.duration))
         }
     }, [isLoading])
 
@@ -65,7 +65,7 @@ export default function Subscription() {
             <div className="flex flex-col items-center">
                 {!isLoading && currentSubscription !== undefined ? (
                     <div className="flex flex-col items-start w-full">
-                        <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentSubscription?.photo)} alt="subscription image" />
+                        <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentSubscription?.product_page_image)} alt="subscription image" />
                         <h1 className="text-header mb-2">{data?.title.includes('PS') ? 'PS Plus' : 'EA Play'} {currentSubscription?.title}</h1>
                         <div className="flex items-center gap-2">
                             <h1 className="price-big">{currentPrice} ₽</h1>

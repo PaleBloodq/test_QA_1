@@ -9,7 +9,7 @@ const DonationCard = React.memo(({ donation }: { donation: ProductType }) => {
     return (
         <>
             <Link to={'/donation/' + donation?.id} className='w-full h-[240px] flex flex-col items-start justify-between'>
-                <img className='h-full rounded-xl mb-[18px]' src={replaceUrl(donation?.publications[0]?.preview)} alt="donation image" />
+                <img className='h-full rounded-xl mb-[18px]' src={replaceUrl(donation?.publications[0]?.product_page_image)} alt="donation image" />
             </Link>
         </>
     );
