@@ -1,8 +1,10 @@
 import json
+import os
+import requests
 from django.db.models import signals
 from django.dispatch import receiver
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
-from api import models
+from api import models, tasks
 from api.utils import send_order_to_bot
 from api.senders import send_chat_message
 from settings import settings
@@ -40,7 +42,7 @@ def hash_product_publication(sender, **kwargs):
 
 @receiver(signals.post_delete, sender=models.ProductPublication)
 def delete_photo_product_publication(instance: models.ProductPublication, **kwargs):
-    to_delete = (instance.photo, instance.preview)
+    to_delete = (instance.product_page_image, instance.offer_image, instance.search_image)
     for file in to_delete:
         try:
             if file.url:
@@ -60,3 +62,22 @@ def change_order_status(sender, instance: models.Order, created: bool, **kwargs)
 def post_save_message(sender, instance: models.ChatMessage, created: bool, **kwargs):
     if created:
         send_chat_message(instance)
+        if instance.manager:
+            requests.post(
+                f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/message/send/',
+                json={
+                    'user_id': instance.order.profile.telegram_id,
+                    'order_id': str(instance.order.id),
+                    'text': instance.text
+                }
+            )
+
+@receiver(signals.post_save, sender=models.Mailing)
+def post_save_mailing(sender, instance: models.Mailing, **kwargs):
+    if instance.status != models.Mailing.Status.WAITING:
+        return
+    tasks.send_mailing.apply_async(
+        args=[str(instance.id)],
+        eta=instance.start_on,
+        task_id=f'send_mailing_{instance.id}',
+    )

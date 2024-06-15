@@ -1,9 +1,6 @@
 from django.contrib import admin
 from django.db.models import QuerySet, ImageField, ManyToManyField
-from django.http import HttpRequest
-from django.utils.safestring import mark_safe
 from api import models, forms
-from settings import settings
 
 class ProductPublicationInline(admin.StackedInline):
     model = models.ProductPublication
@@ -65,12 +62,18 @@ class ProductAdmin(admin.ModelAdmin):
         from api import tasks
         tasks.parse_product_publications_task.delay([str(product.id) for product in queryset])
     parse_product_publications.short_description = 'Спарсить издания'
+    
+    def delete_publications(self, request, queryset: QuerySet[models.Product]):
+        models.ProductPublication.objects.filter(
+            product__in=queryset
+        ).delete()
+    delete_publications.short_description = 'Удалить издания'
 
     inlines = [ProductPublicationInline]
     list_filter = [PriceChangedListFilter]
     list_display = ['title', 'type', 'release_date', 'count_publications', 'price_changed']
     readonly_fields = ['orders']
-    actions = [parse_product_publications]
+    actions = [parse_product_publications, delete_publications]
     formfield_overrides = {
         ManyToManyField: {'widget': forms.ManyToManyForm},
     }
@@ -81,39 +84,13 @@ class OrderProductInline(admin.TabularInline):
     extra = 0
 
 
-class ChatMessageInline(admin.TabularInline):
-    model = models.ChatMessage
-    extra = 0
-    ordering = ('-created_at',)
-    fields = ('created_at', 'sender', 'text',)
-    readonly_fields = ('created_at', 'sender', 'text',)
-    show_change_link = True
-
-    def sender(self, obj: models.ChatMessage):
-        if obj.manager:
-            return mark_safe(
-                f'<a href="{settings.FORCE_SCRIPT_NAME}/admin/auth/user/{obj.manager.pk}/">Менеджер {obj.manager}</a>')
-        return mark_safe(
-            f'<a href="{settings.FORCE_SCRIPT_NAME}/backend/admin/api/profile/{obj.order.profile.id}/">Клиент {obj.order.profile.telegram_id}</a>')
-
-    def has_change_permission(self, request: HttpRequest, obj) -> bool:
-        return False
-
-
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    change_form_template = 'admin/order.html'
     inlines = [OrderProductInline]
     list_display = ['date', 'status', 'profile', 'amount']
     list_filter = ['date', 'status', 'profile', 'amount']
     readonly_fields = ['id', 'payment_id', 'payment_url']
     search_fields = ['id', 'profile__telegram_id', 'amount']
-
-    def render_change_form(self, request, context, add, change, form_url, obj):
-        context.update({
-            'FORCE_SCRIPT_NAME': settings.FORCE_SCRIPT_NAME,
-        })
-        return super().render_change_form(request, context, add, change, form_url, obj)
 
 
 @admin.register(models.PromoCode)
@@ -141,3 +118,16 @@ class LanguageAdmin(admin.ModelAdmin):
 @admin.register(models.Profile)
 class ProfileAdmin(admin.ModelAdmin):
     pass
+
+
+class MailingMediaInline(admin.TabularInline):
+    model = models.MailingMedia
+    extra = 0
+
+
+@admin.register(models.Mailing)
+class MailingAdmin(admin.ModelAdmin):
+    inlines = [MailingMediaInline]
+    readonly_fields = ['sent_count', 'received_count']
+    list_display = ['start_on', 'status', 'text']
+    list_filter = ['start_on', 'status']

@@ -1,12 +1,14 @@
 import logging
 import random
 from time import sleep
+import requests
 from asgiref.sync import async_to_sync
 from celery_singleton import Singleton
-from api import models, utils
+from api import models, utils, serializers
 from api.senders import send_admin_notification, NotifyLevels
-from settings import celery_app
-from services.ps_store_api import PS_StoreAPI
+from settings import celery_app, TELEGRAM_BOT_URL
+from ps_store_api.api import PS_StoreAPI
+from ps_store_api import models as ps_models
 
 
 @celery_app.task(base=Singleton, on_unique=["ignore"])
@@ -18,43 +20,19 @@ def parse_product_publications_task(product_ids: list[str], need_notify=True):
         if product.ps_store_url is None:
             logging.warning('No url found.')
             continue
-        editions = api.get_by_url(product.ps_store_url)
-        logging.warning(f'{len(editions)} editions found.')
-        for edition in editions:
+        ps_concept = api.parse_by_url(product.ps_store_url)
+        if ps_concept is None:
+            logging.warning('No concept found.')
+            continue
+        product = utils.update_product(product, ps_concept)
+        for ps_product in ps_models.Product.objects.filter(concept=ps_concept):
             try:
-                if product.parse_release_date and product.release_date != edition.release_date:
-                    product.release_date = edition.release_date
-                    product.save()
-                publication = models.ProductPublication.objects.filter(ps_store_id=edition.id).first()
-                if publication is None:
-                    publication = models.ProductPublication(
-                        product=product,
-                        ps_store_id=edition.id,
-                    )
-                if publication.parse_title:
-                    publication.title = edition.name
-                if publication.parse_price:
-                    if publication.final_price != edition.price.discounted_price:
-                        publication.price_changed = True
-                        async_to_sync(send_admin_notification)({
-                            'text': f'Цена на издание товара {publication.product.title} изменилась',
-                            'level': NotifyLevels.WARN.value,
-                        })
-                    publication.final_price = utils.normalize_price(edition.price.discounted_price, True)
-                    publication.discount = edition.price.discount
-                    publication.discount_deadline = edition.price.discount_deadline
-                if publication.parse_ps_plus_price:
-                    publication.ps_plus_final_price = utils.normalize_price(edition.ps_plus_price.discounted_price, True)
-                    publication.ps_plus_discount = edition.ps_plus_price.discount
-                    publication.ps_plus_discount_deadline = edition.ps_plus_price.discount_deadline
-                if publication.parse_image:
-                    if not all((publication.product_page_image, publication.search_image, publication.offer_image)):
-                        publication.set_photo_from_url(edition.image)
-                publication.save()
-                if publication.parse_platforms:
-                    for platform in edition.platforms:
-                        platform = models.Platform.objects.get_or_create(name=platform)[0]
-                        publication.platforms.add(platform)
+                utils.update_product_publication(product, ps_product)
+            except Exception as exc:
+                logging.exception(exc)
+        for ps_add_on in ps_models.AddOn.objects.filter(concept=ps_concept):
+            try:
+                utils.update_product_publication(product, ps_add_on)
             except Exception as exc:
                 logging.exception(exc)
         sleep(random.randint(3, 5))
@@ -69,9 +47,30 @@ def periodic_parse_product_publications_task():
     logging.warning("Periodic pars product")
     async_to_sync(send_admin_notification)({'text': 'Начинается парсинг каталога...',
                                                     'level': NotifyLevels.INFO.value})
-    #date = datetime.datetime.now() - datetime.timedelta(hours=12)
-    #all_products = list(models.Product.objects.filter(updated_at__lt=date.isoformat()).all())
-    all_products = list(models.Product.objects.all())
-    half_count = (len(all_products) + 1) // 2
-    queryset = random.sample(all_products, half_count)
+    queryset = list(models.Product.objects.all())
     parse_product_publications_task.delay([str(product.id) for product in queryset], False)
+
+
+@celery_app.task(bind=True)
+def send_mailing(task, mailing_id: str):
+    mailing = models.Mailing.objects.filter(id=mailing_id).first()
+    if mailing is None:
+        return
+    try:
+        data = serializers.SendMailingSerializer(mailing).data
+        mailing.sent_count = len(data['telegram_ids'])
+        logging.info(f'Sending mailing tg_bot.')
+        response = requests.post(
+            TELEGRAM_BOT_URL+'/api/mailing/',
+            json=data,
+        )
+        status_code = response.status_code
+    except Exception as exc:
+        logging.exception(exc)
+        status_code = -1
+    finally:
+        if status_code == 201:
+            mailing.status = models.Mailing.Status.MAILING
+        else:
+            mailing.status = models.Mailing.Status.ERROR
+        mailing.save()
