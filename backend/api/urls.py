@@ -45,4 +45,5 @@ urlpatterns = [
         path('orders/', views.Orders.as_view()),
         path('', views.Profile.as_view()),
     ])),
+    path('mailing/', views.Mailing.as_view()),
 ]
