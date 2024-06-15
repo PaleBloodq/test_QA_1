@@ -1,6 +1,11 @@
 import logging
+import base64
+import uuid
 import json
+from PIL import Image
+from io import BytesIO
 from asgiref.sync import sync_to_async
+from django.core.files.base import ContentFile
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 
@@ -35,9 +40,11 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
                 message = await models.ChatMessage.objects.acreate(
                     order_id=data.get('order_id'),
                     text=data.get('text'),
-                    manager=await User.objects.aget(id=data.get('manager')),   
+                    manager=await User.objects.aget(id=data.get('manager')),
                 )
-                logging.warning(message)
+                for image in data.get('images', []):
+                    await sync_to_async(self.save_image)(image, message)
+                senders.send_chat_message(message)
             case 'accept_order':
                 order = await models.Order.objects.aget(id=data.get('order_id'))
                 order.status = models.Order.StatusChoices.IN_PROGRESS
@@ -123,3 +130,13 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
         return OrderSerializer(
             models.Order.objects.get(id=order_id)
         ).data
+    
+    def save_image(self, image: str, message):
+        from api import models
+        order_message_image = models.OrderMessageImage.objects.create(chat_message=message)
+        img = Image.open(BytesIO(base64.b64decode(image)))
+        img_io = BytesIO()
+        img.save(img_io, format="WEBP", quality=50)
+        img_io.seek(0)
+        order_message_image.image.save(f'photo_{uuid.uuid4().hex}.webp', ContentFile(img_io.getvalue()), save=True)
+        return order_message_image

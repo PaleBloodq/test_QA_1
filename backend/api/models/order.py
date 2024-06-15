@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from imagekit.models import ProcessedImageField
 from .base import BaseModel
 from .profile import Profile
 from ..validators import percent_validator
@@ -10,6 +11,7 @@ __all__ = [
     'OrderProduct',
     'PromoCode',
     'ChatMessage',
+    'OrderMessageImage',
 ]
 
 
@@ -67,9 +69,14 @@ class PromoCode(BaseModel):
 
 
 class ChatMessage(BaseModel):
-    order = models.ForeignKey(Order, verbose_name='Сообщение', on_delete=models.CASCADE, related_name='chat_messages')
+    order = models.ForeignKey(Order, verbose_name='Заказ', on_delete=models.CASCADE, related_name='chat_messages')
     manager = models.ForeignKey(User, verbose_name='Менеджер', on_delete=models.CASCADE, null=True, blank=True)
     text = models.TextField('Текст сообщения')
 
     class Meta:
         ordering = ['created_at']
+
+
+class OrderMessageImage(BaseModel):
+    chat_message = models.ForeignKey(ChatMessage, verbose_name='Сообщение', on_delete=models.CASCADE, related_name='chat_message_images')
+    image = ProcessedImageField(verbose_name='Изображение', format='WEBP', options={'quality': 60}, null=True, blank=True)

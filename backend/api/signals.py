@@ -58,20 +58,6 @@ def change_order_status(sender, instance: models.Order, created: bool, **kwargs)
         send_order_to_bot(instance)
 
 
-@receiver(signals.post_save, sender=models.ChatMessage)
-def post_save_message(sender, instance: models.ChatMessage, created: bool, **kwargs):
-    if created:
-        send_chat_message(instance)
-        if instance.manager:
-            requests.post(
-                f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/message/send/',
-                json={
-                    'user_id': instance.order.profile.telegram_id,
-                    'order_id': str(instance.order.id),
-                    'text': instance.text
-                }
-            )
-
 @receiver(signals.post_save, sender=models.Mailing)
 def post_save_mailing(sender, instance: models.Mailing, **kwargs):
     if instance.status != models.Mailing.Status.WAITING:
