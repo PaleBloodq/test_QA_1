@@ -61,34 +61,37 @@
   }
 
   function showMessage(message) {
-    const { manager, text, media } = message;
+  const { manager, text, images } = message;
 
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('flex', 'p-2', 'rounded-lg', 'flex-col', 'mb-2', 'w-fit');
+  const messageDiv = document.createElement('div');
+  messageDiv.classList.add('flex', 'p-2', 'rounded-lg', 'flex-col', 'mb-2', 'w-fit', 'gap-2');
 
-    if (manager) {
-        messageDiv.classList.add('bg-green-100', 'ml-auto');
-    } else {
-        messageDiv.classList.add('bg-blue-100', 'gap-2');
-    }
-
-    const textParagraph = document.createElement('p');
-    textParagraph.classList.add('text-black');
-    textParagraph.textContent = text;
-
-    messageDiv.appendChild(textParagraph);
-
-    if (media) {
-        const imgElement = document.createElement('img');
-        imgElement.classList.add('rounded-lg', 'max-w-[350px]', 'lg:max-w-[400px]', 'max-h-[400px]');
-        imgElement.src = media;
-        imgElement.alt = '';
-
-        messageDiv.appendChild(imgElement);
-    }
-
-    return messageDiv;
+  if (manager) {
+    messageDiv.classList.add('bg-green-100', 'ml-auto');
+  } else {
+    messageDiv.classList.add('bg-blue-100', 'gap-2');
   }
+
+  const textParagraph = document.createElement('p');
+  textParagraph.classList.add('text-black');
+  textParagraph.textContent = text;
+
+  messageDiv.appendChild(textParagraph);
+
+  if (images && images.length > 0) {
+    images.forEach(imageUrl => {
+      const imgElement = document.createElement('img');
+      imgElement.classList.add('rounded-lg', 'max-w-[350px]', 'lg:max-w-[400px]', 'max-h-[400px]');
+      imgElement.src = `http://localhost:8100/aokibot/backend${imageUrl}`;
+      imgElement.alt = '';
+
+      messageDiv.appendChild(imgElement);
+    });
+  }
+
+  return messageDiv;
+}
+
 
   function addNewMessage(message) {
     const newMessage = showMessage(message)
@@ -224,10 +227,13 @@
 
     function sendMessage(event) {
       const input = document.getElementById('messageInput')
-      if(event?.key === 'Enter' || event === undefined) {
-        socket.send(JSON.stringify({type: "new_message", order_id: currentChat, text: input.value, manager: managerId, images: base64Images}));
-        input.value = ''
-        scrollChatDown()
+      if(input.value || base64Images.length !== 0) {
+        if(event?.key === 'Enter' || event === undefined) {
+          socket.send(JSON.stringify({type: "new_message", order_id: currentChat, text: input.value, manager: managerId, images: base64Images}));
+          input.value = ''
+          scrollChatDown()
+          document.getElementById('thumbnails').innerHTML = ''
+        }
       }
     }
 
