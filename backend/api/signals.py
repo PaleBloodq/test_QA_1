@@ -4,7 +4,7 @@ import requests
 from django.db.models import signals
 from django.dispatch import receiver
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
-from api import models
+from api import models, tasks
 from api.utils import send_order_to_bot
 from api.senders import send_chat_message
 from settings import settings
@@ -71,3 +71,13 @@ def post_save_message(sender, instance: models.ChatMessage, created: bool, **kwa
                     'text': instance.text
                 }
             )
+
+@receiver(signals.post_save, sender=models.Mailing)
+def post_save_mailing(sender, instance: models.Mailing, **kwargs):
+    if instance.status != models.Mailing.Status.WAITING:
+        return
+    tasks.send_mailing.apply_async(
+        args=[str(instance.id)],
+        eta=instance.start_on,
+        task_id=f'send_mailing_{instance.id}',
+    )

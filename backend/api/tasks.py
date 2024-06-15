@@ -1,11 +1,12 @@
 import logging
 import random
 from time import sleep
+import requests
 from asgiref.sync import async_to_sync
 from celery_singleton import Singleton
-from api import models, utils
+from api import models, utils, serializers
 from api.senders import send_admin_notification, NotifyLevels
-from settings import celery_app
+from settings import celery_app, TELEGRAM_BOT_URL
 from ps_store_api.api import PS_StoreAPI
 from ps_store_api import models as ps_models
 
@@ -48,3 +49,28 @@ def periodic_parse_product_publications_task():
                                                     'level': NotifyLevels.INFO.value})
     queryset = list(models.Product.objects.all())
     parse_product_publications_task.delay([str(product.id) for product in queryset], False)
+
+
+@celery_app.task(bind=True)
+def send_mailing(task, mailing_id: str):
+    mailing = models.Mailing.objects.filter(id=mailing_id).first()
+    if mailing is None:
+        return
+    try:
+        data = serializers.SendMailingSerializer(mailing).data
+        mailing.sent_count = len(data['telegram_ids'])
+        logging.info(f'Sending mailing tg_bot.')
+        response = requests.post(
+            TELEGRAM_BOT_URL+'/api/mailing/',
+            json=data,
+        )
+        status_code = response.status_code
+    except Exception as exc:
+        logging.exception(exc)
+        status_code = -1
+    finally:
+        if status_code == 201:
+            mailing.status = models.Mailing.Status.MAILING
+        else:
+            mailing.status = models.Mailing.Status.ERROR
+        mailing.save()

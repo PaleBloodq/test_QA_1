@@ -118,3 +118,16 @@ class LanguageAdmin(admin.ModelAdmin):
 @admin.register(models.Profile)
 class ProfileAdmin(admin.ModelAdmin):
     pass
+
+
+class MailingMediaInline(admin.TabularInline):
+    model = models.MailingMedia
+    extra = 0
+
+
+@admin.register(models.Mailing)
+class MailingAdmin(admin.ModelAdmin):
+    inlines = [MailingMediaInline]
+    readonly_fields = ['sent_count', 'received_count']
+    list_display = ['start_on', 'status', 'text']
+    list_filter = ['start_on', 'status']
