@@ -67,3 +67,10 @@ class Order(BaseModel):
 
 class OrderList(BaseModel):
     orders: List[Order]
+
+
+class Mailing(BaseModel):
+    id: str
+    text: str
+    telegram_ids: list[int]
+    media: list[str]
