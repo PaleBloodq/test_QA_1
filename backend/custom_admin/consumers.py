@@ -44,7 +44,7 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
                 )
                 for image in data.get('images', []):
                     await sync_to_async(self.save_image)(image, message)
-                senders.send_chat_message(message)
+                await sync_to_async(senders.send_chat_message)(message)
             case 'accept_order':
                 order = await models.Order.objects.aget(id=data.get('order_id'))
                 order.status = models.Order.StatusChoices.IN_PROGRESS
