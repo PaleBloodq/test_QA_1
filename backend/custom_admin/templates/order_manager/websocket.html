@@ -2,9 +2,6 @@
   const managerId = {{ user.id }};
   let currentChat = ''
 
-
-
-
   // ФУНКЦИИ
 
   function scrollChatDown() {
@@ -228,7 +225,7 @@
     function sendMessage(event) {
       const input = document.getElementById('messageInput')
       if(event?.key === 'Enter' || event === undefined) {
-        socket.send(JSON.stringify({type: "new_message", order_id: currentChat, text: input.value, manager: managerId}));
+        socket.send(JSON.stringify({type: "new_message", order_id: currentChat, text: input.value, manager: managerId, images: base64Images}));
         input.value = ''
         scrollChatDown()
       }
