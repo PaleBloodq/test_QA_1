@@ -56,6 +56,7 @@ class ChatMessageSerializer(serializers.ModelSerializer):
             'created_at',
             'manager',
             'text',
+            'images',
         )
 
 
