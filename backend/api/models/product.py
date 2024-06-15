@@ -1,28 +1,24 @@
 import logging
 import uuid
 from io import BytesIO
-
 import requests
-from PIL import Image
-from django.core.files.base import ContentFile
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 from imagekit.models import ProcessedImageField
-
-from api.validators import validate_ps_store_url
+from PIL import Image
 from ps_store_api import models as ps_models
+from .base import BaseModel
+from ..validators import validate_ps_store_url, percent_validator
 
-percent_validator = MinValueValidator(0), MaxValueValidator(100)
 
-
-class BaseModel(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created_at = models.DateTimeField('Создан в', auto_now_add=True)
-    updated_at = models.DateTimeField('Обновлен в', auto_now=True)
-
-    class Meta:
-        abstract = True
+__all__ = [
+    'EnumBaseModel',
+    'Platform',
+    'Language',
+    'Product',
+    'Tag',
+    'ProductPublication',
+]
 
 
 class EnumBaseModel(BaseModel):
@@ -72,6 +68,15 @@ class Product(BaseModel):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+
+class Tag(EnumBaseModel):
+    database_name = models.CharField('Системное название', max_length=255)
+    products = models.ManyToManyField(Product, verbose_name='Товары', related_name='tags', blank=True)
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
 
 
 class ProductPublication(BaseModel):
@@ -129,97 +134,3 @@ class ProductPublication(BaseModel):
     class Meta:
         verbose_name = 'Издание'
         verbose_name_plural = 'Издания'
-
-
-class Tag(EnumBaseModel):
-    database_name = models.CharField('Системное название', max_length=255)
-    products = models.ManyToManyField(Product, verbose_name='Товары', related_name='tags', blank=True)
-
-    class Meta:
-        verbose_name = 'Тег'
-        verbose_name_plural = 'Теги'
-
-
-class Profile(BaseModel):
-    telegram_id = models.BigIntegerField('Телеграм ID', unique=True)
-    playstation_email = models.EmailField('E-mail от аккаунта PlayStation', null=True, blank=True)
-    playstation_password = models.CharField('Пароль от аккаунта PlayStation', null=True, blank=True)
-    bill_email = models.EmailField('E-mail для чеков', null=True, blank=True)
-    cashback = models.IntegerField('Баллы', default=0)
-    token_seed = models.UUIDField('Семя токена', default=uuid.uuid4)
-
-    @classmethod
-    def get_or_none(cls, *args, **kwargs):
-        instance = cls.objects.filter(*args, **kwargs)
-        if instance:
-            return instance.get()
-        return None
-
-    def __str__(self) -> str:
-        return str(self.telegram_id)
-
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-
-
-class Order(BaseModel):
-    class StatusChoices(models.TextChoices):
-        PAYMENT = 'PAYMENT', 'Ожидает оплаты'
-        PAID = 'PAID', 'Оплачен'
-        ERROR = 'ERROR', 'Ошибка'
-        IN_PROGRESS = 'IN_PROGRESS', 'В работе'
-        COMPLETED = 'COMPLETED', 'Выполнен'
-
-    profile = models.ForeignKey(Profile, verbose_name='Пользователь', on_delete=models.CASCADE, related_name='order')
-    date = models.DateField('Дата заказа')
-    amount = models.DecimalField('Сумма заказа', max_digits=10, decimal_places=2)
-    bill_email = models.EmailField('E-mail для чека')
-    spend_cashback = models.BooleanField('Списать баллы')
-    spend_cashback_amount = models.IntegerField('Списание кэшбека', default=0)
-    status = models.CharField('Статус', choices=StatusChoices.choices, default=StatusChoices.PAYMENT)
-    cashback = models.IntegerField('Начисление кэшбека', default=0)
-    need_account = models.BooleanField('Нужно создать аккаунт', default=False)
-    email = models.EmailField('E-mail', null=True, blank=True)
-    password = models.CharField('Пароль', max_length=255, null=True, blank=True)
-    promo_code = models.CharField('Промокод', max_length=255, null=True, blank=True)
-    promo_code_discount = models.DecimalField('Скидка по промокоду', max_digits=10, decimal_places=2, null=True, blank=True)
-    payment_id = models.CharField('ID платежа', null=True, blank=True, editable=False)
-    payment_url = models.URLField('Ссылка на оплату', null=True, blank=True, editable=False)
-    manager = models.ForeignKey(User, related_name='Менеджер', on_delete=models.SET_NULL, null=True, blank=True, default=None)
-
-    def __str__(self) -> str:
-        return f'{self.id} от {self.date}'
-
-    class Meta:
-        verbose_name = 'Заказ'
-        verbose_name_plural = 'Заказы'
-
-class OrderProduct(BaseModel):
-    order = models.ForeignKey(Order, verbose_name='Заказ', on_delete=models.CASCADE, related_name='order_products')
-    product = models.CharField('Позиция', max_length=255)
-    product_id = models.UUIDField('ID товара', max_length=255)
-    description = models.CharField('Описание', max_length=255)
-    final_price = models.DecimalField('Конечная стоимость', max_digits=10, decimal_places=2)
-
-
-class PromoCode(BaseModel):
-    promo_code = models.CharField('Промокод', max_length=255)
-    expiration = models.DateTimeField('Дата окончания')
-    discount = models.IntegerField('Скидка %', validators=percent_validator)
-
-    def __str__(self) -> str:
-        return f'{self.discount}% {self.promo_code}'
-
-    class Meta:
-        verbose_name = 'Промокод'
-        verbose_name_plural = 'Промокоды'
-
-
-class ChatMessage(BaseModel):
-    order = models.ForeignKey(Order, verbose_name='Сообщение', on_delete=models.CASCADE, related_name='chat_messages')
-    manager = models.ForeignKey(User, verbose_name='Менеджер', on_delete=models.CASCADE, null=True, blank=True)
-    text = models.TextField('Текст сообщения')
-
-    class Meta:
-        ordering = ['created_at']
