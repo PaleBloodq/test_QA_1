@@ -1,8 +1,10 @@
 from enum import Enum
+import requests
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from . import models
 from .serializers import order_manager as serializers
+from settings import TELEGRAM_BOT_URL
 
 
 class NotifyLevels(Enum):
@@ -30,6 +32,15 @@ async def _send_order_manager(type: str, **kwargs):
 
 
 def send_chat_message(chat_message: models.ChatMessage):
+    if chat_message.manager:
+        requests.post(
+            f'{TELEGRAM_BOT_URL}/api/order/message/send/',
+            json={
+                'user_id': chat_message.order.profile.telegram_id,
+                'order_id': str(chat_message.order.id),
+                'text': chat_message.text
+            }
+        )
     async_to_sync(_send_order_manager)(
         'chat_message',
         message=serializers.ChatMessageSerializer(chat_message).data

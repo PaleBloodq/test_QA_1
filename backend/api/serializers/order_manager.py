@@ -38,9 +38,16 @@ class OrderSerializer(serializers.ModelSerializer):
 class ChatMessageSerializer(serializers.ModelSerializer):
     order_id = serializers.SerializerMethodField()
     manager = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    images = serializers.SerializerMethodField()
     
     def get_order_id(self, obj: models.ChatMessage) -> str:
         return str(obj.order.id)
+    
+    def get_images(self, obj: models.ChatMessage) -> list[str]:
+        return [
+            image.image.url
+            for image in models.OrderMessageImage.objects.filter(chat_message=obj)
+        ]
     
     class Meta:
         model = models.ChatMessage
