@@ -21,7 +21,7 @@ class NewMessage(BaseModel):
     order_id: str
     text: str
     user_id: int
-    images: Optional[List[str]]
+    images: Optional[List[str]] = None
 
 
 class OrderProduct(BaseModel):
