@@ -12,9 +12,18 @@ __all__ = [
 class OrderSerializer(serializers.ModelSerializer):
     profile = serializers.SlugRelatedField(slug_field='telegram_id', read_only=True)
     status = serializers.SerializerMethodField()
+    chat = serializers.SerializerMethodField()
     
-    def get_status(self, obj: models.Order):
+    def get_status(self, obj: models.Order) -> str:
         return obj.get_status_display()
+    
+    def get_chat(self, obj: models.Order) -> list[dict]:
+        return ChatMessageSerializer(
+            models.ChatMessage.objects.filter(
+                order=obj
+            ),
+            many=True
+        ).data
     
     class Meta:
         model = models.Order
@@ -29,9 +38,16 @@ class OrderSerializer(serializers.ModelSerializer):
 class ChatMessageSerializer(serializers.ModelSerializer):
     order_id = serializers.SerializerMethodField()
     manager = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    images = serializers.SerializerMethodField()
     
     def get_order_id(self, obj: models.ChatMessage) -> str:
         return str(obj.order.id)
+    
+    def get_images(self, obj: models.ChatMessage) -> list[str]:
+        return [
+            image.image.url
+            for image in models.OrderMessageImage.objects.filter(chat_message=obj)
+        ]
     
     class Meta:
         model = models.ChatMessage
@@ -40,12 +56,14 @@ class ChatMessageSerializer(serializers.ModelSerializer):
             'created_at',
             'manager',
             'text',
+            'images',
         )
 
 
 class OrderPreviewSerializer(serializers.ModelSerializer):
     last_message = serializers.SerializerMethodField()
     telegram_id = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
     
     def get_last_message(self, obj: models.Order) -> str:
         try:
@@ -56,9 +74,13 @@ class OrderPreviewSerializer(serializers.ModelSerializer):
     def get_telegram_id(self, obj: models.Order) -> int:
         return obj.profile.telegram_id
     
+    def get_status(self, obj: models.Order) -> str:
+        return obj.get_status_display()
+    
     class Meta:
         model = models.Order
         fields = [
+            'id',
             'telegram_id',
             'status',
             'date',

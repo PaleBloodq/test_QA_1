@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'rest_framework',
     'api',
+    'ps_store_api',
 ]
 
 MIDDLEWARE = [
@@ -155,3 +156,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_ROOT.mkdir(exist_ok=True)
 
 STATIC_ROOT.mkdir(exist_ok=True)
+
+TELEGRAM_BOT_SCHEMA = os.environ.get('TELEGRAM_BOT_SCHEMA')
+
+TELEGRAM_BOT_HOST = os.environ.get('TELEGRAM_BOT_HOST')
+
+TELEGRAM_BOT_PORT = int(os.environ.get('TELEGRAM_BOT_PORT'))
+
+TELEGRAM_BOT_URL = f'{TELEGRAM_BOT_SCHEMA}://{TELEGRAM_BOT_HOST}{f":{TELEGRAM_BOT_PORT}" if TELEGRAM_BOT_PORT else ""}'

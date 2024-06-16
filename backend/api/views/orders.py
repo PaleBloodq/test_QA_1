@@ -3,6 +3,10 @@ from decimal import Decimal
 import os
 from datetime import date
 from dataclasses import dataclass
+import base64
+import uuid
+from PIL import Image
+from io import BytesIO
 import requests
 from asgiref.sync import async_to_sync
 from rest_framework.request import Request
@@ -11,8 +15,9 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.db.models import Sum
 from django.db.models.manager import BaseManager
+from django.core.files.base import ContentFile
 from api import models, serializers, utils
-from api.senders import send_admin_notification, NotifyLevels, send_order_created
+from api.senders import send_admin_notification, NotifyLevels, send_order_created, send_chat_message
 
 
 PAYMENTS_URL = f'{os.environ.get("PAYMENTS_SCHEMA")}://{os.environ.get("PAYMENTS_HOST")}'
@@ -200,28 +205,19 @@ class ChatMessages(APIView):
         text = request.data.get('text')
         order = models.Order.objects.filter(id=order_id).first()
         if order and text:
-            models.ChatMessage.objects.create(
+            message = models.ChatMessage.objects.create(
                 order=order,
                 text=text,
-                manager=request.user if request.user.id else None,
             )
-            if request.user.id:
-                requests.post(
-                    f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/message/send/',
-                    json={
-                        'user_id': order.profile.telegram_id,
-                        'order_id': order_id,
-                        'text': text
-                    }
-                )
-                return Response(status=status.HTTP_200_OK)
-            return Response(
-                serializers.ChatMessageSerializer(
-                    models.ChatMessage.objects.filter(order=order),
-                    many=True,
-                ).data,
-                status=status.HTTP_200_OK
-            )
+            for image in request.data.get('images', []):
+                order_message_image = models.OrderMessageImage.objects.create(chat_message=message)
+                img = Image.open(BytesIO(base64.b64decode(image)))
+                img_io = BytesIO()
+                img.save(img_io, format="WEBP", quality=50)
+                img_io.seek(0)
+                order_message_image.image.save(f'photo_{uuid.uuid4().hex}.webp', ContentFile(img_io.getvalue()), save=True)
+            send_chat_message(message)
+            return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 

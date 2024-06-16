@@ -13,7 +13,10 @@ from rest_framework import status
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 import jwt
+from asgiref.sync import async_to_sync
 from api import models, serializers
+from api.senders import send_admin_notification, NotifyLevels
+from ps_store_api import models as ps_models
 
 BOT_URL = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/change/'
 
@@ -130,3 +133,61 @@ def update_sales_leaders(order: models.Order):
     for product in actual_leaders:
         if product not in current_leaders.all():
             current_leaders.add(product)
+
+
+def update_product(product: models.Product, ps_concept: ps_models.Concept):
+    changed = False
+    if product.ps_concept != ps_concept:
+        product.ps_concept = ps_concept
+        changed = True
+    if product.parse_release_date:
+        product.release_date = ps_concept.release_date
+        changed = True
+    if changed:
+        product.save()
+    return product
+
+
+def update_product_publication(product: models.Product, ps_product: ps_models.AbstractProduct):
+    publication = models.ProductPublication.objects.filter(ps_store_id=ps_product.id).first()
+    if publication is None:
+        publication = models.ProductPublication(
+            product=product,
+            ps_store_id=ps_product.id,
+        )
+        if isinstance(ps_product, ps_models.Product):
+            publication.ps_product = ps_product
+        if isinstance(ps_product, ps_models.AddOn):
+            publication.ps_add_on = ps_product
+    if publication.parse_title:
+        publication.title = ps_product.name
+    if publication.parse_price:
+        price = normalize_price(ps_product.price.discounted_price, True)
+        if publication.final_price != price:
+            async_to_sync(send_admin_notification)({
+                'text': f'Цена на издание товара {publication.product.title} изменилась',
+                'level': NotifyLevels.WARN.value,
+            })
+            publication.price_changed = True
+        publication.final_price = price
+        publication.discount = ps_product.price.discount
+        publication.discount_deadline = ps_product.price.discount_deadline
+    if publication.parse_ps_plus_price and ps_product.ps_plus_price:
+        ps_plus_price = normalize_price(ps_product.ps_plus_price.discounted_price, True)
+        if publication.ps_plus_final_price != price:
+            async_to_sync(send_admin_notification)({
+                'text': f'Цена на издание товара {publication.product.title} изменилась',
+                'level': NotifyLevels.WARN.value,
+            })
+            publication.price_changed = True
+        publication.ps_plus_final_price = ps_plus_price
+        publication.ps_plus_discount = ps_product.ps_plus_price.discount
+        publication.ps_plus_discount_deadline = ps_product.ps_plus_price.discount_deadline
+    if publication.parse_image:
+        if not all((publication.product_page_image, publication.search_image, publication.offer_image)):
+            publication.set_photo_from_url(ps_product.portrait_image)
+    publication.save()
+    if publication.parse_platforms:
+        for platform in ps_product.platforms.all():
+            platform = models.Platform.objects.get_or_create(name=platform.name)[0]
+            publication.platforms.add(platform)

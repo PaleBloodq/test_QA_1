@@ -6,7 +6,7 @@
     <div onclick="getMyOrders()" id="my-orders" class="mb-4">
       {% include "order_manager/orders_list_button.html" with text="Мои заказы" name="my" %}
     </div>
-    <div id="completed-orders">
+    <div onclick="getCompletedOrders()" id="completed-orders">
       {% include "order_manager/orders_list_button.html" with text="Выполненные заказы" name="completed" %}
     </div>
   </div>

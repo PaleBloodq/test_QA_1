@@ -1,6 +1,7 @@
 import re
 import requests
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 def validate_ps_store_url(value):
@@ -21,3 +22,5 @@ def validate_ps_store_url(value):
         raise ValidationError("URL-адрес PlayStation Store недействителен.")
 
     return modified_url
+
+percent_validator = MinValueValidator(0), MaxValueValidator(100)

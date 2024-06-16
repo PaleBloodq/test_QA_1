@@ -19,6 +19,7 @@ import AddToCartButton from '../../components/common/AddToCartButton';
 import { replaceUrl } from '../../helpers/replaceUrl';
 import calcCashback from '../../helpers/calcCashback';
 import { ProductType } from '../../types/ProductType';
+import AddToWishlist from '../../components/common/AddToWishlist';
 
 export default function Game() {
     const dispatch = useDispatch();
@@ -83,64 +84,67 @@ export default function Game() {
             <div className="flex flex-col items-center">
                 <div className="flex flex-col items-start w-full">
                     <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentPublication?.product_page_image)} alt="game image" />
-                    <div className='flex items-center mb-2 gap-2'>
-                        <h1 className="text-header">{title && title}</h1>
-                        {isNew(data?.release_date) && <Tag type="new">Новинка</Tag>}
-                    </div>
-                    <div className="flex items-center flex-wrap w-full gap-2">
-                        {!isPsPlus ? (
-                            <h1 className="price-big">
-                                {currentPublication?.final_price || 0} ₽
-                            </h1>
-                        ) : (
-                            <SelectPrice price={currentPrice} discount={currentPublication?.ps_plus_discount} />
-                        )}
-                        <div className="flex gap-2">
-                            {currentPublication?.ps_plus_discount === 0 && currentPublication?.discount > 0 ? (
-                                <Tag type="discount">-{currentPublication.discount}%</Tag>
-                            ) : null}
-                            {currentPublication?.cashback ? <Tag type="cashback">Кэшбэк: {calcCashback(currentPrice, currentPublication?.cashback)} ₽</Tag> : null}
+                    <div className='w-full -mt-16 bg-white dark:bg-[#1a1e22] rounded-t-3xl'>
+                        <AddToWishlist id={currentPublication?.id} />
+                        <div className='flex items-center mb-2 gap-2'>
+                            <h1 className="text-header">{title && title}</h1>
+                            {isNew(data?.release_date) && <Tag type="new">Новинка</Tag>}
                         </div>
-                    </div>
-                    {currentPublication?.discount ? (
-                        <div className="w-full flex justify-between mb-5">
-                            <p className="text-subtitle">Скидка действует до:</p>
-                            <p className="text-subtitle-info">{currentPublication?.discount_deadline}</p>
-                        </div>
-                    ) : null}
-                    <SelectPublication publications={publications} />
-                    {!isDatePassed(data?.release_date) && <ReleaseTimer releaseDate={data?.release_date} />}
-                    <Line />
-                    {includes?.length > 1 &&
-                        <>
-                            <div className='flex flex-col'>
-                                <h1 className='text-title-xl mb-[20px]'>Состав издания:</h1>
-                                <ul className='list-disc ml-3'>
-                                    {includes?.length && includes?.map((item: ReactNode, index: number) => (
-                                        <li key={index} className='custom-marker text-subtitle'>{item}</li>
-                                    ))}
-                                </ul>
+                        <div className="flex items-center flex-wrap w-full gap-2">
+                            {!isPsPlus ? (
+                                <h1 className="price-big">
+                                    {currentPublication?.final_price || 0} ₽
+                                </h1>
+                            ) : (
+                                <SelectPrice price={currentPrice} discount={currentPublication?.ps_plus_discount} />
+                            )}
+                            <div className="flex gap-2">
+                                {currentPublication?.ps_plus_discount === 0 && currentPublication?.discount > 0 ? (
+                                    <Tag type="discount">-{currentPublication.discount}%</Tag>
+                                ) : null}
+                                {currentPublication?.cashback ? <Tag type="cashback">Кэшбэк: {calcCashback(currentPrice, currentPublication?.cashback)} ₽</Tag> : null}
                             </div>
-                            <Line />
-                        </>
-                    }
-                    <div className='flex flex-col gap-2 w-full'>
-                        <div className='w-full flex justify-between'>
-                            <p className='text-subtitle'>Платформа:</p>
-                            <p className='text-title text-[14px]'>{currentPublication?.platforms.map((platform) => platform)?.join(', ')}</p>
                         </div>
-                        <div className='w-full flex justify-between'>
-                            <p className='text-subtitle'>Язык:</p>
-                            <p className='text-title text-[14px]'>{currentPublication?.languages?.map((lang) => lang)?.join(', ')}</p>
-                        </div>
-                        <div className='w-full flex justify-between'>
-                            <p className='text-subtitle'>Дата релиза:</p>
-                            <p className='text-title text-[14px]'>{data?.release_date}</p>
+                        {currentPublication?.discount ? (
+                            <div className="w-full flex justify-between mb-5">
+                                <p className="text-subtitle">Скидка действует до:</p>
+                                <p className="text-subtitle-info">{currentPublication?.discount_deadline}</p>
+                            </div>
+                        ) : null}
+                        <SelectPublication publications={publications} />
+                        {!isDatePassed(data?.release_date) && <ReleaseTimer releaseDate={data?.release_date} />}
+                        <Line />
+                        {includes?.length > 1 &&
+                            <>
+                                <div className='flex flex-col'>
+                                    <h1 className='text-title-xl mb-[20px]'>Состав издания:</h1>
+                                    <ul className='list-disc ml-3'>
+                                        {includes?.length && includes?.map((item: ReactNode, index: number) => (
+                                            <li key={index} className='custom-marker text-subtitle'>{item}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <Line />
+                            </>
+                        }
+                        <div className='flex flex-col gap-2 w-full'>
+                            <div className='w-full flex justify-between'>
+                                <p className='text-subtitle'>Платформа:</p>
+                                <p className='text-title text-[14px]'>{currentPublication?.platforms.map((platform) => platform)?.join(', ')}</p>
+                            </div>
+                            <div className='w-full flex justify-between'>
+                                <p className='text-subtitle'>Язык:</p>
+                                <p className='text-title text-[14px]'>{currentPublication?.languages?.map((lang) => lang)?.join(', ')}</p>
+                            </div>
+                            <div className='w-full flex justify-between'>
+                                <p className='text-subtitle'>Дата релиза:</p>
+                                <p className='text-title text-[14px]'>{data?.release_date}</p>
+                            </div>
                         </div>
                     </div>
                     <AddToCartButton cartItem={cartItem} />
                 </div>
-            </div>
-        </Container>
+            </div >
+        </Container >
     );
 }
