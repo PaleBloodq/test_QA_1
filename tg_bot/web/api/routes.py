@@ -34,6 +34,15 @@ async def send_message_manager(request: Request) -> Response:
     data = await request.json()
     try:
         data = NewMessage(**data)
+        if data.images:
+            media = []
+            for url in data.images:
+                filepath = BACKEND_URL + url
+                media.append(InputMediaPhoto(media=URLInputFile(filepath)))
+            if len(media) > 1:
+                await bot.send_media_group(data.user_id, media)
+            else:
+                await bot.send_photo(data.user_id, photo=media[0].media)
         order_id = escape_markdown(data.order_id)
         text = f"*Сообщение от менеджера по вашему заказу ||{order_id}|| :*\n```📨 " + escape_markdown(data.text).replace('\\n', '\n')
         text += '```\n\n_Чтобы ответить на сообщение, потяните его влево, если вы с телефона, напишите текст и отправьте\n' \
