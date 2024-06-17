@@ -19,9 +19,6 @@ class TimestampField(serializers.DateTimeField):
 class MediaField(serializers.URLField):
     def to_internal_value(self, data: list[dict]):
         for media in data:
-            if media.get('type') == 'IMAGE' and media.get('role') == 'PORTRAIT_BANNER':
-                return super().to_internal_value(quote(media.get('url'), '/:?&='))
-        for media in data:
             if media.get('type') == 'IMAGE' and media.get('role') == 'MASTER':
                 return super().to_internal_value(quote(media.get('url'), '/:?&='))
 
