@@ -15,7 +15,7 @@ export default function Other({ data }: { data: SectionType[] }) {
                                     <h1 className="text-header ml-5">{item.name}</h1>
                                 </div>
                                 <div className='ml-2'>
-                                    <GamesSlider type={item.objects[0].type} isLoading={isLoading} data={item.objects} />
+                                    <GamesSlider type={item?.objects[0]?.type} isLoading={isLoading} data={item.objects} />
                                 </div>
                             </div>
                         </div>
