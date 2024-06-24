@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import os
-from typing import Union
+from typing import Union, Optional
 
 import aiohttp
 from aiogram import Bot, Dispatcher
@@ -85,8 +85,10 @@ class ApiWrapper:
         return await cls._make_request('POST', '/api/token/get/', data=data)
 
     @classmethod
-    async def send_message(cls, order_id: str, text: str) -> Union[bool, dict]:
+    async def send_message(cls, order_id: str, text: str, image: Optional[str] = None) -> Union[bool, dict]:
         data = {'order_id': order_id, 'text': text}
+        if image:
+            data['images'] = [image]
         return await cls._make_request('POST', '/api/order/chat/', data=data, expect_json=False)
 
     @classmethod

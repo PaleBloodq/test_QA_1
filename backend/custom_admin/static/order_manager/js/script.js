@@ -14,6 +14,10 @@ function handleFiles(files) {
     const reader = new FileReader();
 
     reader.onload = function (e) {
+      const base64String = e.target.result;
+      const base64Data = base64String.substring(base64String.indexOf(',') + 1).trim();
+      base64Images.push(base64Data);
+
       const thumbnailWrapper = document.createElement("div");
       thumbnailWrapper.classList.add("relative", "w-16", "h-16", "flex-shrink-0");
 
@@ -40,6 +44,10 @@ function handleFiles(files) {
 
       removeButton.addEventListener("click", function () {
         thumbnailsContainer.removeChild(thumbnailWrapper);
+        const index = base64Images.indexOf(base64Data);
+        if (index > -1) {
+          base64Images.splice(index, 1);
+        }
       });
 
       thumbnailWrapper.appendChild(img);
