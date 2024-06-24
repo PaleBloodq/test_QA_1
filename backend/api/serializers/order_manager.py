@@ -57,10 +57,13 @@ class ChatMessageSerializer(serializers.ModelSerializer):
         return str(obj.order.id)
     
     def get_images(self, obj: models.ChatMessage) -> list[str]:
-        return [
-            image.image.url
-            for image in models.OrderMessageImage.objects.filter(chat_message=obj)
-        ]
+        images = []
+        for image in models.OrderMessageImage.objects.filter(chat_message=obj):
+            try:
+                images.append(image.image.url)
+            except:
+                pass
+        return images
     
     class Meta:
         model = models.ChatMessage
