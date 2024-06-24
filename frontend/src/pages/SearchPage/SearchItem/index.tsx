@@ -26,11 +26,11 @@ export default function SearchItem({ item }: { item: any }) {
             {
                 item?.discount ? (
                     <div className="flex gap-2">
-                        <h3 className="price-small">{item.final_price || item.original_price} ₽</h3>
+                        <h3 className="price-small">{item.final_price} ₽</h3>
                         <Tag type="discount">-{item?.discount}%</Tag>
                     </div>
                 ) : (
-                    <h3 className="price-small">{item?.original_price} ₽</h3>
+                    <h3 className="price-small">{item?.final_price} ₽</h3>
                 )
             }
         </Link>

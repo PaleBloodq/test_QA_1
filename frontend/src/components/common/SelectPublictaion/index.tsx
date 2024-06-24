@@ -14,22 +14,13 @@ export default function SelectPublication({ publications }: SelectPublicationTyp
     const selectedPublication = useSelector(selectedPublicationSelector)
     const selectedPlatform = useSelector(selectedPlatformSelector)
 
-    // let groupedPublications = publications.reduce((acc: any, sub: any) => {
-    //     if (!acc[sub.title]) {
-    //         acc[sub.title] = [];
-    //     }
-    //     acc[sub.title].push(sub);
-    //     return acc;
-    // }, {});
-    // groupedPublications = Object.entries(groupedPublications)
-
     return (
         <>
             <h2 className="text-title-xl mb-[18px]">Издания</h2>
             <SelectPlatform publications={publications} />
             <div className="w-full gap-3 flex justify-start flex-wrap">
                 {publications
-                    .filter((publication) => publication.platforms.includes(selectedPlatform))
+                    .filter((publication) => selectedPlatform === undefined || publication.platforms.includes(selectedPlatform))
                     .map((publication) => (
                         <button
                             key={publication.id}
