@@ -1,3 +1,4 @@
+import logging
 from urllib.parse import quote
 from decimal import Decimal
 from datetime import datetime
@@ -8,7 +9,10 @@ from . import models
 
 class ReleaseDateField(serializers.DateTimeField):
     def to_internal_value(self, value: dict):
-        return super().to_internal_value(value.get('value'))
+        value = value.get('value')
+        if not value:
+            return None
+        return super().to_internal_value(value)
 
 
 class TimestampField(serializers.DateTimeField):
@@ -40,7 +44,7 @@ class PriceField(serializers.DecimalField):
 class ConceptSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
-    releaseDate = ReleaseDateField(source='release_date')
+    releaseDate = ReleaseDateField(source='release_date', allow_null=True)
     publisherName = serializers.CharField(source='publisher_name')
     
     def create(self, validated_data):
@@ -123,6 +127,7 @@ class AbstractProductSerializer(serializers.Serializer):
     
     price_fields = {
         'ADD_TO_CART': 'price',
+        'PREORDER': 'price',
         'UPSELL_PS_PLUS_DISCOUNT': 'ps_plus_price'
     }
     
