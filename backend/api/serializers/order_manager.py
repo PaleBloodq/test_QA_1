@@ -9,10 +9,23 @@ __all__ = [
 ]
 
 
+class OrderProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.OrderProduct
+        exclude = [
+            'id',
+            'created_at',
+            'updated_at',
+            'order',
+            'product_id'
+        ]
+
+
 class OrderSerializer(serializers.ModelSerializer):
     profile = serializers.SlugRelatedField(slug_field='telegram_id', read_only=True)
     status = serializers.SerializerMethodField()
     chat = serializers.SerializerMethodField()
+    products = OrderProductSerializer(many=True, source='order_products')
     
     def get_status(self, obj: models.Order) -> str:
         return obj.get_status_display()
@@ -44,10 +57,13 @@ class ChatMessageSerializer(serializers.ModelSerializer):
         return str(obj.order.id)
     
     def get_images(self, obj: models.ChatMessage) -> list[str]:
-        return [
-            image.image.url
-            for image in models.OrderMessageImage.objects.filter(chat_message=obj)
-        ]
+        images = []
+        for image in models.OrderMessageImage.objects.filter(chat_message=obj):
+            try:
+                images.append(image.image.url)
+            except:
+                pass
+        return images
     
     class Meta:
         model = models.ChatMessage

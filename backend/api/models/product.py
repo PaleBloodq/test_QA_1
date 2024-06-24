@@ -52,7 +52,7 @@ class Product(BaseModel):
     title = models.CharField('Заголовок', max_length=255)
     type = models.CharField('Тип', max_length=32, choices=TypeChoices.choices)
     release_date = models.DateField('Дата релиза', null=True, blank=True)
-    ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True)
+    ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True, unique=True)
     parse_release_date = models.BooleanField('Парсить дату релиза', default=True)
     orders = models.IntegerField('Оплаченных заказов', default=0, editable=False)
     ps_concept = models.OneToOneField(ps_models.Concept, verbose_name='Концепт PS', on_delete=models.SET_NULL, related_name='api_product', null=True, blank=True)
