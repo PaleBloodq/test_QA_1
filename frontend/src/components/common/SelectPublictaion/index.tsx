@@ -28,7 +28,7 @@ export default function SelectPublication({ publications }: SelectPublicationTyp
                             className={`w-full max-w-[160px] h-20 flex flex-col justify-center items-center ${publication.id === selectedPublication ? 'custom-border__red' : 'custom-border'
                                 }`}
                         >
-                            <h1 className="text-subtitle">{publication.title}</h1>
+                            <h1 className="text-subtitle text-center">{publication.title}</h1>
                             <h2 className="price-small">
                                 {publication.final_price}₽
                             </h2>
