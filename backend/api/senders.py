@@ -33,12 +33,15 @@ async def _send_order_manager(type: str, **kwargs):
 
 def send_chat_message(chat_message: models.ChatMessage):
     if chat_message.manager:
+        images_instance = chat_message.chat_message_images.all()
+        images = [image.image.url for image in images_instance]
         requests.post(
             f'{TELEGRAM_BOT_URL}/api/order/message/send/',
             json={
                 'user_id': chat_message.order.profile.telegram_id,
                 'order_id': str(chat_message.order.id),
-                'text': chat_message.text
+                'text': chat_message.text,
+                'images': images
             }
         )
     async_to_sync(_send_order_manager)(
