@@ -78,8 +78,8 @@ class OrderInfo:
             amount -= amount * promo_code_discount / 100
         if self.spend_cashback:
             if self.profile.cashback >= amount:
-                self.spend_cashback_amount = amount - 1
-                return 1
+                self.spend_cashback_amount = amount - 10
+                return 10
             self.spend_cashback_amount = self.profile.cashback
             amount -= self.spend_cashback_amount
         return amount
