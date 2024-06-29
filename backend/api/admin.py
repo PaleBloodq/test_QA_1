@@ -31,6 +31,14 @@ class ProductPublicationInline(admin.StackedInline):
         return fields
 
 
+@admin.register(models.ProductPublication)
+class ProductPublicationAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'product',
+    ]
+
+
 class PriceChangedListFilter(admin.SimpleListFilter):
     title = 'Цена изменилась?'
     parameter_name = 'price_changed'
@@ -69,7 +77,6 @@ class ProductAdmin(admin.ModelAdmin):
         ).delete()
     delete_publications.short_description = 'Удалить издания'
 
-    inlines = [ProductPublicationInline]
     list_filter = [PriceChangedListFilter]
     list_display = ['title', 'type', 'release_date', 'count_publications', 'price_changed', 'ps_store_url']
     readonly_fields = ['orders']
@@ -131,3 +138,54 @@ class MailingAdmin(admin.ModelAdmin):
     readonly_fields = ['sent_count', 'received_count']
     list_display = ['start_on', 'status', 'text']
     list_filter = ['start_on', 'status']
+
+
+@admin.register(models.Publication)
+class PublicationAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'product',
+        'final_price',
+        'ps_plus_final_price',
+        'price_changed',
+    ]
+    list_filter = [
+        'product',
+        'price_changed',
+    ]
+
+
+@admin.register(models.AddOn)
+class AddOnAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'product',
+        'final_price',
+        'ps_plus_final_price',
+        'price_changed',
+    ]
+    list_filter = [
+        'product',
+        'price_changed',
+        'type',
+    ]
+
+
+@admin.register(models.AddOnType)
+class AddOnTypeAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.Subscription)
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'product',
+        'final_price',
+        'ps_plus_final_price',
+        'price_changed',
+    ]
+    list_filter = [
+        'product',
+        'price_changed',
+    ]

@@ -193,6 +193,17 @@ class ProductSerializer(AbstractProductSerializer):
 
 class AddOnSerializer(AbstractProductSerializer):
     model = models.AddOn
+    localizedStoreDisplayClassification = serializers.CharField(source='type')
+    
+    def create(self, validated_data: dict):
+        validated_data['type'] = models.AddOnType.objects.get_or_create(
+            name=validated_data.pop('type'))[0]
+        return super().create(validated_data)
+    
+    def update(self, instance: models.AddOn, validated_data: dict):
+        instance.type = models.AddOnType.objects.get_or_create(
+            name=validated_data.pop('type'))[0]
+        return super().update(instance, validated_data)
     
     class Meta:
         fields = [
@@ -201,4 +212,5 @@ class AddOnSerializer(AbstractProductSerializer):
             'platforms',
             'media',
             'mobilectas',
+            'localizedStoreDisplayClassification',
         ]
