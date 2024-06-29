@@ -32,16 +32,8 @@ class Order(BaseModel):
 
 
 class Payment(BaseModel):
-    terminal_key: str = Field(alias='TerminalKey')
-    amount: int = Field(alias='Amount')
-    order_id: UUID4 = Field(alias='OrderId')
-    success: bool = Field(alias='Success')
-    status: str = Field(alias='Status')
     payment_id: str = Field(alias='PaymentId')
-    error_code: str = Field(alias='ErrorCode')
-    payment_url: str = Field(alias='PaymentURL', default=None)
-    message: str = Field(alias='Message', default=None)
-    details: str = Field(alias='Details', default=None)
+    payment_url: str = Field(alias='PaymentURL')
 
 
 async def get_token(payment_data: dict):
@@ -87,14 +79,23 @@ async def create_payment(order: Order) -> Payment | None:
             } for item in order.items
         ],
     }
-    logging.debug(payment_data)
     async with aiohttp.ClientSession() as session:
         try:
             async with session.post(API_URL+'Init', json=payment_data) as response:
-                data = await response.json()
-                return Payment(**data)
-        except Exception as e:
-            logging.exception((e, data))
+                payment = await response.json()
+            payment_id = payment.get('PaymentId')
+            get_qr_data = {
+                'TerminalKey': TERMINAL_KEY,
+                'PaymentId': payment_id,
+                'DataType': 'PAYLOAD',
+            }
+            get_qr_data['Token'] = await get_token(get_qr_data)
+            async with session.post(API_URL+'GetQr', json=get_qr_data) as response:
+                qr = await response.json()
+            payment_url = qr.get('Data')
+            return Payment(PaymentId=payment_id, PaymentURL=payment_url)
+        except Exception as exc:
+            logging.exception(exc)
 
 
 async def get_payment(payment_id: str) -> dict:
