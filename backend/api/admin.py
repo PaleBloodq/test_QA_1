@@ -71,7 +71,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     inlines = [ProductPublicationInline]
     list_filter = [PriceChangedListFilter]
-    list_display = ['title', 'type', 'release_date', 'count_publications', 'price_changed']
+    list_display = ['title', 'type', 'release_date', 'count_publications', 'price_changed', 'ps_store_url']
     readonly_fields = ['orders']
     actions = [parse_product_publications, delete_publications]
     formfield_overrides = {
