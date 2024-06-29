@@ -38,7 +38,7 @@ body {
     @apply text-[18px] font-medium text-black dark:text-white;
   }
   .text-subtitle {
-    @apply text-[14px] text-[#606D7B] dark:text-[#FFFFFF99] text-left;
+    @apply text-[14px] text-[#606D7B] dark:text-[#FFFFFF99] text-left line-clamp-2;
   }
   .text-subtitle-info {
     @apply text-[14px] text-black dark:text-white;
