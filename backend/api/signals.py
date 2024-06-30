@@ -15,7 +15,7 @@ def ready():
 
 
 @receiver(signals.post_migrate)
-def hash_product_publication(sender, **kwargs):
+def post_migrate_api(sender, **kwargs):
     if sender.name != 'api':
         return
     models.Tag.objects.get_or_create(name='Подписки EA Play', database_name='eaPlay')
@@ -41,7 +41,33 @@ def hash_product_publication(sender, **kwargs):
 
 
 @receiver(signals.post_delete, sender=models.Publication)
-def delete_photo_product_publication(instance: models.Publication, **kwargs):
+def post_delete_publication(instance: models.Publication, **kwargs):
+    to_delete = (instance.product_page_image, instance.offer_image, instance.search_image)
+    for file in to_delete:
+        try:
+            if file.url:
+                path = settings.MEDIA_ROOT / file.url.split('/')[-1]
+                if path.is_file():
+                    path.unlink()
+        except:
+            continue
+
+
+@receiver(signals.post_delete, sender=models.AddOn)
+def post_delete_add_on(instance: models.AddOn, **kwargs):
+    to_delete = (instance.product_page_image, instance.offer_image, instance.search_image)
+    for file in to_delete:
+        try:
+            if file.url:
+                path = settings.MEDIA_ROOT / file.url.split('/')[-1]
+                if path.is_file():
+                    path.unlink()
+        except:
+            continue
+
+
+@receiver(signals.post_delete, sender=models.Subscription)
+def post_delete_subscription(instance: models.Subscription, **kwargs):
     to_delete = (instance.product_page_image, instance.offer_image, instance.search_image)
     for file in to_delete:
         try:
