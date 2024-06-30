@@ -92,6 +92,8 @@ class Tag(EnumBaseModel):
 
 
 class AbstractProductPublication(BaseModel):
+    typename = 'abstract_product'
+    
     product = models.ForeignKey(
         Product, verbose_name='Товар', on_delete=models.CASCADE,
         related_name="%(app_label)s_%(class)s_related",
@@ -163,6 +165,10 @@ class AbstractProductPublication(BaseModel):
         except Exception as exc:
             logging.exception(exc)
     
+    @property
+    def product_type(self) -> str:
+        return self.typename
+    
     def __str__(self) -> str:
         return f'{self.product}: {self.title}'
     
@@ -171,6 +177,8 @@ class AbstractProductPublication(BaseModel):
 
 
 class Publication(AbstractProductPublication):
+    typename = 'publication'
+    
     ps_product = models.OneToOneField(
         ps_models.Product, verbose_name='Товар PS', on_delete=models.DO_NOTHING,
         null=True, blank=True, related_name='api_publication')
@@ -185,6 +193,8 @@ class Publication(AbstractProductPublication):
 
 
 class AddOn(AbstractProductPublication):
+    typename = 'add_on'
+    
     ps_add_on = models.OneToOneField(ps_models.AddOn, verbose_name='Аддон PS',
         on_delete=models.SET_NULL, null=True, blank=True, related_name='api_add_on')
     type = models.ForeignKey(AddOnType, verbose_name='Тип аддона',
@@ -196,6 +206,8 @@ class AddOn(AbstractProductPublication):
 
 
 class Subscription(AbstractProductPublication):
+    typename = 'subscription'
+    
     duration = models.IntegerField('Длительность в месяцах', null=True)
 
     class Meta:

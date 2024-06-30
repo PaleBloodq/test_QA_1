@@ -4,6 +4,7 @@ import os
 from datetime import date
 from dataclasses import dataclass
 import base64
+import typing
 import uuid
 from PIL import Image
 from io import BytesIO
@@ -50,6 +51,12 @@ class CheckPromoCode(APIView):
                 })
             return Response({'result': False})
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@dataclass
+class CartItem:
+    type: typing.Literal['publication', 'add_on', 'subscription']
+    items: BaseManager[models.Publication | models.AddOn | models.Subscription]
 
 
 @dataclass
