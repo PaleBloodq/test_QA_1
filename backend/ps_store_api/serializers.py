@@ -160,16 +160,12 @@ class AbstractProductSerializer(serializers.Serializer):
         return instance
     
     def update(self, instance: models.AbstractProduct, validated_data):
-        if instance.price:
-            instance.price.delete()
         price = validated_data.get('price')
         if price:
-            instance.price = models.Mobilecta.objects.create(**price)
-        if instance.ps_plus_price:
-            instance.ps_plus_price.delete()
+            models.Mobilecta.objects.filter(pk=instance.price.pk).update(**price)
         ps_plus_price = validated_data.get('ps_plus_price')
         if ps_plus_price:
-            instance.ps_plus_price = models.Mobilecta.objects.create(**ps_plus_price)
+            models.Mobilecta.objects.filter(pk=instance.ps_plus_price.pk).update(**ps_plus_price)
         instance.save()
         return instance
 
@@ -193,6 +189,17 @@ class ProductSerializer(AbstractProductSerializer):
 
 class AddOnSerializer(AbstractProductSerializer):
     model = models.AddOn
+    localizedStoreDisplayClassification = serializers.CharField(source='type')
+    
+    def create(self, validated_data: dict):
+        validated_data['type'] = models.AddOnType.objects.get_or_create(
+            name=validated_data.pop('type'))[0]
+        return super().create(validated_data)
+    
+    def update(self, instance: models.AddOn, validated_data: dict):
+        instance.type = models.AddOnType.objects.get_or_create(
+            name=validated_data.pop('type'))[0]
+        return super().update(instance, validated_data)
     
     class Meta:
         fields = [
@@ -201,4 +208,5 @@ class AddOnSerializer(AbstractProductSerializer):
             'platforms',
             'media',
             'mobilectas',
+            'localizedStoreDisplayClassification',
         ]

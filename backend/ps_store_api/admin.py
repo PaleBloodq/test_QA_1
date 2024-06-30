@@ -15,3 +15,8 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(models.AddOn)
 class AddOnAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(models.AddOnType)
+class AddOnTypeAdmin(admin.ModelAdmin):
+    pass

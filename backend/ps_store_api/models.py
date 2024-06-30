@@ -12,11 +12,22 @@ class Concept(models.Model):
         return f'{self.name}'
 
 
-class Platform(models.Model):
+class AbstractEnumModel(models.Model):
     name = models.CharField('Название', max_length=32)
     
     def __str__(self) -> str:
         return f'{self.name}'
+    
+    class Meta:
+        abstract = True
+
+
+class Platform(AbstractEnumModel):
+    pass
+
+
+class AddOnType(AbstractEnumModel):
+    pass
 
 
 class Mobilecta(models.Model):
@@ -52,4 +63,5 @@ class Product(AbstractProduct):
 
 
 class AddOn(AbstractProduct):
-    pass
+    type = models.ForeignKey(AddOnType, verbose_name='Тип', default=None,
+        on_delete=models.CASCADE, null=True, blank=True)
