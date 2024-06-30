@@ -28,9 +28,9 @@ def parse_product_publications_task(product_ids: list[str], need_notify=True):
         for ps_product in ps_models.Product.objects.filter(concept=ps_concept):
             try:
                 utils.update_publication(models.Publication.objects.get_or_create(
-                    {
-                        'product': product
-                    },
+                    dict(
+                        product=product
+                    ),
                     ps_product=ps_product,
                 )[0])
             except Exception as exc:

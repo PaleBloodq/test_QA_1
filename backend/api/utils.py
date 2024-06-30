@@ -136,15 +136,11 @@ def update_sales_leaders(order: models.Order):
 
 
 def update_product(product: models.Product, ps_concept: ps_models.Concept):
-    changed = False
     if product.ps_concept != ps_concept:
         product.ps_concept = ps_concept
-        changed = True
     if product.parse_release_date:
         product.release_date = ps_concept.release_date
-        changed = True
-    if changed:
-        product.save()
+    product.save()
     return product
 
 

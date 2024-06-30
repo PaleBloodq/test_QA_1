@@ -160,16 +160,12 @@ class AbstractProductSerializer(serializers.Serializer):
         return instance
     
     def update(self, instance: models.AbstractProduct, validated_data):
-        if instance.price:
-            instance.price.delete()
         price = validated_data.get('price')
         if price:
-            instance.price = models.Mobilecta.objects.create(**price)
-        if instance.ps_plus_price:
-            instance.ps_plus_price.delete()
+            models.Mobilecta.objects.filter(pk=instance.price.pk).update(**price)
         ps_plus_price = validated_data.get('ps_plus_price')
         if ps_plus_price:
-            instance.ps_plus_price = models.Mobilecta.objects.create(**ps_plus_price)
+            models.Mobilecta.objects.filter(pk=instance.ps_plus_price.pk).update(**ps_plus_price)
         instance.save()
         return instance
 

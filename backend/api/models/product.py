@@ -172,8 +172,8 @@ class AbstractProductPublication(BaseModel):
 
 class Publication(AbstractProductPublication):
     ps_product = models.OneToOneField(
-        ps_models.Product, verbose_name='Товар PS', on_delete=models.SET_NULL,
-        null=True, blank=True)
+        ps_models.Product, verbose_name='Товар PS', on_delete=models.DO_NOTHING,
+        null=True, blank=True, related_name='api_publication')
 
     class Meta:
         verbose_name = 'Издание'
@@ -182,7 +182,7 @@ class Publication(AbstractProductPublication):
 
 class AddOn(AbstractProductPublication):
     ps_add_on = models.OneToOneField(ps_models.AddOn, verbose_name='Аддон PS',
-        on_delete=models.SET_NULL, null=True, blank=True)
+        on_delete=models.SET_NULL, null=True, blank=True, related_name='api_add_on')
     type = models.ForeignKey(AddOnType, verbose_name='Тип аддона',
         on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -225,8 +225,8 @@ class ProductPublication(BaseModel):
     parse_title = models.BooleanField('Парсить заголовок', default=True)
     parse_price = models.BooleanField('Парсить цену', default=True)
     parse_platforms = models.BooleanField('Парсить платформы', default=True)
-    ps_product = models.OneToOneField(ps_models.Product, verbose_name='Товар PS', on_delete=models.SET_NULL, related_name='api_publication', null=True, blank=True)
-    ps_add_on = models.OneToOneField(ps_models.AddOn, verbose_name='Аддон PS', on_delete=models.SET_NULL, related_name='api_add_on', null=True, blank=True)
+    ps_product = models.OneToOneField(ps_models.Product, verbose_name='Товар PS', on_delete=models.SET_NULL, related_name='api_publication_old', null=True, blank=True)
+    ps_add_on = models.OneToOneField(ps_models.AddOn, verbose_name='Аддон PS', on_delete=models.SET_NULL, related_name='api_add_on_old', null=True, blank=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         return super().save(force_insert, force_update, using, update_fields)

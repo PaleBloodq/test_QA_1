@@ -32,8 +32,8 @@ INSTALLED_APPS = [
     "corsheaders",
     'django_celery_beat',
     'rest_framework',
-    'api',
     'ps_store_api',
+    'api',
 ]
 
 MIDDLEWARE = [

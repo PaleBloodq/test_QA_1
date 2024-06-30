@@ -1,42 +1,6 @@
 from django.contrib import admin
-from django.db.models import QuerySet, ImageField, ManyToManyField
+from django.db.models import QuerySet, ManyToManyField
 from api import models, forms
-
-class ProductPublicationInline(admin.StackedInline):
-    model = models.ProductPublication
-    extra = 0
-    readonly_fields = ('price_changed',)
-    ordering = ('title',)
-    exclude = ['hash']
-    formfield_overrides = {
-        ImageField: {'widget': forms.DragAndDropFileInput},
-        ManyToManyField: {'widget': forms.ManyToManyForm},
-    }
-
-    def get_fields(self, request, obj: models.Product = None):
-        # Получить все поля модели
-        fields = super().get_fields(request, obj)
-        if obj:
-            match obj.type:
-                case models.Product.TypeChoices.DONATION:
-                    fields.remove('title')
-                    fields.remove('duration')
-                case models.Product.TypeChoices.SUBSCRIPTION:
-                    fields.remove('quantity')
-                case models.Product.TypeChoices.GAME:
-                    fields.remove('duration')
-                    fields.remove('quantity')
-        fields.remove('price_changed')
-        fields.insert(3, 'price_changed')
-        return fields
-
-
-@admin.register(models.ProductPublication)
-class ProductPublicationAdmin(admin.ModelAdmin):
-    list_display = [
-        'title',
-        'product',
-    ]
 
 
 class PriceChangedListFilter(admin.SimpleListFilter):
@@ -58,29 +22,35 @@ class PriceChangedListFilter(admin.SimpleListFilter):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    @admin.display(description='Количество изданий')
+    @admin.display(description='Изданий')
     def count_publications(self, obj: models.Product):
-        return obj.publications.count()
-
-    @admin.display(description='Цена изменилась?', boolean=True)
-    def price_changed(self, obj: models.Product):
-        return obj.publications.filter(price_changed=True).exists()
+        return models.Publication.objects.filter(product=obj).count()
+    
+    @admin.display(description='Аддонов')
+    def count_add_ons(self, obj: models.Product):
+        return models.AddOn.objects.filter(product=obj).count()
 
     def parse_product_publications(self, request, queryset: QuerySet[models.Product]):
         from api import tasks
         tasks.parse_product_publications_task.delay([str(product.id) for product in queryset])
-    parse_product_publications.short_description = 'Спарсить издания'
+    parse_product_publications.short_description = 'Спарсить издания и аддоны'
     
     def delete_publications(self, request, queryset: QuerySet[models.Product]):
-        models.ProductPublication.objects.filter(
+        models.Publication.objects.filter(
             product__in=queryset
         ).delete()
     delete_publications.short_description = 'Удалить издания'
+    
+    def delete_add_ons(self, request, queryset: QuerySet[models.Product]):
+        models.AddOn.objects.filter(
+            product__in=queryset
+        ).delete()
+    delete_add_ons.short_description = 'Удалить аддоны'
 
     list_filter = [PriceChangedListFilter]
-    list_display = ['title', 'type', 'release_date', 'count_publications', 'price_changed', 'ps_store_url']
+    list_display = ['title', 'type', 'release_date', 'count_publications', 'count_add_ons', 'ps_store_url']
     readonly_fields = ['orders']
-    actions = [parse_product_publications, delete_publications]
+    actions = [parse_product_publications, delete_publications, delete_add_ons]
     formfield_overrides = {
         ManyToManyField: {'widget': forms.ManyToManyForm},
     }
