@@ -46,10 +46,12 @@ class PS_StoreAPI:
             )
             if serializer.is_valid():
                 serializer.save(concept=product.concept)
-            else:
-                logging.warning(serializer.errors)
+                continue
+            # logging.warning(serializer.data)
+            logging.warning(serializer.errors)
     
     def _parse_products(self, concept: models.Concept):
+        products = []
         for product in self._get_response(
             'metGetPricingDataByConceptId',
             {
@@ -62,9 +64,13 @@ class PS_StoreAPI:
                 data=product
             )
             if serializer.is_valid():
-                self._parse_add_ons(serializer.save(concept=concept))
-            else:
-                logging.warning(serializer.errors)
+                products.append(serializer.save(concept=concept))
+                continue
+            # logging.warning(serializer.data)
+            logging.warning(serializer.errors)
+        for product in products:
+            logging.warning(f'Parse {product.name} add-ons')
+            self._parse_add_ons(product)
     
     def parse_by_concept_id(self, concept_id: int) -> models.Concept | None:
         serializer = serializers.ConceptSerializer(
@@ -79,8 +85,10 @@ class PS_StoreAPI:
         )
         if serializer.is_valid():
             concept = serializer.save()
+            logging.warning(f'Parse {concept.name} products')
             self._parse_products(concept)
             return concept
+        # logging.warning(serializer.data)
         logging.warning(serializer.errors)
     
     def parse_by_product_id(self, product_id: str) -> models.Concept | None:

@@ -81,17 +81,16 @@ export default function App() {
 
 
 
-  const telegramThemeColor = window?.Telegram?.WebApp.headerColor
+  const telegramThemeColor = window?.Telegram?.WebApp.colorScheme
 
   useEffect(() => {
     const bodyDiv = document.getElementById('webapp-root-body')
-    if (telegramThemeColor === '#ffffff') {
+    if (telegramThemeColor === 'light') {
       bodyDiv.classList.value = 'light'
-      bodyDiv.style.backgroundColor = '#ffffff'
-
+      window?.Telegram?.WebApp.setHeaderColor('#ffffff')
     } else {
       bodyDiv.classList.value = 'dark'
-      bodyDiv.style.backgroundColor = '#000000'
+      window?.Telegram?.WebApp.setHeaderColor('#1a1e22')
     }
 
   }, [telegramThemeColor])

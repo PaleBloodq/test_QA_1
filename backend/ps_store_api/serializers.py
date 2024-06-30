@@ -1,3 +1,4 @@
+import logging
 from urllib.parse import quote
 from decimal import Decimal
 from datetime import datetime
@@ -8,7 +9,10 @@ from . import models
 
 class ReleaseDateField(serializers.DateTimeField):
     def to_internal_value(self, value: dict):
-        return super().to_internal_value(value.get('value'))
+        value = value.get('value')
+        if not value:
+            return None
+        return super().to_internal_value(value)
 
 
 class TimestampField(serializers.DateTimeField):
@@ -18,9 +22,6 @@ class TimestampField(serializers.DateTimeField):
 
 class MediaField(serializers.URLField):
     def to_internal_value(self, data: list[dict]):
-        for media in data:
-            if media.get('type') == 'IMAGE' and media.get('role') == 'PORTRAIT_BANNER':
-                return super().to_internal_value(quote(media.get('url'), '/:?&='))
         for media in data:
             if media.get('type') == 'IMAGE' and media.get('role') == 'MASTER':
                 return super().to_internal_value(quote(media.get('url'), '/:?&='))
@@ -43,7 +44,7 @@ class PriceField(serializers.DecimalField):
 class ConceptSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
-    releaseDate = ReleaseDateField(source='release_date')
+    releaseDate = ReleaseDateField(source='release_date', allow_null=True)
     publisherName = serializers.CharField(source='publisher_name')
     
     def create(self, validated_data):
@@ -126,6 +127,7 @@ class AbstractProductSerializer(serializers.Serializer):
     
     price_fields = {
         'ADD_TO_CART': 'price',
+        'PREORDER': 'price',
         'UPSELL_PS_PLUS_DISCOUNT': 'ps_plus_price'
     }
     
@@ -158,16 +160,12 @@ class AbstractProductSerializer(serializers.Serializer):
         return instance
     
     def update(self, instance: models.AbstractProduct, validated_data):
-        if instance.price:
-            instance.price.delete()
         price = validated_data.get('price')
         if price:
-            instance.price = models.Mobilecta.objects.create(**price)
-        if instance.ps_plus_price:
-            instance.ps_plus_price.delete()
+            models.Mobilecta.objects.filter(pk=instance.price.pk).update(**price)
         ps_plus_price = validated_data.get('ps_plus_price')
         if ps_plus_price:
-            instance.ps_plus_price = models.Mobilecta.objects.create(**ps_plus_price)
+            models.Mobilecta.objects.filter(pk=instance.ps_plus_price.pk).update(**ps_plus_price)
         instance.save()
         return instance
 
@@ -191,6 +189,17 @@ class ProductSerializer(AbstractProductSerializer):
 
 class AddOnSerializer(AbstractProductSerializer):
     model = models.AddOn
+    localizedStoreDisplayClassification = serializers.CharField(source='type')
+    
+    def create(self, validated_data: dict):
+        validated_data['type'] = models.AddOnType.objects.get_or_create(
+            name=validated_data.pop('type'))[0]
+        return super().create(validated_data)
+    
+    def update(self, instance: models.AddOn, validated_data: dict):
+        instance.type = models.AddOnType.objects.get_or_create(
+            name=validated_data.pop('type'))[0]
+        return super().update(instance, validated_data)
     
     class Meta:
         fields = [
@@ -199,4 +208,5 @@ class AddOnSerializer(AbstractProductSerializer):
             'platforms',
             'media',
             'mobilectas',
+            'localizedStoreDisplayClassification',
         ]

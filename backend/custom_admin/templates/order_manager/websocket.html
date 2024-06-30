@@ -1,5 +1,6 @@
 <script>
           const managerId = {{ user.id }};
+          const FORCE_SCRIPT_NAME = '{{ FORCE_SCRIPT_NAME }}';
           let currentChat = ''
 
           // ФУНКЦИИ
@@ -82,7 +83,7 @@
           images.forEach(imageUrl => {
             const imgElement = document.createElement('img');
             imgElement.classList.add('rounded-lg', 'max-w-[350px]', 'lg:max-w-[400px]', 'max-h-[400px]');
-            imgElement.src = `http://localhost:8100/aokibot/backend${imageUrl}`;
+            imgElement.src = `${window.location.protocol}//${window.location.host}${FORCE_SCRIPT_NAME}${imageUrl}`;
             imgElement.alt = '';
 
             messageDiv.appendChild(imgElement);
@@ -129,6 +130,11 @@
             document.getElementById('order-info-payment-id').innerHTML = `<strong>ID Платежа:</strong> ${order.payment_url || 'Нет данных'}`;
             document.getElementById('order-info-account-email').innerHTML = `<strong>E-mail:</strong> ${order.email || 'Нет данных'}`;
             document.getElementById('order-info-account-password').innerHTML = `<strong>Пароль:</strong> ${order.password || 'Нет данных'}`;
+            let order_products = '';
+            order.products.forEach((product) => {
+                order_products += `<details><summary>${product.product}</summary><strong>Описание:</strong> ${product.description}<br><strong>Цена:</strong> ${product.final_price}</details>`
+            })
+            document.getElementById('order-info-products').innerHTML = order_products;
           }
 
           function toggleShowElements(isShow) {

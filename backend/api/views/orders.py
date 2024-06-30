@@ -4,6 +4,7 @@ import os
 from datetime import date
 from dataclasses import dataclass
 import base64
+import typing
 import uuid
 from PIL import Image
 from io import BytesIO
@@ -55,7 +56,7 @@ class CheckPromoCode(APIView):
 @dataclass
 class OrderInfo:
     profile: models.Profile
-    cart: BaseManager[models.ProductPublication]
+    cart: list[models.AbstractProductPublication]
     spend_cashback: bool
     need_account: bool
     bill_email: str
@@ -73,18 +74,18 @@ class OrderInfo:
         return discount
     
     def get_amount(self, promo_code_discount: int = None) -> int:
-        amount = self.cart.aggregate(Sum('final_price')).get('final_price__sum')
+        amount = sum([item.final_price for item in self.cart])
         if promo_code_discount:
             amount -= amount * promo_code_discount / 100
         if self.spend_cashback:
             if self.profile.cashback >= amount:
-                self.spend_cashback_amount = amount - 1
-                return 1
+                self.spend_cashback_amount = amount - 10
+                return 10
             self.spend_cashback_amount = self.profile.cashback
             amount -= self.spend_cashback_amount
         return amount
     
-    def get_description(self, publication: models.ProductPublication) -> str:
+    def get_description(self, publication: models.AbstractProductPublication) -> str:
         description = f'{publication.title}'
         for platform in publication.platforms.all():
             description += f' - {platform.name}'
@@ -161,11 +162,32 @@ class OrderInfo:
 
 
 class CreateOrder(APIView):
+    def get_cart(self, cart: list[dict[str, str]]):
+        publications = []
+        add_ons = []
+        subscriptions = []
+        for item in cart:
+            match item.get('type'):
+                case 'publication':
+                    publications.append(item.get('id'))
+                case 'add_on':
+                    add_ons.append(item.get('id'))
+                case 'subscription':
+                    subscriptions.append(item.get('id'))
+        cart = []
+        if publications:
+            cart += list(models.Publication.objects.filter(id__in=publications))
+        if add_ons:
+            cart += list(models.AddOn.objects.filter(id__in=add_ons))
+        if subscriptions:
+            cart += list(models.Subscription.objects.filter(id__in=subscriptions))
+        return cart
+    
     @utils.auth_required
     def post(self, request: Request, profile: models.Profile):
         order_info = OrderInfo(
             profile,
-            models.ProductPublication.objects.filter(id__in=request.data.get('cart', [])),
+            self.get_cart(request.data.get('cart', [])),
             request.data.get('spendCashback', False),
             not request.data.get('hasAccount', False),
             request.data.get('billEmail', profile.bill_email),

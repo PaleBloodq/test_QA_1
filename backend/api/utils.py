@@ -85,11 +85,6 @@ def auth_required(func):
     return wrapped
 
 
-def hash_product_publication(product_id: int, title: str, platforms: list[str]):
-    to_hash = f'{product_id} {title} {platforms}'
-    return md5(to_hash.encode('utf-8')).hexdigest()
-
-
 def check_promo_code(profile: models.Profile, promo_code: str | None) -> int | None:
     if promo_code:
         promo = models.PromoCode.objects.filter(
@@ -121,7 +116,9 @@ def normalize_price(price: Optional[Decimal], exchange: bool = False) -> Optiona
 
 def update_sales_leaders(order: models.Order):
     for product in models.OrderProduct.objects.filter(order=order):
-        publication = models.ProductPublication.objects.filter(id=product.product_id).first()
+        publication = models.Publication.objects.filter(id=product.product_id).first() \
+            or models.AddOn.objects.filter(id=product.product_id).first() \
+            or models.Subscription.objects.filter(id=product.product_id).first()
         if publication:
             publication.product.orders += 1
             publication.product.save()
@@ -136,29 +133,24 @@ def update_sales_leaders(order: models.Order):
 
 
 def update_product(product: models.Product, ps_concept: ps_models.Concept):
-    changed = False
     if product.ps_concept != ps_concept:
         product.ps_concept = ps_concept
-        changed = True
     if product.parse_release_date:
         product.release_date = ps_concept.release_date
-        changed = True
-    if changed:
-        product.save()
+    product.save()
     return product
 
 
-def update_product_publication(product: models.Product, ps_product: ps_models.AbstractProduct):
-    publication = models.ProductPublication.objects.filter(ps_store_id=ps_product.id).first()
-    if publication is None:
-        publication = models.ProductPublication(
-            product=product,
-            ps_store_id=ps_product.id,
-        )
-        if isinstance(ps_product, ps_models.Product):
-            publication.ps_product = ps_product
-        if isinstance(ps_product, ps_models.AddOn):
-            publication.ps_add_on = ps_product
+def update_publication(publication: models.Publication | models.AddOn):
+    if isinstance(publication, models.Publication):
+        ps_product = publication.ps_product
+        if publication.parse_release_date:
+            publication.release_date = ps_product.release_date
+        if publication.product.release_date is None:
+            publication.product.release_date = publication.release_date
+            publication.product.save()
+    if isinstance(publication, models.AddOn):
+        ps_product = publication.ps_add_on
     if publication.parse_title:
         publication.title = ps_product.name
     if publication.parse_price:

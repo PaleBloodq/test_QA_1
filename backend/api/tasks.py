@@ -27,12 +27,28 @@ def parse_product_publications_task(product_ids: list[str], need_notify=True):
         product = utils.update_product(product, ps_concept)
         for ps_product in ps_models.Product.objects.filter(concept=ps_concept):
             try:
-                utils.update_product_publication(product, ps_product)
+                utils.update_publication(models.Publication.objects.get_or_create(
+                    dict(
+                        product=product
+                    ),
+                    ps_product=ps_product,
+                )[0])
             except Exception as exc:
                 logging.exception(exc)
         for ps_add_on in ps_models.AddOn.objects.filter(concept=ps_concept):
             try:
-                utils.update_product_publication(product, ps_add_on)
+                utils.update_publication(models.AddOn.objects.get_or_create(
+                    dict(
+                        product=product,
+                        type=models.AddOnType.objects.get_or_create(
+                            dict(
+                                name=ps_add_on.type.name
+                            ),
+                            original_name=ps_add_on.type.name
+                        )[0]
+                    ),
+                    ps_add_on=ps_add_on,
+                )[0])
             except Exception as exc:
                 logging.exception(exc)
         sleep(random.randint(3, 5))
