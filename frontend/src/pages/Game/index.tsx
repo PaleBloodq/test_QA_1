@@ -72,7 +72,10 @@ export default function Game() {
         final_price: currentPublication.final_price,
         discount: currentPublication.discount,
         cashback: currentPublication.cashback,
+        product_type: currentPublication.product_type
     };
+
+    console.log(data)
 
     const includes = currentPublication.includes?.split("\r\n") || [];
 
@@ -80,8 +83,6 @@ export default function Game() {
         return <div>Загрузка...</div>;
     }
 
-    console.log(data)
-    console.log(publications)
 
     return (
         <Container>
