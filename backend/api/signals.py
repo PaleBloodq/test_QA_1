@@ -40,8 +40,8 @@ def hash_product_publication(sender, **kwargs):
     )
 
 
-@receiver(signals.post_delete, sender=models.ProductPublication)
-def delete_photo_product_publication(instance: models.ProductPublication, **kwargs):
+@receiver(signals.post_delete, sender=models.Publication)
+def delete_photo_product_publication(instance: models.Publication, **kwargs):
     to_delete = (instance.product_page_image, instance.offer_image, instance.search_image)
     for file in to_delete:
         try:
@@ -51,6 +51,7 @@ def delete_photo_product_publication(instance: models.ProductPublication, **kwar
                     path.unlink()
         except:
             continue
+
 
 @receiver(signals.post_save, sender=models.Order)
 def change_order_status(sender, instance: models.Order, created: bool, **kwargs):

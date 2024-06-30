@@ -192,6 +192,11 @@ def update_product_publication(product: models.Product, ps_product: ps_models.Ab
 def update_publication(publication: models.Publication | models.AddOn):
     if isinstance(publication, models.Publication):
         ps_product = publication.ps_product
+        if publication.parse_release_date:
+            publication.release_date = ps_product.release_date
+        if publication.product.release_date is None:
+            publication.product.release_date = publication.release_date
+            publication.product.save()
     if isinstance(publication, models.AddOn):
         ps_product = publication.ps_add_on
     if publication.parse_title:

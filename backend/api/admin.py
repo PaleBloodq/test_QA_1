@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.db.models import QuerySet, ManyToManyField
+from django.utils.html import format_html
 from api import models, forms
+from settings import FORCE_SCRIPT_NAME
 
 
 class PriceChangedListFilter(admin.SimpleListFilter):
@@ -24,11 +26,13 @@ class PriceChangedListFilter(admin.SimpleListFilter):
 class ProductAdmin(admin.ModelAdmin):
     @admin.display(description='Изданий')
     def count_publications(self, obj: models.Product):
-        return models.Publication.objects.filter(product=obj).count()
+        count = models.Publication.objects.filter(product=obj).count()
+        return format_html(f'<a href="{FORCE_SCRIPT_NAME}/admin/api/publication/?product__id__exact={obj.id}">{count}</a>')
     
     @admin.display(description='Аддонов')
     def count_add_ons(self, obj: models.Product):
-        return models.AddOn.objects.filter(product=obj).count()
+        count = models.AddOn.objects.filter(product=obj).count()
+        return format_html(f'<a href="{FORCE_SCRIPT_NAME}/admin/api/addon/?product__id__exact={obj.id}">{count}</a>')
 
     def parse_product_publications(self, request, queryset: QuerySet[models.Product]):
         from api import tasks

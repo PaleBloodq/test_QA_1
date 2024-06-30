@@ -174,6 +174,10 @@ class Publication(AbstractProductPublication):
     ps_product = models.OneToOneField(
         ps_models.Product, verbose_name='Товар PS', on_delete=models.DO_NOTHING,
         null=True, blank=True, related_name='api_publication')
+    release_date = models.DateField(
+        'Дата релиза', null=True, blank=True)
+    parse_release_date = models.BooleanField(
+        'Парсить дату релиза', default=True)
 
     class Meta:
         verbose_name = 'Издание'
