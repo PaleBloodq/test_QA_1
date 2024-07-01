@@ -15,4 +15,5 @@ export type PublicationType = {
   search_image: string;
   offer_image: string;
   discount_deadline: string;
+  product_type: "publication" | "add_on" | "subscription";
 };

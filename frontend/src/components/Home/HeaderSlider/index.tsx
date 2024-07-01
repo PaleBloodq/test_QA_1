@@ -29,6 +29,7 @@ export default function HeaderSlider({ data }: { data: SectionType }) {
 
     console.log(data)
 
+
     return (
         <div className="h-[355px] w-full">
             {!isLoading && (
@@ -45,12 +46,12 @@ export default function HeaderSlider({ data }: { data: SectionType }) {
                         const mainPublication = (game.publications.find((item) => item.is_main === true)) || game.publications[0];
                         return (
                             <SwiperSlide key={`header-${index}`}>
-                                <Link className="flex w-full h-full relative" to={`/game/${game.id}/${mainPublication.id}`}>
-                                    <img className="rounded-xl" src={replaceUrl(mainPublication.offer_image)} alt="" />
+                                <Link className="flex w-full h-full relative" to={`/game/${game.id}/${mainPublication?.id}`}>
+                                    <img className="rounded-xl" src={replaceUrl(mainPublication?.offer_image)} alt="" />
                                     <div className="absolute bottom-[50px] z-10 flex w-full items-center gap-2 flex-col justify-center">
                                         <h1 className="font-bold text-4xl text-white drop-shadow-[0_40px_40px_rgba(1,1,1,1)]">{mainPublication?.final_price} ₽</h1>
                                         <div className='w-16 flex gap-3 justify-center'>
-                                            {mainPublication.discount !== 0 && <Tag type="discount">-{mainPublication.discount}%</Tag>}
+                                            {mainPublication?.discount !== 0 && <Tag type="discount">-{mainPublication?.discount}%</Tag>}
                                             {isNew(game.release_date) && <Tag type="new">Новинка</Tag>}
                                         </div>
                                     </div>

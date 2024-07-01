@@ -30,7 +30,6 @@ export default function Home() {
         }
     }, [items, dispatch])
 
-    console.log(data)
 
     const basicTags = ["offers", "new", "psPlus", "eaPlay", "leaders", "donation"];
 
