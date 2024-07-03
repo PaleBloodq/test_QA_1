@@ -1,21 +1,20 @@
 import json
-import logging
-import pathlib
-
+import os
+import requests
 from django.db.models import signals
 from django.dispatch import receiver
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
-from api import models, utils
+from api import models, tasks
 from api.utils import send_order_to_bot
+from api.senders import send_chat_message
 from settings import settings
-
 
 def ready():
     print('api signals are ready')
 
 
 @receiver(signals.post_migrate)
-def hash_product_publication(sender, **kwargs):
+def post_migrate_api(sender, **kwargs):
     if sender.name != 'api':
         return
     models.Tag.objects.get_or_create(name='Подписки EA Play', database_name='eaPlay')
@@ -40,9 +39,9 @@ def hash_product_publication(sender, **kwargs):
     )
 
 
-@receiver(signals.post_delete, sender=models.ProductPublication)
-def delete_photo_product_publication(instance: models.ProductPublication, **kwargs):
-    to_delete = (instance.photo, instance.preview)
+@receiver(signals.post_delete, sender=models.Publication)
+def post_delete_publication(instance: models.Publication, **kwargs):
+    to_delete = (instance.product_page_image, instance.offer_image, instance.search_image)
     for file in to_delete:
         try:
             if file.url:
@@ -52,8 +51,45 @@ def delete_photo_product_publication(instance: models.ProductPublication, **kwar
         except:
             continue
 
+
+@receiver(signals.post_delete, sender=models.AddOn)
+def post_delete_add_on(instance: models.AddOn, **kwargs):
+    to_delete = (instance.product_page_image, instance.offer_image, instance.search_image)
+    for file in to_delete:
+        try:
+            if file.url:
+                path = settings.MEDIA_ROOT / file.url.split('/')[-1]
+                if path.is_file():
+                    path.unlink()
+        except:
+            continue
+
+
+@receiver(signals.post_delete, sender=models.Subscription)
+def post_delete_subscription(instance: models.Subscription, **kwargs):
+    to_delete = (instance.product_page_image, instance.offer_image, instance.search_image)
+    for file in to_delete:
+        try:
+            if file.url:
+                path = settings.MEDIA_ROOT / file.url.split('/')[-1]
+                if path.is_file():
+                    path.unlink()
+        except:
+            continue
+
+
 @receiver(signals.post_save, sender=models.Order)
 def change_order_status(sender, instance: models.Order, created: bool, **kwargs):
     if not created:
         send_order_to_bot(instance)
 
+
+@receiver(signals.post_save, sender=models.Mailing)
+def post_save_mailing(sender, instance: models.Mailing, **kwargs):
+    if instance.status != models.Mailing.Status.WAITING:
+        return
+    tasks.send_mailing.apply_async(
+        args=[str(instance.id)],
+        eta=instance.start_on,
+        task_id=f'send_mailing_{instance.id}',
+    )

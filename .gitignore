@@ -31,11 +31,14 @@ run_django.py
 test.py
 
 # Django
-static/
-media/
+backend/static/
+backend/media/
 migrations/
 
 # Sensitive information
 *.pem
 *.pub
 *.env
+
+# Shortcuts
+/*.url

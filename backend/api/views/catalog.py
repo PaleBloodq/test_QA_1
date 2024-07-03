@@ -1,24 +1,22 @@
 import logging
-from datetime import datetime, date
+import re
 
-from asgiref.sync import async_to_sync
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
-from django.db.models import Sum
-from api import models, serializers, utils
+from api import models, serializers
 from api.cache_api import CacheProxy
-from api.senders import send_admin_notification, NotifyLevels
 
 
 class GetCategories(APIView):
     def get(self, request: Request):
-        return Response(self.get_categorys())
+        return Response(self.get_categories())
 
     @staticmethod
-    @CacheProxy.memoize(timeout=3600, depend_models=[models.Product, models.Tag, models.ProductPublication])
-    def get_categorys():
+    @CacheProxy.memoize(timeout=3600, depend_models=[
+        models.Product, models.Tag, models.Publication,
+        models.AddOn, models.Subscription])
+    def get_categories():
         return [
             {
                 'tag': tag.database_name,
@@ -39,11 +37,13 @@ class GetProduct(APIView):
 
 
 class GetPublication(APIView):
-    def get(self, request: Request, publication_id: str):
-        response = serializers.SingleProductPublicationSerializer(
-            models.ProductPublication.objects.get(id=publication_id)
-        ).data
-        return Response(response)
+    def get(self, request: Request, type: str, publication_id: str):
+        model, serializer = {
+            'publication': (models.Publication, serializers.PublicationWithProductSerializer),
+            'add_on': (models.AddOn, serializers.AddOnWithProductSerializer),
+            'subscription': (models.Subscription, serializers.SubscriptionWithProductSerializer)
+        }.get(type)
+        return Response(serializer(model.objects.get(id=publication_id)).data)
 
 
 class GetFilters(APIView):
@@ -51,8 +51,16 @@ class GetFilters(APIView):
         return Response(self.get_filters())
 
     @staticmethod
-    @CacheProxy.memoize(timeout=3600, depend_models=[models.Platform, models.Language, models.ProductPublication])
+    @CacheProxy.memoize(
+        timeout=3600, depend_models=[
+        models.Platform, models.Language, models.Publication,
+        models.AddOn, models.Subscription])
     def get_filters():
+        def final_price(model, reverse: bool) -> int:
+            try:
+                return model.objects.latest(f'{"-" if reverse else ""}final_price').final_price
+            except:
+                return 1_000_000 if reverse else 0
         return {
             'platforms': serializers.PlatformSerializer(
                 models.Platform.objects.all(),
@@ -62,8 +70,16 @@ class GetFilters(APIView):
                 models.Language.objects.all(),
                 many=True,
             ).data,
-            'minPrice': models.ProductPublication.objects.latest('-final_price').final_price,
-            'maxPrice': models.ProductPublication.objects.latest('final_price').final_price,
+            'minPrice': min(
+                final_price(models.Publication, True),
+                final_price(models.AddOn, True),
+                final_price(models.Subscription, True),
+            ),
+            'maxPrice': max(
+                final_price(models.Publication, False),
+                final_price(models.AddOn, False),
+                final_price(models.Subscription, False),
+            ),
         }
 
 
@@ -71,6 +87,7 @@ class SearchProducts(APIView):
     def post(self, request: Request):
         offset = request.data.get('offset', 0)
         limit = request.data.get('limit', 20)
+        q = request.data.get('q')
         query = {}
         if request.data.get('minPrice'):
             query['final_price__gte'] = request.data.get('minPrice')
@@ -80,14 +97,26 @@ class SearchProducts(APIView):
             query['platforms__in'] = request.data.get('platforms')
         if request.data.get('languages'):
             query['languages__in'] = request.data.get('languages')
-        if request.data.get('q'):
-            query['product__title__iregex'] = request.data.get('q')
-        if query:
-            instance = models.ProductPublication.objects.filter(**query).distinct()[offset:limit]
-        else:
-            instance = models.ProductPublication.objects.all()[offset:limit]
-        response = serializers.SingleProductPublicationSerializer(
-            instance,
-            many=True,
-        ).data
-        return Response(response)
+        if q:
+            q_words = [re.escape(n) for n in re.sub(r'\W+', ' ', q).lower().split(' ')]
+            q_clean = r'(' + '.*' + '.*|.*'.join(q_words) + '.*' + ')'
+            query['product__title__iregex'] = q_clean
+
+        def instances(model):
+            if query:
+                return model.objects.filter(**query).distinct()[offset:limit]
+            return model.objects.all()[offset:limit]
+        return Response({
+            'publications': serializers.PublicationWithProductSerializer(
+                instances(models.Publication),
+                many=True
+            ).data,
+            'add_ons': serializers.AddOnWithProductSerializer(
+                instances(models.AddOn),
+                many=True
+            ).data,
+            'subscriptions': serializers.SubscriptionWithProductSerializer(
+                instances(models.Subscription),
+                many=True
+            ).data,
+        })

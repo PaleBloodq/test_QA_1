@@ -10,11 +10,14 @@ from app import register_dialogs
 from app.dialogs import error_handler
 from app.routes import register_routes
 
-from web.api.routes import send_message_manager, change_order
+from web.api.routes import send_message_manager, change_order, mailing
 
 app = web.Application()
-app.add_routes([web.post('/api/order/message/send/', send_message_manager),
-                web.post('/api/order/change/', change_order),])
+app.add_routes([
+    web.post('/api/order/message/send/', send_message_manager),
+    web.post('/api/order/change/', change_order),
+    web.post('/api/mailing/', mailing),
+])
 
 
 async def main():

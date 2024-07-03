@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Менеджер заказов</title>
+    <script>
+      let base64Images = []
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% include "order_manager/websocket.html" %}
+    <link rel="stylesheet" href="{% static "order_manager/css/styles.css" %}" />
+    </head>
+    <body class="h-screen flex flex-col lg:flex-row">
+      {% include "order_manager/orders_list.html" %}
+      {% include "order_manager/chat.html" %}
+      {% include "order_manager/order_info.html" %}
+      <script defer src="{% static "order_manager/js/script.js" %}"></script>
+  </body>
+</html>

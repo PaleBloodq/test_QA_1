@@ -1,0 +1,64 @@
+<div class="lg:w-3/5 w-full flex flex-col h-[600px] lg:h-full">
+  <div class="bg-gray-100 border-b border-gray-300 p-4 flex items-center flex-wrap gap-2">
+    <h2 id="chat-order-id-info" class="text-lg font-semibold">Выберите заказ</h2>
+    <div>
+      <button
+        onclick="acceptOrder()"
+        id="accept-order-button"
+        class="w-fit bg-violet-500 text-white py-2 px-4 rounded">
+        Взять в работу
+      </button>
+      <button
+        onclick="completeOrder()"
+        id="complete-order-button"
+        class="w-fit bg-green-500 text-white py-2 px-4 rounded">
+        Завершить
+      </button>
+    </div>
+  </div>
+  <div
+    id="chat"
+    class="flex-1 p-4 min-h-80 overflow-y-auto bg-gray-50 flex-col overflow-x-hidden"></div>
+  <div id="chat-input-container" class="p-4 border-t border-gray-300 flex flex-col">
+    <div id="thumbnails" class="flex gap-2 mb-2"></div>
+    <div class="w-full flex justify-center items-center">
+      <textarea
+        onkeydown="sendMessage(event)"
+        id="messageInput"
+        placeholder="Напишите сообщение..."
+        class="flex-1 p-2 border border-gray-300 rounded-l outline-none h-12"></textarea>
+      <div class="flex gap-2">
+        <button
+          id="send-message-button"
+          onclick="sendMessage()"
+          class="bg-blue-500 text-white py-2 px-4 rounded-r">
+          Отправить
+        </button>
+        <button
+          id="uploadButton"
+          class="bg-blue-500 text-white py-2 px-4 rounded-md cursor-pointer">
+          <svg class="w-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+              <path
+                d="M3 13V11C3 7.22876 3 5.34315 4.17157 4.17157C5.34315 3 7.22876 3 11 3H13C16.7712 3 18.6569 3 19.8284 4.17157C21 5.34315 21 7.22876 21 11V13C21 16.7712 21 18.6569 19.8284 19.8284C18.6569 21 16.7712 21 13 21H12"
+                stroke="#ffffff"
+                stroke-width="2"></path>
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M18.9997 13.5854L18.7569 13.3425L18.7422 13.3279C18.6785 13.2642 18.6249 13.2106 18.5777 13.1672C17.1476 11.8531 14.8649 12.2236 13.9237 13.9224C13.8926 13.9785 13.8587 14.0463 13.8185 14.1268L13.8185 14.1268L13.8092 14.1454L13.781 14.2016L13.7791 14.2054L13.7763 14.2022L13.7353 14.1545L8.75926 8.3491C8.39983 7.92978 7.76853 7.88122 7.34921 8.24064C6.92988 8.60006 6.88132 9.23136 7.24074 9.65069L12.2168 15.4561L12.2256 15.4664C12.2545 15.5001 12.2884 15.5397 12.3193 15.5727C13.246 16.5622 14.8679 16.3626 15.5269 15.1778C15.5489 15.1383 15.5722 15.0917 15.592 15.052L15.592 15.052L15.598 15.0399C15.6528 14.9304 15.6656 14.9052 15.6732 14.8916C15.9869 14.3253 16.7478 14.2019 17.2245 14.6399C17.2359 14.6504 17.2561 14.6702 17.3426 14.7568L18.9441 16.3582C18.9902 15.6404 18.9983 14.748 18.9997 13.5854Z"
+                fill="#ffffff"></path>
+              <circle cx="16.5" cy="7.5" r="1.5" fill="#ffffff"></circle>
+              <path
+                d="M8 16V15H9V16H8ZM3.62469 20.7809C3.19343 21.1259 2.56414 21.056 2.21913 20.6247C1.87412 20.1934 1.94404 19.5641 2.37531 19.2191L3.62469 20.7809ZM7 21V16H9V21H7ZM8 17H3V15H8V17ZM8.6247 16.7809L3.62469 20.7809L2.37531 19.2191L7.3753 15.2191L8.6247 16.7809Z"
+                fill="#ffffff"></path>
+            </g>
+          </svg>
+        </button>
+        <input id="fileInput" type="file" accept="image/*" class="hidden" />
+      </div>
+    </div>
+  </div>
+</div>

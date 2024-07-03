@@ -3,6 +3,11 @@ from decimal import Decimal
 import os
 from datetime import date
 from dataclasses import dataclass
+import base64
+import typing
+import uuid
+from PIL import Image
+from io import BytesIO
 import requests
 from asgiref.sync import async_to_sync
 from rest_framework.request import Request
@@ -11,9 +16,10 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.db.models import Sum
 from django.db.models.manager import BaseManager
+from django.core.files.base import ContentFile
 from api import models, serializers, utils
-from api.senders import send_admin_notification, NotifyLevels
-from api.utils import send_order_to_bot
+from api.senders import send_admin_notification, NotifyLevels, send_order_created, send_chat_message
+
 
 PAYMENTS_URL = f'{os.environ.get("PAYMENTS_SCHEMA")}://{os.environ.get("PAYMENTS_HOST")}'
 if os.environ.get("PAYMENTS_PORT"):
@@ -50,7 +56,7 @@ class CheckPromoCode(APIView):
 @dataclass
 class OrderInfo:
     profile: models.Profile
-    cart: BaseManager[models.ProductPublication]
+    cart: list[models.AbstractProductPublication]
     spend_cashback: bool
     need_account: bool
     bill_email: str
@@ -68,18 +74,18 @@ class OrderInfo:
         return discount
     
     def get_amount(self, promo_code_discount: int = None) -> int:
-        amount = self.cart.aggregate(Sum('final_price')).get('final_price__sum')
+        amount = sum([item.final_price for item in self.cart])
         if promo_code_discount:
             amount -= amount * promo_code_discount / 100
         if self.spend_cashback:
             if self.profile.cashback >= amount:
-                self.spend_cashback_amount = amount - 1
-                return 1
+                self.spend_cashback_amount = amount - 10
+                return 10
             self.spend_cashback_amount = self.profile.cashback
             amount -= self.spend_cashback_amount
         return amount
     
-    def get_description(self, publication: models.ProductPublication) -> str:
+    def get_description(self, publication: models.AbstractProductPublication) -> str:
         description = f'{publication.title}'
         for platform in publication.platforms.all():
             description += f' - {platform.name}'
@@ -111,7 +117,6 @@ class OrderInfo:
                 product=publication.product.title,
                 product_id=publication.id,
                 description=self.get_description(publication),
-                original_price=publication.original_price,
                 final_price=Decimal(final_price),
             )
         if order.promo_code_discount:
@@ -157,11 +162,32 @@ class OrderInfo:
 
 
 class CreateOrder(APIView):
+    def get_cart(self, cart: list[dict[str, str]]):
+        publications = []
+        add_ons = []
+        subscriptions = []
+        for item in cart:
+            match item.get('type'):
+                case 'publication':
+                    publications.append(item.get('id'))
+                case 'add_on':
+                    add_ons.append(item.get('id'))
+                case 'subscription':
+                    subscriptions.append(item.get('id'))
+        cart = []
+        if publications:
+            cart += list(models.Publication.objects.filter(id__in=publications))
+        if add_ons:
+            cart += list(models.AddOn.objects.filter(id__in=add_ons))
+        if subscriptions:
+            cart += list(models.Subscription.objects.filter(id__in=subscriptions))
+        return cart
+    
     @utils.auth_required
     def post(self, request: Request, profile: models.Profile):
         order_info = OrderInfo(
             profile,
-            models.ProductPublication.objects.filter(id__in=request.data.get('cart', [])),
+            self.get_cart(request.data.get('cart', [])),
             request.data.get('spendCashback', False),
             not request.data.get('hasAccount', False),
             request.data.get('billEmail', profile.bill_email),
@@ -201,28 +227,19 @@ class ChatMessages(APIView):
         text = request.data.get('text')
         order = models.Order.objects.filter(id=order_id).first()
         if order and text:
-            models.ChatMessage.objects.create(
+            message = models.ChatMessage.objects.create(
                 order=order,
                 text=text,
-                manager=request.user if request.user.id else None,
             )
-            if request.user.id:
-                requests.post(
-                    f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/message/send/',
-                    json={
-                        'user_id': order.profile.telegram_id,
-                        'order_id': order_id,
-                        'text': text
-                    }
-                )
-                return Response(status=status.HTTP_200_OK)
-            return Response(
-                serializers.ChatMessageSerializer(
-                    models.ChatMessage.objects.filter(order=order),
-                    many=True,
-                ).data,
-                status=status.HTTP_200_OK
-            )
+            for image in request.data.get('images', []):
+                order_message_image = models.OrderMessageImage.objects.create(chat_message=message)
+                img = Image.open(BytesIO(base64.b64decode(image)))
+                img_io = BytesIO()
+                img.save(img_io, format="WEBP", quality=50)
+                img_io.seek(0)
+                order_message_image.image.save(f'photo_{uuid.uuid4().hex}.webp', ContentFile(img_io.getvalue()), save=True)
+            send_chat_message(message)
+            return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -236,12 +253,16 @@ class UpdateOrderStatus(APIView):
                     case 'CONFIRMED':
                         if order.status == models.Order.StatusChoices.PAID:
                             return Response('OK')
-                        async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} оплачен',
-                                                                'level': NotifyLevels.SUCCESS.value})
                         order.status = models.Order.StatusChoices.PAID
                         order.profile.cashback += order.cashback
                         order.profile.save()
                         order.save()
+                        utils.update_sales_leaders(order)
+                        async_to_sync(send_admin_notification)({
+                            'text': f'Заказ {order.id} оплачен',
+                            'level': NotifyLevels.SUCCESS.value
+                        })
+                        send_order_created(order)
                     case 'REJECTED'| 'REVERSED' | 'PARTIAL_REVERSED'| 'PARTIAL_REFUNDED'| 'REFUNDED':
                         async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
                                                                 'level': NotifyLevels.ERROR.value})

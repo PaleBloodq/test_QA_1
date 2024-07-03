@@ -13,7 +13,7 @@ import { addToCart } from "../../features/Cart/cartSlice";
 
 export default function Cart() {
 
-    const { isLoggined } = useSelector(userSelector)
+    // const { isLoggined } = useSelector(userSelector)
     const dispatch = useDispatch()
 
 

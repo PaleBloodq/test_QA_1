@@ -1,4 +1,6 @@
+import logging
 import os
+from typing import Optional
 from datetime import datetime, timedelta
 from hashlib import md5
 import uuid
@@ -11,7 +13,10 @@ from rest_framework import status
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 import jwt
+from asgiref.sync import async_to_sync
 from api import models, serializers
+from api.senders import send_admin_notification, NotifyLevels
+from ps_store_api import models as ps_models
 
 BOT_URL = f'http://{os.environ.get("TELEGRAM_BOT_HOST")}:{os.environ.get("TELEGRAM_BOT_PORT")}/api/order/change/'
 
@@ -80,11 +85,6 @@ def auth_required(func):
     return wrapped
 
 
-def hash_product_publication(product_id: int, title: str, platforms: list[str]):
-    to_hash = f'{product_id} {title} {platforms}'
-    return md5(to_hash.encode('utf-8')).hexdigest()
-
-
 def check_promo_code(profile: models.Profile, promo_code: str | None) -> int | None:
     if promo_code:
         promo = models.PromoCode.objects.filter(
@@ -98,16 +98,88 @@ def send_order_to_bot(order: models.Order):
     requests.post(BOT_URL, json=serializers.OrderSerializer(order).data)
 
 
-def normalize_price(price: Decimal, exchange: bool = False) -> Decimal:
-    if exchange:
-        if price <= 899:
-            exchange_rate = Decimal(5.0)
-        elif 900 <= price <= 1699:
-            exchange_rate = Decimal(4.5)
-        else:
-            exchange_rate = Decimal(4.0)
-        price *= exchange_rate
-    if price >= 1000 and price % 1000 < 25:
-        price -= price % Decimal(1000) + Decimal(5)
-    price = price - price % Decimal(5)
+def normalize_price(price: Optional[Decimal], exchange: bool = False) -> Optional[Decimal]:
+    if price:
+        if exchange:
+            if price <= 899:
+                exchange_rate = Decimal(5.0)
+            elif 900 <= price <= 1699:
+                exchange_rate = Decimal(4.5)
+            else:
+                exchange_rate = Decimal(4.0)
+            price *= exchange_rate
+        if price >= 1000 and price % 1000 < 25:
+            price -= price % Decimal(1000) + Decimal(5)
+        price = price - price % Decimal(5)
     return price
+
+
+def update_sales_leaders(order: models.Order):
+    for product in models.OrderProduct.objects.filter(order=order):
+        publication = models.Publication.objects.filter(id=product.product_id).first() \
+            or models.AddOn.objects.filter(id=product.product_id).first() \
+            or models.Subscription.objects.filter(id=product.product_id).first()
+        if publication:
+            publication.product.orders += 1
+            publication.product.save()
+    current_leaders = models.Tag.objects.get(database_name='leaders').products
+    actual_leaders = models.Product.objects.order_by('-orders')[:30]
+    for product in current_leaders.all():
+        if product not in actual_leaders:
+            current_leaders.remove(product)
+    for product in actual_leaders:
+        if product not in current_leaders.all():
+            current_leaders.add(product)
+
+
+def update_product(product: models.Product, ps_concept: ps_models.Concept):
+    if product.ps_concept != ps_concept:
+        product.ps_concept = ps_concept
+    if product.parse_release_date:
+        product.release_date = ps_concept.release_date
+    product.save()
+    return product
+
+
+def update_publication(publication: models.Publication | models.AddOn):
+    if isinstance(publication, models.Publication):
+        ps_product = publication.ps_product
+        if publication.parse_release_date:
+            publication.release_date = ps_product.release_date
+        if publication.product.release_date is None:
+            publication.product.release_date = publication.release_date
+            publication.product.save()
+    if isinstance(publication, models.AddOn):
+        ps_product = publication.ps_add_on
+    if publication.parse_title:
+        publication.title = ps_product.name
+    if publication.parse_price:
+        price = normalize_price(ps_product.price.discounted_price, True)
+        if publication.final_price != price:
+            async_to_sync(send_admin_notification)({
+                'text': f'Цена на издание товара {publication.product.title} изменилась',
+                'level': NotifyLevels.WARN.value,
+            })
+            publication.price_changed = True
+        publication.final_price = price
+        publication.discount = ps_product.price.discount
+        publication.discount_deadline = ps_product.price.discount_deadline
+    if publication.parse_ps_plus_price and ps_product.ps_plus_price:
+        ps_plus_price = normalize_price(ps_product.ps_plus_price.discounted_price, True)
+        if publication.ps_plus_final_price != price:
+            async_to_sync(send_admin_notification)({
+                'text': f'Цена на издание товара {publication.product.title} изменилась',
+                'level': NotifyLevels.WARN.value,
+            })
+            publication.price_changed = True
+        publication.ps_plus_final_price = ps_plus_price
+        publication.ps_plus_discount = ps_product.ps_plus_price.discount
+        publication.ps_plus_discount_deadline = ps_product.ps_plus_price.discount_deadline
+    if publication.parse_image:
+        if not all((publication.product_page_image, publication.search_image, publication.offer_image)):
+            publication.set_photo_from_url(ps_product.portrait_image)
+    publication.save()
+    if publication.parse_platforms:
+        for platform in ps_product.platforms.all():
+            platform = models.Platform.objects.get_or_create(name=platform.name)[0]
+            publication.platforms.add(platform)

@@ -19,7 +19,6 @@ type GamesSliderProps = {
 
 const GamesSlider = React.memo(({ data, isLoading, type }: GamesSliderProps) => {
 
-    console.log(data)
 
 
     return (
