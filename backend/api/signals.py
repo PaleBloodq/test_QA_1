@@ -9,7 +9,6 @@ from api.utils import send_order_to_bot
 from api.senders import send_chat_message
 from settings import settings
 
-
 def ready():
     print('api signals are ready')
 

@@ -66,9 +66,9 @@ class Product(BaseModel):
     release_date = models.DateField('Дата релиза', null=True, blank=True)
     ps_store_url = models.URLField('Ссылка в PS Store', null=True, blank=True, unique=True)
     parse_release_date = models.BooleanField('Парсить дату релиза', default=True)
+    parse_add_ons = models.BooleanField('Парсить аддоны и остальные допы', default=True)
     orders = models.IntegerField('Оплаченных заказов', default=0, editable=False)
     ps_concept = models.OneToOneField(ps_models.Concept, verbose_name='Концепт PS', on_delete=models.SET_NULL, related_name='api_product', null=True, blank=True)
-
     def clean(self):
         if not self.type in (self.TypeChoices.SUBSCRIPTION, self.TypeChoices.DONATION):
             self.ps_store_url = validate_ps_store_url(self.ps_store_url)
@@ -144,6 +144,7 @@ class AbstractProductPublication(BaseModel):
     parse_platforms = models.BooleanField(
         'Парсить платформы', default=True)
 
+
     def set_photo_from_url(self, url: str):
         try:
             response = requests.get(url)
@@ -207,7 +208,6 @@ class AddOn(AbstractProductPublication):
 
 class Subscription(AbstractProductPublication):
     typename = 'subscription'
-    
     duration = models.IntegerField('Длительность в месяцах', null=True)
 
     class Meta:
