@@ -1,4 +1,5 @@
 import logging
+import re
 
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -86,6 +87,7 @@ class SearchProducts(APIView):
     def post(self, request: Request):
         offset = request.data.get('offset', 0)
         limit = request.data.get('limit', 20)
+        q = request.data.get('q')
         query = {}
         if request.data.get('minPrice'):
             query['final_price__gte'] = request.data.get('minPrice')
@@ -95,8 +97,11 @@ class SearchProducts(APIView):
             query['platforms__in'] = request.data.get('platforms')
         if request.data.get('languages'):
             query['languages__in'] = request.data.get('languages')
-        if request.data.get('q'):
-            query['product__title__iregex'] = request.data.get('q')
+        if q:
+            q_words = [re.escape(n) for n in re.sub(r'\W+', ' ', q).lower().split(' ')]
+            q_clean = r'(' + '.*' + '.*|.*'.join(q_words) + '.*' + ')'
+            query['product__title__iregex'] = q_clean
+
         def instances(model):
             if query:
                 return model.objects.filter(**query).distinct()[offset:limit]
