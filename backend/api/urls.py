@@ -2,6 +2,7 @@ from django.urls import path, include
 from api import views
 
 urlpatterns = [
+    path('cart/', views.Cart.as_view()),
     path('token/', include([
         path('refresh/', views.RefreshToken.as_view()),
         path('verify/', views.VerifyToken.as_view()),
