@@ -162,7 +162,7 @@ class AbstractProductPublication(BaseModel):
         return self.typename
     
     def __str__(self) -> str:
-        return f'{self.title}'
+        return f'({self.product.title}) {self.title}'
     
     class Meta:
         abstract = True

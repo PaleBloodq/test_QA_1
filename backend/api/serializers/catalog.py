@@ -1,3 +1,4 @@
+import re
 from rest_framework import serializers
 from .. import models
 
@@ -12,6 +13,7 @@ __all__ = [
     'SubscriptionSerializer',
     'SubscriptionWithProductSerializer',
     'ProductSerializer',
+    'SearchProductsSerializer',
 ]
 
 
@@ -174,3 +176,63 @@ class ProductSerializer(SimpleProductSerializer):
             'add_ons',
             'subscriptions',
         ]
+
+
+class SearchProductsSerializer(serializers.Serializer):
+    minPrice = serializers.IntegerField(required=False)
+    maxPrice = serializers.IntegerField(required=False)
+    platforms = serializers.ListField(
+        required=False,
+        child=serializers.UUIDField()
+    )
+    languages = serializers.ListField(
+        required=False,
+        child=serializers.UUIDField()
+    )
+    q = serializers.CharField(required=False, allow_blank=True)
+    offset = serializers.IntegerField(required=False, default=0)
+    limit = serializers.IntegerField(required=False, default=20)
+    typename = serializers.ChoiceField([
+        'publication', 'add_on', 'subscription'
+    ])
+    
+    def get_serializer_by_typename(self) -> PublicationSerializer:
+        return {
+            'publication': PublicationWithProductSerializer,
+            'add_on': AddOnWithProductSerializer,
+            'subscription': SubscriptionWithProductSerializer,
+        }.get(self.validated_data.get('typename'))
+    
+    def get_query(self) -> dict:
+        query = {}
+        if self.validated_data.get('minPrice'):
+            query['final_price__gte'] = self.validated_data.get('minPrice')
+        if self.validated_data.get('maxPrice'):
+            query['final_price__lte'] = self.validated_data.get('maxPrice')
+        if self.validated_data.get('platforms'):
+            query['platforms__in'] = self.validated_data.get('platforms')
+        if self.validated_data.get('languages'):
+            query['languages__in'] = self.validated_data.get('languages')
+        if self.validated_data.get('q'):
+            q_words = [re.escape(n) for n in re.sub(r'\W+', ' ', self.validated_data.get('q')).lower().split(' ')]
+            q_clean = r'(' + '.*' + '.*|.*'.join(q_words) + '.*' + ')'
+            query['product__title__iregex'] = q_clean
+        return query
+    
+    def get_instances(self, model, query: dict, limit: int, offset: int):
+        if query:
+            instances = model.objects.filter(**query).distinct()
+        else:
+            instances = model.objects.all()
+        return instances.order_by('-discount')[offset:limit]
+
+    def get_response(self) -> dict:
+        serializer = self.get_serializer_by_typename()
+        return serializer(
+            self.get_instances(
+                serializer.Meta.model,
+                self.get_query(),
+                self.validated_data.get('limit'),
+                self.validated_data.get('offset'),
+            ), many=True
+        ).data
