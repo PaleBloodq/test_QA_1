@@ -35,22 +35,23 @@ def parse_product_publications_task(product_ids: list[str], need_notify=True):
                 )[0])
             except Exception as exc:
                 logging.exception(exc)
-        for ps_add_on in ps_models.AddOn.objects.filter(concept=ps_concept):
-            try:
-                utils.update_publication(models.AddOn.objects.get_or_create(
-                    dict(
-                        product=product,
-                        type=models.AddOnType.objects.get_or_create(
-                            dict(
-                                name=ps_add_on.type.name
-                            ),
-                            original_name=ps_add_on.type.name
-                        )[0]
-                    ),
-                    ps_add_on=ps_add_on,
-                )[0])
-            except Exception as exc:
-                logging.exception(exc)
+        if product.parse_add_ons:
+            for ps_add_on in ps_models.AddOn.objects.filter(concept=ps_concept):
+                try:
+                    utils.update_publication(models.AddOn.objects.get_or_create(
+                        dict(
+                            product=product,
+                            type=models.AddOnType.objects.get_or_create(
+                                dict(
+                                    name=ps_add_on.type.name
+                                ),
+                                original_name=ps_add_on.type.name
+                            )[0]
+                        ),
+                        ps_add_on=ps_add_on,
+                    )[0])
+                except Exception as exc:
+                    logging.exception(exc)
         sleep(random.randint(3, 5))
     async_to_sync(send_admin_notification)({
         'text': f'Парсинг завершился',

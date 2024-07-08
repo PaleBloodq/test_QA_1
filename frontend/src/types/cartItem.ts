@@ -9,4 +9,5 @@ export type CartItemType = {
   final_price: number;
   discount: number;
   cashback: number;
+  product_type: "add_on" | "publication" | "subscription";
 };

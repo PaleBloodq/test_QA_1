@@ -17,6 +17,7 @@ export default function SearchItem({ item }: { item: any }) {
         }
     })();
 
+    console.log(item)
 
     return (
         <Link to={baseLink} className="w-[164px] h-fit flex flex-col justify-between items-start">

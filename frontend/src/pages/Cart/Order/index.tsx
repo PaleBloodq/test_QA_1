@@ -28,7 +28,7 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
     }, [sameEmail])
 
     const orderObject = {
-        cart: items?.map((item) => item.id),
+        cart: items?.map((item) => { return { id: item.id, type: item.product_type } }),
         spendCashback: useCashback,
         hasAccount: hasAccount,
         accountEmail: hasAccount ? accountEmail : null,

@@ -31,6 +31,7 @@ export default function SearchPage() {
 
     const inputRef = createRef<HTMLInputElement>();
 
+    console.log(data)
 
     return (
         <Container>
@@ -69,9 +70,9 @@ export default function SearchPage() {
                         </button>
                     </div>
                     <div className="min-h-screen">
-                        {!isLoading && data?.length > 0 ?
+                        {!isLoading && data ?
                             <div className="w-full h-auto flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px] justify-center">
-                                {data?.map((item: any, index: number) => <SearchItem key={index} item={item} />)}
+                                {[...data.publications, ...data.add_ons]?.map((item: any, index: number) => <SearchItem key={index} item={item} />)}
                             </div>
                             :
                             <div className="w-full h-screen flex justify-center flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
