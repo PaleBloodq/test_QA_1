@@ -82,15 +82,6 @@ class Product(BaseModel):
         verbose_name_plural = 'Товары'
 
 
-class Tag(EnumBaseModel):
-    database_name = models.CharField('Системное название', max_length=255)
-    products = models.ManyToManyField(Product, verbose_name='Товары', related_name='tags', blank=True)
-
-    class Meta:
-        verbose_name = 'Тег'
-        verbose_name_plural = 'Теги'
-
-
 class AbstractProductPublication(BaseModel):
     typename = 'abstract_product'
     
@@ -171,7 +162,7 @@ class AbstractProductPublication(BaseModel):
         return self.typename
     
     def __str__(self) -> str:
-        return f'{self.product}: {self.title}'
+        return f'{self.title}'
     
     class Meta:
         abstract = True
@@ -208,8 +199,21 @@ class AddOn(AbstractProductPublication):
 
 class Subscription(AbstractProductPublication):
     typename = 'subscription'
+    
     duration = models.IntegerField('Длительность в месяцах', null=True)
 
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+
+
+class Tag(EnumBaseModel):
+    database_name = models.CharField('Системное название', max_length=255)
+    products = models.ManyToManyField(Product, verbose_name='Товары', related_name='tags', blank=True)
+    publications = models.ManyToManyField(Publication, verbose_name='Издания', related_name='tags', blank=True)
+    add_ons = models.ManyToManyField(AddOn, verbose_name='Аддоны', related_name='tags', blank=True)
+    subscriptions = models.ManyToManyField(Subscription, verbose_name='Подписки', related_name='tags', blank=True)
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
