@@ -66,6 +66,7 @@ services:
 
   payments:
     image: registry.gitlab.com/chat-labs/aoki-bot/payments:latest
+    build: payments/
     depends_on:
       - backend
     env_file:

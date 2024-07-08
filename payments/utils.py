@@ -1,8 +1,10 @@
 import os
+from datetime import datetime, timedelta
 import logging
 import hashlib
 import aiohttp
 from pydantic import BaseModel, UUID4, NonNegativeFloat, Field
+import pytz
 
 
 TERMINAL_KEY = os.environ.get('TINKOFF_TERMINAL_KEY')
@@ -14,6 +16,7 @@ API_URL = 'https://securepay.tinkoff.ru/v2/'
 
 PAYMENT_WEBHOOK_URL = os.environ.get("PAYMENT_WEBHOOK_URL")
 
+BACKEND_TIMEZONE = pytz.timezone(os.environ.get('DJANGO_TIME_ZONE', 'UTC'))
 
 class OrderItem(BaseModel):
     name: str
@@ -60,6 +63,7 @@ async def create_payment(order: Order) -> Payment | None:
         'Recurrent': 'N',
         'CustomerKey': str(order.customer_telegram_id),
         'NotificationURL': PAYMENT_WEBHOOK_URL,
+        'RedirectDueDate': (datetime.now(BACKEND_TIMEZONE) + timedelta(minutes=2)).isoformat(timespec='seconds')
     }
     payment_data['Token'] = await get_token(payment_data)
     payment_data['Receipt'] = {
@@ -83,19 +87,27 @@ async def create_payment(order: Order) -> Payment | None:
         try:
             async with session.post(API_URL+'Init', json=payment_data) as response:
                 payment = await response.json()
-            payment_id = payment.get('PaymentId')
-            get_qr_data = {
-                'TerminalKey': TERMINAL_KEY,
-                'PaymentId': payment_id,
-                'DataType': 'PAYLOAD',
-            }
-            get_qr_data['Token'] = await get_token(get_qr_data)
-            async with session.post(API_URL+'GetQr', json=get_qr_data) as response:
-                qr = await response.json()
-            payment_url = qr.get('Data')
-            return Payment(PaymentId=payment_id, PaymentURL=payment_url)
         except Exception as exc:
             logging.exception(exc)
+            return
+        payment_id = payment.get('PaymentId')
+        get_qr_data = {
+            'TerminalKey': TERMINAL_KEY,
+            'PaymentId': payment_id,
+            'DataType': 'PAYLOAD',
+        }
+        get_qr_data['Token'] = await get_token(get_qr_data)
+        try:
+            async with session.post(API_URL+'GetQr', json=get_qr_data) as response:
+                qr = await response.json()
+        except Exception as exc:
+            logging.exception(exc)
+            return
+        payment_url = qr.get('Data')
+        try:
+            return Payment(PaymentId=payment_id, PaymentURL=payment_url)
+        except Exception as exc:
+            logging.exception(exc, payment, qr, order, payment_data)
 
 
 async def get_payment(payment_id: str) -> dict:

@@ -162,32 +162,19 @@ class OrderInfo:
 
 
 class CreateOrder(APIView):
-    def get_cart(self, cart: list[dict[str, str]]):
-        publications = []
-        add_ons = []
-        subscriptions = []
-        for item in cart:
-            match item.get('type'):
-                case 'publication':
-                    publications.append(item.get('id'))
-                case 'add_on':
-                    add_ons.append(item.get('id'))
-                case 'subscription':
-                    subscriptions.append(item.get('id'))
-        cart = []
-        if publications:
-            cart += list(models.Publication.objects.filter(id__in=publications))
-        if add_ons:
-            cart += list(models.AddOn.objects.filter(id__in=add_ons))
-        if subscriptions:
-            cart += list(models.Subscription.objects.filter(id__in=subscriptions))
-        return cart
+    def get_cart(self, profile: models.Profile):
+        cart = models.Cart.objects.get_or_create(profile=profile)[0]
+        cart_items = list(cart.publications.all()) \
+            + list(cart.add_ons.all()) \
+            + list(cart.subscriptions.all())
+        cart.delete()
+        return cart_items
     
     @utils.auth_required
     def post(self, request: Request, profile: models.Profile):
         order_info = OrderInfo(
             profile,
-            self.get_cart(request.data.get('cart', [])),
+            self.get_cart(profile),
             request.data.get('spendCashback', False),
             not request.data.get('hasAccount', False),
             request.data.get('billEmail', profile.bill_email),
@@ -244,6 +231,28 @@ class ChatMessages(APIView):
 
 
 class UpdateOrderStatus(APIView):
+    def get_product_publication(self, id) -> models.AbstractProductPublication | None:
+        result = models.Publication.objects.filter(id=id).first()
+        if result is None:
+            result = models.AddOn.objects.filter(id=id).first()
+        if result is None:
+            result = models.Subscription.objects.filter(id=id).first()
+        return result
+    
+    def restore_cart(self, order: models.Order) -> models.Cart:
+        cart = models.Cart.objects.get_or_create(profile=order.profile)[0]
+        for item in models.OrderProduct.objects.filter(order=order):
+            product_publication = self.get_product_publication(item.product_id)
+            if product_publication:
+                match product_publication.typename:
+                    case 'publication':
+                        cart.publications.add(product_publication)
+                    case 'add_on':
+                        cart.add_ons.add(product_publication)
+                    case 'subscription':
+                        cart.subscriptions.add(product_publication)
+        return cart
+    
     def post(self, request: Request):
         check_token = requests.post(PAYMENTS_URL+'/check_token', json=request.data).json()
         if check_token.get('TokenCorrect'):
@@ -263,6 +272,11 @@ class UpdateOrderStatus(APIView):
                             'level': NotifyLevels.SUCCESS.value
                         })
                         send_order_created(order)
+                    case 'DEADLINE_EXPIRED':
+                        order.profile.cashback += order.spend_cashback_amount
+                        order.profile.save()
+                        self.restore_cart(order)
+                        order.delete()
                     case 'REJECTED'| 'REVERSED' | 'PARTIAL_REVERSED'| 'PARTIAL_REFUNDED'| 'REFUNDED':
                         async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
                                                                 'level': NotifyLevels.ERROR.value})
