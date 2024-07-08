@@ -97,7 +97,6 @@ services:
       - "6379:6379"
     restart: unless-stopped
 
-
   flower:
     image: mher/flower
     environment:
@@ -107,6 +106,22 @@ services:
       - 8889:8888
     depends_on:
       - redis
+
+  ngrok:
+    image: ngrok/ngrok:alpine
+    env_file:
+      - ./local.env
+    command: 'http --domain=genuine-teaching-rhino.ngrok-free.app nginx:80'
+    links:
+      - nginx
+    ports:
+      - '4040:4040'
+    expose:
+      - '4040'
+    depends_on:
+      - backend
+      - nginx
+    restart: unless-stopped
 
 volumes:
   postgres_data:
