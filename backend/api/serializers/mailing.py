@@ -8,13 +8,23 @@ __all__ = [
 ]
 
 
+class MailingButtonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.MailingButton
+        fields = [
+            'text',
+            'url'
+        ]
+
+
 class SendMailingSerializer(serializers.ModelSerializer):
     telegram_ids = serializers.SerializerMethodField()
     media = serializers.SerializerMethodField()
+    buttons = serializers.SerializerMethodField()
     
     def get_telegram_ids(self, obj: models.Mailing) -> list[int]:
         return list(models.Profile.objects.all().values_list(
-                'telegram_id', flat=True
+            'telegram_id', flat=True
         ))
     
     def get_media(self, obj: models.Mailing) -> list[str]:
@@ -23,6 +33,12 @@ class SendMailingSerializer(serializers.ModelSerializer):
             for media in models.MailingMedia.objects.filter(mailing=obj)
         ]
     
+    def get_buttons(self, obj: models.Mailing) -> list[dict]:
+        return MailingButtonSerializer(
+            models.MailingButton.objects.filter(mailing=obj),
+            many=True
+        ).data
+    
     class Meta:
         model = models.Mailing
         fields = [
@@ -30,6 +46,7 @@ class SendMailingSerializer(serializers.ModelSerializer):
             'telegram_ids',
             'text',
             'media',
+            'buttons',
         ]
 
 

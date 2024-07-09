@@ -74,8 +74,14 @@ class OrderList(BaseModel):
     orders: List[Order]
 
 
+class MailingButton(BaseModel):
+    url: str
+    text: str
+
+
 class Mailing(BaseModel):
     id: str
     text: str
     telegram_ids: list[int]
     media: list[str]
+    buttons: list[MailingButton]
