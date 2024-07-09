@@ -1,4 +1,5 @@
 import logging
+import re
 from urllib.parse import quote
 from decimal import Decimal
 from datetime import datetime
@@ -138,13 +139,22 @@ class AbstractProductSerializer(serializers.Serializer):
     
     def to_internal_value(self, data):
         value = super().to_internal_value(data)
-        for mobilecta in value.pop('mobilectas'):
+        for mobilecta in value.pop('mobilectas', []):
             field = self.price_fields.get(mobilecta.get('type'))
             if field:
                 value[field] = mobilecta
         return value
     
+    def get_name(self, name: str, concept: models.Concept) -> str:
+        if name == concept.name:
+            return name
+        return re.sub(f'{concept.name}\W*', '', name)
+    
     def create(self, validated_data: dict):
+        validated_data['name'] = self.get_name(
+            validated_data.get('name'),
+            validated_data.get('concept')
+        )
         price = validated_data.get('price')
         if price:
             validated_data['price'] = models.Mobilecta.objects.create(**price)
@@ -160,6 +170,10 @@ class AbstractProductSerializer(serializers.Serializer):
         return instance
     
     def update(self, instance: models.AbstractProduct, validated_data):
+        instance.name = self.get_name(
+            validated_data.get('name'),
+            validated_data.get('concept')
+        )
         price = validated_data.get('price')
         if price:
             models.Mobilecta.objects.filter(pk=instance.price.pk).update(**price)
