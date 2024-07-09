@@ -53,5 +53,5 @@ def send_chat_message(chat_message: models.ChatMessage):
 def send_order_created(order: models.Order):
     async_to_sync(_send_order_manager)(
         'new_order',
-        order=serializers.OrderSerializer(order).data
+        order=serializers.OrderPreviewSerializer(order).data
     )

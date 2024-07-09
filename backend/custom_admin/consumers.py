@@ -33,6 +33,7 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
     
     async def receive(self, text_data):
         from django.contrib.auth.models import User
+        from django.db.models import Exists, OuterRef, Subquery
         from api import models, senders
         data = json.loads(text_data)
         match data.get('type'):
@@ -85,7 +86,12 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
                         query=dict(
                             status=models.Order.StatusChoices.PAID,
                             manager=None,
-                        )
+                        ),
+                        args=[
+                            Exists(models.ChatMessage.objects.filter(
+                                order=OuterRef('pk')
+                            ))
+                        ]
                     ),
                 }))
             case 'completed_orders_tab':
@@ -119,10 +125,10 @@ class OrderManagerConsumer(AsyncWebsocketConsumer):
     async def order_completed(self, event: dict):
         await self.send(text_data=json.dumps(event))
     
-    def get_orders(self, limit: int, offset: int, query: dict = {}):
+    def get_orders(self, limit: int, offset: int, query: dict = {}, args: list = []):
         from api import models
         from api.serializers.order_manager import OrderPreviewSerializer
-        return OrderPreviewSerializer(models.Order.objects.filter(**query)[offset:limit], many=True).data
+        return OrderPreviewSerializer(models.Order.objects.filter(*args, **query)[offset:limit], many=True).data
     
     def get_order_by_id(self, order_id: str) -> dict:
         from api import models

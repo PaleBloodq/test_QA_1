@@ -164,3 +164,7 @@ TELEGRAM_BOT_HOST = os.environ.get('TELEGRAM_BOT_HOST')
 TELEGRAM_BOT_PORT = int(os.environ.get('TELEGRAM_BOT_PORT'))
 
 TELEGRAM_BOT_URL = f'{TELEGRAM_BOT_SCHEMA}://{TELEGRAM_BOT_HOST}{f":{TELEGRAM_BOT_PORT}" if TELEGRAM_BOT_PORT else ""}'
+
+PAYMENTS_URL = f'{os.environ.get("PAYMENTS_SCHEMA")}://{os.environ.get("PAYMENTS_HOST")}'
+if os.environ.get("PAYMENTS_PORT"):
+    PAYMENTS_URL += f':{os.environ.get("PAYMENTS_PORT")}'

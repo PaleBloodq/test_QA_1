@@ -63,7 +63,8 @@ async def create_payment(order: Order) -> Payment | None:
         'Recurrent': 'N',
         'CustomerKey': str(order.customer_telegram_id),
         'NotificationURL': PAYMENT_WEBHOOK_URL,
-        'RedirectDueDate': (datetime.now(BACKEND_TIMEZONE) + timedelta(minutes=2)).isoformat(timespec='seconds')
+        'FailURL': PAYMENT_WEBHOOK_URL,
+        'RedirectDueDate': (datetime.now(BACKEND_TIMEZONE) + timedelta(minutes=30)).isoformat(timespec='seconds')
     }
     payment_data['Token'] = await get_token(payment_data)
     payment_data['Receipt'] = {

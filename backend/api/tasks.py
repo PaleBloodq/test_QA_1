@@ -91,3 +91,16 @@ def send_mailing(task, mailing_id: str):
         else:
             mailing.status = models.Mailing.Status.ERROR
         mailing.save()
+
+
+@celery_app.task(bind=True)
+def check_order_expired(task, order_id: str):
+    order = models.Order.objects.filter(id=order_id).first()
+    if order is None:
+        return
+    if order.status != models.Order.StatusChoices.PAYMENT:
+        return
+    order.profile.cashback += order.spend_cashback_amount
+    order.profile.save()
+    utils.restore_cart(order)
+    order.delete()

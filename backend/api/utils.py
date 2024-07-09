@@ -183,3 +183,27 @@ def update_publication(publication: models.Publication | models.AddOn):
         for platform in ps_product.platforms.all():
             platform = models.Platform.objects.get_or_create(name=platform.name)[0]
             publication.platforms.add(platform)
+
+
+def get_product_publication(id: str) -> models.AbstractProductPublication | None:
+    result = models.Publication.objects.filter(id=id).first()
+    if result is None:
+        result = models.AddOn.objects.filter(id=id).first()
+    if result is None:
+        result = models.Subscription.objects.filter(id=id).first()
+    return result
+
+
+def restore_cart(order: models.Order) -> models.Cart:
+    cart = models.Cart.objects.get_or_create(profile=order.profile)[0]
+    for item in models.OrderProduct.objects.filter(order=order):
+        product_publication = get_product_publication(item.product_id)
+        if product_publication:
+            match product_publication.typename:
+                case 'publication':
+                    cart.publications.add(product_publication)
+                case 'add_on':
+                    cart.add_ons.add(product_publication)
+                case 'subscription':
+                    cart.subscriptions.add(product_publication)
+    return cart
