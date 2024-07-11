@@ -6,31 +6,22 @@ import Button from "../../../components/common/Button";
 import PriceSlider from "./PriceSlider";
 import { FilterInitData } from "../../../types/filterInitData";
 import { searchSelector } from "../../../features/Search/searchSelectors";
+import useMultiTypeSearch from "../../../hooks/useMultiTypeSearch";
 
 type FilterPropsType = {
     initData: FilterInitData,
     setShowFilter: (value: boolean) => void,
-    getSearchProducts: (arg: any) => any
-
+    handleSearch: () => void
 }
 
-export default function Filter({ initData, setShowFilter, getSearchProducts }: FilterPropsType) {
-
+export default function Filter({ initData, setShowFilter, handleSearch }: FilterPropsType) {
     const dispatch = useDispatch();
+    const { platforms, languages } = useSelector(searchSelector);
 
-    const { platforms, languages, limit, maxPrice, minPrice, value } = useSelector(searchSelector)
+
 
     function resetFilter() {
         dispatch(resetSearchSettings(initData))
-    }
-
-    const params = {
-        minPrice: minPrice,
-        maxPrice: maxPrice,
-        platforms: platforms,
-        languages: languages,
-        limit: limit,
-        q: value
     }
 
     return (
@@ -46,18 +37,21 @@ export default function Filter({ initData, setShowFilter, getSearchProducts }: F
             <div>
                 <h3 className="text-subtitle block mb-4">Платформа</h3>
                 <div className="flex gap-[10px]">
-                    {initData.platforms.map((platform, index: number) => <button key={'platform-' + index}
-                        onClick={() => dispatch(setSearchPlatforms(platform.id))}
-                    >
-                        <CheckField checked={platforms.includes(platform.id)}>{platform.name}</CheckField>
-                    </button>)
-                    }
+                    {initData.platforms.map((platform, index: number) => (
+                        <button key={'platform-' + index} onClick={() => dispatch(setSearchPlatforms(platform.id))}>
+                            <CheckField checked={platforms.includes(platform.id)}>{platform.name}</CheckField>
+                        </button>
+                    ))}
                 </div>
             </div>
             <div className="mt-7">
                 <h3 className="text-subtitle block mb-4">Язык</h3>
                 <div className="flex gap-[10px] flex-wrap">
-                    {initData.languages.map((lang, index: number) => <button key={'language-' + index} onClick={() => dispatch(setSearchLanguages(lang.id))}><CheckField checked={languages.includes(lang.id)}>{lang.name}</CheckField></button>)}
+                    {initData.languages.map((lang, index: number) => (
+                        <button key={'language-' + index} onClick={() => dispatch(setSearchLanguages(lang.id))}>
+                            <CheckField checked={languages.includes(lang.id)}>{lang.name}</CheckField>
+                        </button>
+                    ))}
                 </div>
             </div>
             <div className="mt-7">
@@ -65,10 +59,10 @@ export default function Filter({ initData, setShowFilter, getSearchProducts }: F
                 <div className="flex flex-col gap-4">
                     <PriceSlider initData={initData} />
                     <div className="w-full mt-[100px]">
-                        <Button onClick={() => { setShowFilter(false); getSearchProducts({ params }) }}>Применить фильтры</Button>
+                        <Button onClick={() => { handleSearch(); setShowFilter(false); }}>Применить фильтры</Button>
                     </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }

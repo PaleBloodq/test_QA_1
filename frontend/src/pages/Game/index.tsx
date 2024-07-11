@@ -85,15 +85,15 @@ export default function Game() {
 
 
     return (
-        <Container>
+        <div>
             <div className="flex flex-col items-center">
                 <div className="flex flex-col items-start w-full">
-                    <img className="w-full h-[400px] rounded-xl mb-8 object-cover" src={replaceUrl(currentPublication.product_page_image)} alt="game image" />
-                    <div className='w-full -mt-16 bg-white dark:bg-[#1a1e22] rounded-t-3xl'>
-                        <AddToWishlist id={currentPublication.id} />
-                        <div className='flex items-center mb-2 gap-2'>
+                    <img className="w-full h-[400px] mb-8 object-cover" src={replaceUrl(currentPublication.product_page_image)} alt="game image" />
+                    <div className='w-full -mt-16 bg-white dark:bg-[#1a1e22] rounded-t-3xl px-3 py-1'>
+                        <div className='flex items-center gap-2'>
                             <h1 className="text-header">{title}</h1>
                             {isNew(data.release_date) && <Tag type="new">Новинка</Tag>}
+                            <AddToWishlist id={currentPublication.id} />
                         </div>
                         <div className="flex items-center flex-wrap w-full gap-2">
                             {!isPsPlus ? (
@@ -135,21 +135,21 @@ export default function Game() {
                         <div className='flex flex-col gap-2 w-full'>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Платформа:</p>
-                                <p className='text-title text-[14px]'>{currentPublication.platforms.join(', ')}</p>
+                                <p className='text-title text-[14px]'>{currentPublication.platforms.join(', ') || 'Нет данных'}</p>
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Язык:</p>
-                                <p className='text-title text-[14px]'>{currentPublication.languages.join(', ')}</p>
+                                <p className='text-title text-[14px]'>{currentPublication.languages.join(', ') || 'Нет данных'}</p>
                             </div>
                             <div className='w-full flex justify-between'>
                                 <p className='text-subtitle'>Дата релиза:</p>
-                                <p className='text-title text-[14px]'>{data.release_date}</p>
+                                <p className='text-title text-[14px]'>{data.release_date || 'Нет данных'}</p>
                             </div>
                         </div>
                     </div>
                     <AddToCartButton cartItem={cartItem} />
                 </div>
             </div>
-        </Container>
+        </div>
     );
 }
