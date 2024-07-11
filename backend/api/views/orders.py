@@ -1,10 +1,8 @@
 import logging
 from decimal import Decimal
-import os
-from datetime import date
+from datetime import date, timedelta
 from dataclasses import dataclass
 import base64
-import typing
 import uuid
 from PIL import Image
 from io import BytesIO
@@ -14,16 +12,11 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from django.db.models import Sum
-from django.db.models.manager import BaseManager
 from django.core.files.base import ContentFile
-from api import models, serializers, utils
+from django.utils import timezone
+from api import models, serializers, utils, tasks
 from api.senders import send_admin_notification, NotifyLevels, send_order_created, send_chat_message
-
-
-PAYMENTS_URL = f'{os.environ.get("PAYMENTS_SCHEMA")}://{os.environ.get("PAYMENTS_HOST")}'
-if os.environ.get("PAYMENTS_PORT"):
-    PAYMENTS_URL += f':{os.environ.get("PAYMENTS_PORT")}'
+from settings import PAYMENTS_URL, DEBUG
 
 
 class Orders(APIView):
@@ -158,36 +151,28 @@ class OrderInfo:
         )
         if created:
             order = self.fill_order(order, promo_code_discount)
+            tasks.check_order_expired.apply_async(
+                args=[str(order.id)],
+                eta=timezone.now()+timedelta(minutes=30),
+                task_id=f'check_order_{order.id}_expired'
+            )
         return order
 
 
 class CreateOrder(APIView):
-    def get_cart(self, cart: list[dict[str, str]]):
-        publications = []
-        add_ons = []
-        subscriptions = []
-        for item in cart:
-            match item.get('type'):
-                case 'publication':
-                    publications.append(item.get('id'))
-                case 'add_on':
-                    add_ons.append(item.get('id'))
-                case 'subscription':
-                    subscriptions.append(item.get('id'))
-        cart = []
-        if publications:
-            cart += list(models.Publication.objects.filter(id__in=publications))
-        if add_ons:
-            cart += list(models.AddOn.objects.filter(id__in=add_ons))
-        if subscriptions:
-            cart += list(models.Subscription.objects.filter(id__in=subscriptions))
-        return cart
+    def get_cart(self, profile: models.Profile):
+        cart = models.Cart.objects.get_or_create(profile=profile)[0]
+        cart_items = list(cart.publications.all()) \
+            + list(cart.add_ons.all()) \
+            + list(cart.subscriptions.all())
+        cart.delete()
+        return cart_items
     
     @utils.auth_required
     def post(self, request: Request, profile: models.Profile):
         order_info = OrderInfo(
             profile,
-            self.get_cart(request.data.get('cart', [])),
+            self.get_cart(profile),
             request.data.get('spendCashback', False),
             not request.data.get('hasAccount', False),
             request.data.get('billEmail', profile.bill_email),
@@ -238,36 +223,54 @@ class ChatMessages(APIView):
                 img.save(img_io, format="WEBP", quality=50)
                 img_io.seek(0)
                 order_message_image.image.save(f'photo_{uuid.uuid4().hex}.webp', ContentFile(img_io.getvalue()), save=True)
-            send_chat_message(message)
+            if models.ChatMessage.objects.filter(order=order, manager=None).count() == 1:
+                send_order_created(order)
+            else:
+                send_chat_message(message)
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class UpdateOrderStatus(APIView):
-    def post(self, request: Request):
-        check_token = requests.post(PAYMENTS_URL+'/check_token', json=request.data).json()
-        if check_token.get('TokenCorrect'):
-            order = models.Order.objects.filter(id=request.data.get('OrderId')).first()
-            if order:
-                match request.data.get('Status'):
-                    case 'CONFIRMED':
-                        if order.status == models.Order.StatusChoices.PAID:
-                            return Response('OK')
-                        order.status = models.Order.StatusChoices.PAID
-                        order.profile.cashback += order.cashback
-                        order.profile.save()
-                        order.save()
-                        utils.update_sales_leaders(order)
-                        async_to_sync(send_admin_notification)({
-                            'text': f'Заказ {order.id} оплачен',
-                            'level': NotifyLevels.SUCCESS.value
-                        })
-                        send_order_created(order)
-                    case 'REJECTED'| 'REVERSED' | 'PARTIAL_REVERSED'| 'PARTIAL_REFUNDED'| 'REFUNDED':
-                        async_to_sync(send_admin_notification)({'text': f'Заказ {order.id} не был оплачен за выделенное время',
-                                                                'level': NotifyLevels.ERROR.value})
-                        order.profile.cashback += order.spend_cashback_amount
-                        order.profile.save()
-                        order.status = models.Order.StatusChoices.ERROR
-                        order.save()
+    def check_token(self, data: dict) -> bool:
+        if DEBUG:
+            return True
+        check_token = requests.post(PAYMENTS_URL+'/check_token', json=data).json()
+        return check_token.get('TokenCorrect')
+    
+    def order_paid(self, order: models.Order):
+        if order.status != models.Order.StatusChoices.PAID:
+            order.status = models.Order.StatusChoices.PAID
+            order.profile.cashback += order.cashback
+            order.profile.save()
+            order.save()
+            utils.update_sales_leaders(order)
+            async_to_sync(send_admin_notification)({
+                'text': f'Заказ {order.id} оплачен',
+                'level': NotifyLevels.SUCCESS.value
+            })
         return Response('OK')
+    
+    def order_rejected(self, order: models.Order):
+        async_to_sync(send_admin_notification)({
+            'text': f'Заказ {order.id} не был оплачен за выделенное время',
+            'level': NotifyLevels.ERROR.value
+        })
+        order.profile.cashback += order.spend_cashback_amount
+        order.profile.save()
+        order.status = models.Order.StatusChoices.ERROR
+        order.save()
+        return Response('OK')
+    
+    def post(self, request: Request):
+        if not self.check_token(request.data):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        order = models.Order.objects.filter(id=request.data.get('OrderId')).first()
+        if order is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        match request.data.get('Status'):
+            case 'AUTHORIZED':
+                return Response('OK')
+            case 'CONFIRMED':
+                return self.order_paid(order)
+        return self.order_rejected(order)

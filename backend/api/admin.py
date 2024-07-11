@@ -106,9 +106,14 @@ class MailingMediaInline(admin.TabularInline):
     extra = 0
 
 
+class MailingButtonInline(admin.TabularInline):
+    model = models.MailingButton
+    extra = 0
+
+
 @admin.register(models.Mailing)
 class MailingAdmin(admin.ModelAdmin):
-    inlines = [MailingMediaInline]
+    inlines = [MailingMediaInline, MailingButtonInline]
     readonly_fields = ['sent_count', 'received_count']
     list_display = ['start_on', 'status', 'text']
     list_filter = ['start_on', 'status']

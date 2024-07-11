@@ -79,7 +79,8 @@ async def mailing(request: Request) -> Response:
 async def send_mailing_messages(mailing: Mailing):
     await asyncio.sleep(1)
     media = []
-    total_messages = ()
+    messages_ids: dict[int, list] = {}
+    received_count = 0
     for url in mailing.media:
         filepath = BACKEND_URL + url
         match url.split('.')[-1]:
@@ -87,27 +88,45 @@ async def send_mailing_messages(mailing: Mailing):
                 media.append(InputMediaPhoto(media=URLInputFile(filepath)))
             case _:
                 media.append(InputMediaDocument(media=URLInputFile(filepath)))
+    reply_markup = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text=button.text, url=button.url)]
+        for button in mailing.buttons
+    ]) if mailing.buttons else None
     for telegram_id in mailing.telegram_ids:
         try:
             if media:
                 if len(media) == 1:
-                    message = await bot.send_photo(telegram_id, media[0].media, caption=mailing.text[:1024])
+                    message = await bot.send_photo(
+                        chat_id=telegram_id,
+                        photo=media[0].media,
+                        caption=mailing.text[:1024],
+                        reply_markup=reply_markup
+                    )
                 else:
                     media[0].caption = mailing.text[:1024]
-                    message = await bot.send_media_group(telegram_id, media)
+                    message = await bot.send_media_group(
+                        chat_id=telegram_id,
+                        media=media
+                    )
             else:
-                message = await bot.send_message(telegram_id, mailing.text[:4096])
+                message = await bot.send_message(
+                    chat_id=telegram_id,
+                    text=mailing.text[:4096],
+                    reply_markup=reply_markup
+                )
         except:
             continue
-        total_messages += (message.message_id, )
+        messages_ids.setdefault(telegram_id, [])
+        messages_ids[telegram_id].append(message.message_id)
+        received_count += 1
         await asyncio.sleep(0.04)
     async with ClientSession() as session:
         await session.patch(
             BACKEND_URL + '/api/mailing/',
             json={
                 'id': mailing.id,
-                'messages_ids': list(total_messages),
-                'received_count': len(total_messages),
+                'messages_ids': messages_ids,
+                'received_count': received_count,
                 'status': 'COMPLETED',
             }
         )

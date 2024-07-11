@@ -1,9 +1,8 @@
 import logging
-import re
-
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.status import *
 from api import models, serializers
 from api.cache_api import CacheProxy
 
@@ -21,8 +20,20 @@ class GetCategories(APIView):
             {
                 'tag': tag.database_name,
                 'name': tag.name,
-                'objects': serializers.ProductSerializer(
+                'products': serializers.ProductSerializer(
                     tag.products.all(),
+                    many=True,
+                ).data,
+                'publications': serializers.PublicationWithProductSerializer(
+                    tag.publications.all(),
+                    many=True,
+                ).data,
+                'add_ons': serializers.AddOnWithProductSerializer(
+                    tag.add_ons.all(),
+                    many=True,
+                ).data,
+                'subscriptions': serializers.SubscriptionWithProductSerializer(
+                    tag.subscriptions.all(),
                     many=True,
                 ).data,
             } for tag in models.Tag.objects.all()]
@@ -85,38 +96,6 @@ class GetFilters(APIView):
 
 class SearchProducts(APIView):
     def post(self, request: Request):
-        offset = request.data.get('offset', 0)
-        limit = request.data.get('limit', 20)
-        q = request.data.get('q')
-        query = {}
-        if request.data.get('minPrice'):
-            query['final_price__gte'] = request.data.get('minPrice')
-        if request.data.get('maxPrice'):
-            query['final_price__lte'] = request.data.get('maxPrice')
-        if request.data.get('platforms'):
-            query['platforms__in'] = request.data.get('platforms')
-        if request.data.get('languages'):
-            query['languages__in'] = request.data.get('languages')
-        if q:
-            q_words = [re.escape(n) for n in re.sub(r'\W+', ' ', q).lower().split(' ')]
-            q_clean = r'(' + '.*' + '.*|.*'.join(q_words) + '.*' + ')'
-            query['product__title__iregex'] = q_clean
-
-        def instances(model):
-            if query:
-                return model.objects.filter(**query).distinct()[offset:limit]
-            return model.objects.all()[offset:limit]
-        return Response({
-            'publications': serializers.PublicationWithProductSerializer(
-                instances(models.Publication),
-                many=True
-            ).data,
-            'add_ons': serializers.AddOnWithProductSerializer(
-                instances(models.AddOn),
-                many=True
-            ).data,
-            'subscriptions': serializers.SubscriptionWithProductSerializer(
-                instances(models.Subscription),
-                many=True
-            ).data,
-        })
+        serializer = serializers.SearchProductsSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.get_response())

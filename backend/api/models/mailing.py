@@ -6,6 +6,7 @@ from .base import BaseModel
 __all__ = [
     'Mailing',
     'MailingMedia',
+    'MailingButton',
 ]
 
 
@@ -31,3 +32,17 @@ class Mailing(BaseModel):
 class MailingMedia(BaseModel):
     mailing = models.ForeignKey(Mailing, verbose_name='Рассылка', on_delete=models.CASCADE)
     media = models.FileField('Медиа')
+    
+    class Meta:
+        verbose_name = 'Медиа'
+        verbose_name_plural = 'Медиа'
+
+
+class MailingButton(BaseModel):
+    mailing = models.ForeignKey(Mailing, verbose_name='Рассылка', on_delete=models.CASCADE)
+    url = models.URLField('Ссылка')
+    text = models.CharField('Текст кнопки')
+    
+    class Meta:
+        verbose_name = 'Кнопка'
+        verbose_name_plural = 'Кнопки'
