@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ProductType } from "../types/ProductType";
 import { PublicationType } from "../types/PublicationType";
+import { AddonType } from "../types/AddonType";
 
 export const productsApi = createApi({
   reducerPath: "productsApi",
@@ -14,6 +15,9 @@ export const productsApi = createApi({
     }),
     getAnyPublication: builder.query<PublicationType, string>({
       query: (id) => `api/publication/${id}`,
+    }),
+    getAddon: builder.query<AddonType, string>({
+      query: (id) => `api/publication/add_on/${id}`,
     }),
     getSearchProducts: builder.mutation({
       query: ({ params }) => ({
@@ -34,4 +38,5 @@ export const {
   useGetSearchProductsMutation,
   useGetSearchFiltersQuery,
   useGetAnyPublicationQuery,
+  useGetAddonQuery,
 } = productsApi;

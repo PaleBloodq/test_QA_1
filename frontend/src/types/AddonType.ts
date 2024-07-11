@@ -1,4 +1,4 @@
-export type Addon = {
+export type AddonType = {
   id: string;
   product_type: "add_on";
   is_main: boolean;

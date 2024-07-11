@@ -1,4 +1,4 @@
-import { Addon } from "./Addon";
+import { AddonType } from "./AddonType";
 import { PublicationType } from "./PublicationType";
 
 export type ProductType = {
@@ -7,5 +7,5 @@ export type ProductType = {
   title: string;
   release_date: string;
   publications: PublicationType[];
-  add_ons: Addon[];
+  add_ons: AddonType[];
 };

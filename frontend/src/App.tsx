@@ -11,6 +11,7 @@ import Profile from './pages/Profile';
 import { useGetUserQuery, useRefreshTokenMutation } from './services/userApi';
 import { setIsLoggined, setUpdateData, setUserData } from './features/User/userSlice';
 import { useDispatch } from 'react-redux';
+import Addon from './pages/Addon';
 
 export default function App() {
 
@@ -81,19 +82,11 @@ export default function App() {
 
 
 
-  const telegramThemeColor = window?.Telegram?.WebApp.colorScheme
-
   useEffect(() => {
     const bodyDiv = document.getElementById('webapp-root-body')
-    if (telegramThemeColor === 'light') {
-      bodyDiv.classList.value = 'light'
-      window?.Telegram?.WebApp.setHeaderColor('#ffffff')
-    } else {
-      bodyDiv.classList.value = 'dark'
-      window?.Telegram?.WebApp.setHeaderColor('#1a1e22')
-    }
-
-  }, [telegramThemeColor])
+    bodyDiv.classList.value = 'dark'
+    window?.Telegram?.WebApp.setHeaderColor('#1a1e22')
+  }, [])
 
   const backButton = window?.Telegram?.WebApp.BackButton
   useEffect(() => {
@@ -115,6 +108,7 @@ export default function App() {
           <Route path='/game/:gameId/:pubId' element={<Game />} />
           <Route path='/subscription/:subscriptionId/:id' element={<Subscription />} />
           <Route path='/donation/:id' element={<DonationPage />} />
+          <Route path='/addon/:id' element={<Addon />} />
           <Route path='/search' element={<SearchPage />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/profile' element={<Profile />} />

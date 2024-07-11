@@ -10,6 +10,7 @@
 
 body {
   overflow-x: hidden;
+  background-color: rgb(26 30 34);
 }
 
 @layer components {

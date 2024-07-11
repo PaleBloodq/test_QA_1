@@ -17,6 +17,9 @@ export default function SearchPage() {
     const inputRef = createRef<HTMLInputElement>();
 
     useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
         handleSearch()
     }, [])
 
