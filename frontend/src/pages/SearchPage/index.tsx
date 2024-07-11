@@ -1,52 +1,42 @@
-import { useDispatch, useSelector } from "react-redux";
+import React, { createRef, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Container from "../../components/common/Container";
 import { searchSelector } from "../../features/Search/searchSelectors";
-import { setSearchValue } from "../../features/Search/searchSlice";
-import { useGetSearchFiltersQuery, useGetSearchProductsMutation } from "../../services/productsApi";
-import { createRef, useEffect, useState } from "react";
+import { useGetSearchFiltersQuery } from "../../services/productsApi";
 import Filter from "./Filter";
 import SearchItem from "./SearchItem";
+import useMultiTypeSearch from "../../hooks/useMultiTypeSearch";
+
+const typenames = ["publication", "add_on", "subscription"];
 
 export default function SearchPage() {
-
-    const dispatch = useDispatch();
-    const { value, languages, limit, maxPrice, minPrice, offset, platforms } = useSelector(searchSelector);
-    const [showFilter, setShowFilter] = useState(false)
-
-    const [getSearchProducts, { data, isLoading }] = useGetSearchProductsMutation();
-    const { data: filterData } = useGetSearchFiltersQuery({})
-    const params = {
-        minPrice: minPrice,
-        maxPrice: maxPrice,
-        platforms: platforms,
-        languages: languages,
-        limit: limit,
-        q: value,
-        offset: offset,
-    }
-    useEffect(() => {
-        getSearchProducts({ params })
-        inputRef.current.focus();
-    }, [])
-
+    const { value } = useSelector(searchSelector);
+    const { products, isLoading, handleSearch, setSearchValue } = useMultiTypeSearch(typenames);
+    const [showFilter, setShowFilter] = useState(false);
+    const { data: filterData } = useGetSearchFiltersQuery({});
     const inputRef = createRef<HTMLInputElement>();
 
-    console.log(data)
+    useEffect(() => {
+        handleSearch()
+    }, [])
 
     return (
         <Container>
-            {showFilter && <Filter getSearchProducts={getSearchProducts} setShowFilter={setShowFilter} initData={filterData} />}
+            {showFilter && <Filter handleSearch={handleSearch} setShowFilter={setShowFilter} initData={filterData} />}
             {!showFilter &&
                 <div className="w-full flex flex-col">
                     <div className="w-full h-[38px] flex items-center justify-between">
                         <input
                             ref={inputRef}
-                            onKeyDown={(event) => event.key === "Enter" && getSearchProducts({ params })}
-                            onChange={(e) => dispatch(setSearchValue(e.target.value))} value={value}
-                            className="w-full bg-transparent outline-none text-header" type="text" placeholder="Найти игру..."
+                            onKeyDown={(event) => event.key === "Enter" && handleSearch()}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                            value={value}
+                            className="w-full bg-transparent outline-none text-header"
+                            type="text"
+                            placeholder="Найти игру..."
                         />
                         <button
-                            onClick={() => getSearchProducts({ params })}
+                            onClick={handleSearch}
                             className="w-[38px] h-[38px] rounded-xl bg-[#f6f7fa] border border-[#e7e7e8] dark:border-none dark:bg-[#FFFFFF0D] flex flex-shrink-0 items-center justify-center mx-2"
                         >
                             <svg
@@ -70,18 +60,23 @@ export default function SearchPage() {
                         </button>
                     </div>
                     <div className="min-h-screen">
-                        {!isLoading && data ?
-                            <div className="w-full h-auto flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px] justify-center">
-                                {[...data.publications, ...data.add_ons]?.map((item: any, index: number) => <SearchItem key={index} item={item} />)}
+                        {isLoading ?
+                            <div className="w-full h-screen flex justify-center flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
+                                <h1 className="text-header">Идет поиск..</h1>
                             </div>
                             :
-                            <div className="w-full h-screen flex justify-center flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
-                                <h1 className="text-header">Ничего не нашлось 😓</h1>
-                            </div>
+                            products.length > 0 ?
+                                <div className="w-full h-auto flex flex-wrap mt-10 gap-y-[40px] gap-x-[15px] justify-center">
+                                    {products.map((item: any, index: number) => <SearchItem key={index} item={item} />)}
+                                </div>
+                                :
+                                <div className="w-full h-screen flex justify-center flex-wrap mt-10 gap-y-[40px] gap-x-[15px]">
+                                    <h1 className="text-header">Ничего не найдено</h1>
+                                </div>
                         }
                     </div>
                 </div>
             }
         </Container>
-    )
+    );
 }

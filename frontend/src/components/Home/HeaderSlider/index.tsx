@@ -42,7 +42,7 @@ export default function HeaderSlider({ data }: { data: SectionType }) {
                     className="headerSwiper"
                     ref={swiperRef}
                 >
-                    {data.objects.map((game: ProductType, index: number) => {
+                    {data.products.map((game: ProductType, index: number) => {
                         const mainPublication = (game.publications.find((item) => item.is_main === true)) || game.publications[0];
                         return (
                             <SwiperSlide key={`header-${index}`}>

@@ -4,7 +4,7 @@ import GamesSlider from "../../common/GamesSlider";
 
 export default function Leaders({ data }: { data: SectionType }) {
 
-    const isLoading = useIsLoading(data?.objects?.length);
+    const isLoading = useIsLoading(data?.products?.length);
 
     return (
         <div className="w-screen relative -ml-[15px]">
@@ -13,7 +13,7 @@ export default function Leaders({ data }: { data: SectionType }) {
                     <h1 className="text-header ml-5">Лидеры продаж</h1>
                 </div>
                 <div className="ml-2">
-                    <GamesSlider type="GAME" data={data?.objects} isLoading={isLoading} />
+                    <GamesSlider type="GAME" data={data?.products} isLoading={isLoading} />
                 </div>
             </div>
         </div>

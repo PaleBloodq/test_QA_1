@@ -6,8 +6,8 @@ export default function Subscribes({ psSubs, eaSubs }: { psSubs: SectionType, ea
 
     return (
         <div className="mt-7 flex flex-col gap-7">
-            <PSPlus data={psSubs?.objects} />
-            <EAPlay data={eaSubs?.objects} />
+            <PSPlus data={psSubs?.products} />
+            <EAPlay data={eaSubs?.products} />
         </div>
     )
 }
