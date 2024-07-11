@@ -5,15 +5,17 @@ import { replaceUrl } from "../../../helpers/replaceUrl"
 export default function SearchItem({ item }: { item: any }) {
 
     const baseLink = (() => {
-        switch (item.product.type) {
-            case "GAME":
+        switch (item.product_type) {
+            case "publication":
                 return `/game/${item.product.id}/${item.id}`
-            case "SUBSCRIPTION":
+            case "subscription":
                 return `/subscription/${item.product.id}/${item.id}`
-            case "DONATION":
+            case "donation":
                 return `/donation/${item.product.id}`
+            case "add_on":
+                return `/addon/${item.id}`
             default:
-                return "/";
+                return `/`;
         }
     })();
 
