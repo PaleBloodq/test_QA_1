@@ -3,7 +3,7 @@ import GamesSlider from '../../common/GamesSlider'
 import useIsLoading from '../../../hooks/useIsLoading';
 
 export default function Other({ data }: { data: SectionType[] }) {
-    const isLoading = useIsLoading(data[0]?.objects);
+    const isLoading = useIsLoading(data[0]?.products);
     return (
         <div className='flex flex-col'>
             {
@@ -15,7 +15,7 @@ export default function Other({ data }: { data: SectionType[] }) {
                                     <h1 className="text-header ml-5">{item.name}</h1>
                                 </div>
                                 <div className='ml-2'>
-                                    <GamesSlider type={item?.objects[0]?.type} isLoading={isLoading} data={item.objects} />
+                                    <GamesSlider type={item?.products[0]?.type} isLoading={isLoading} data={item.products} />
                                 </div>
                             </div>
                         </div>

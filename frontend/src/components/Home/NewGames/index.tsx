@@ -5,7 +5,7 @@ import { SectionType } from "../../../types/SectionType";
 
 export default function NewGames({ data }: { data: SectionType }) {
 
-    const isLoading = useIsLoading(data?.objects.length);
+    const isLoading = useIsLoading(data?.products.length);
 
 
     return (
@@ -16,7 +16,7 @@ export default function NewGames({ data }: { data: SectionType }) {
                     <h1 className="text-header">Новинки</h1>
                 </div>
                 <div className="ml-2">
-                    <GamesSlider type="GAME" data={data?.objects} isLoading={isLoading} />
+                    <GamesSlider type="GAME" data={data?.products} isLoading={isLoading} />
                 </div>
             </div>
         </div>
