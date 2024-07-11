@@ -20,6 +20,7 @@ import { replaceUrl } from '../../helpers/replaceUrl';
 import calcCashback from '../../helpers/calcCashback';
 import { ProductType } from '../../types/ProductType';
 import AddToWishlist from '../../components/common/AddToWishlist';
+import AddonCard from '../../components/common/AddonCard';
 
 export default function Game() {
     const dispatch = useDispatch();
@@ -89,7 +90,7 @@ export default function Game() {
             <div className="flex flex-col items-center">
                 <div className="flex flex-col items-start w-full">
                     <img className="w-full h-[400px] mb-8 object-cover" src={replaceUrl(currentPublication.product_page_image)} alt="game image" />
-                    <div className='w-full -mt-16 bg-white dark:bg-[#1a1e22] rounded-t-3xl px-3 py-1'>
+                    <div className='w-full -mt-16 bg-white dark:bg-[#1a1e22] rounded-t-3xl px-3 py-1 mb-5'>
                         <div className='flex items-center gap-2'>
                             <h1 className="text-header">{title}</h1>
                             {isNew(data.release_date) && <Tag type="new">Новинка</Tag>}
@@ -145,6 +146,14 @@ export default function Game() {
                                 <p className='text-subtitle'>Дата релиза:</p>
                                 <p className='text-title text-[14px]'>{data.release_date || 'Нет данных'}</p>
                             </div>
+                        </div>
+                        {data.add_ons?.length > 0 && (
+                            <h1 className='text-header mt-5 mb-5'>Аддоны: </h1>
+                        )}
+                        <div className='flex flex-wrap gap-x-4 gap-y-5'>
+                            {data.add_ons.map((addon, index) => (
+                                <AddonCard key={index} addon={addon} />
+                            ))}
                         </div>
                     </div>
                     <AddToCartButton cartItem={cartItem} />
