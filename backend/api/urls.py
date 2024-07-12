@@ -40,6 +40,7 @@ urlpatterns = [
     path('profile/', include([
         path('update/', views.UpdateProfile.as_view()),
         path('orders/', views.Orders.as_view()),
+        path('wishlist/', views.WishList.as_view()),
         path('', views.Profile.as_view()),
     ])),
     path('mailing/', views.Mailing.as_view()),

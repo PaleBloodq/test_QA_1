@@ -4,3 +4,4 @@ from .orders import *
 from . import order_manager
 from .mailing import *
 from .cart import *
+from .wishlist import *
