@@ -1,3 +1,4 @@
+from itertools import chain
 from rest_framework import serializers
 from .. import models
 from .catalog import (
@@ -26,6 +27,7 @@ class CartSerializer(serializers.ModelSerializer):
             'subscriptions',
         ]
 
-
+    def to_list(self):
+        return list(chain(*self.data.values()))
 class ChangeCartSerializer(serializers.Serializer):
     id = serializers.UUIDField()

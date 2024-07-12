@@ -26,7 +26,7 @@ class Cart(APIView):
     def get(self, request: Request, profile: models.Profile):
         cart = models.Cart.objects.get_or_create(profile=profile)[0]
         serializer = serializers.CartSerializer(cart)
-        return Response(serializer.data)
+        return Response(serializer.to_list())
     
     @utils.auth_required
     def post(self, request: Request, profile: models.Profile):
