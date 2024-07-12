@@ -1,28 +1,36 @@
-import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../../features/Cart/cartSlice";
-import Button from "../Button";
-import { cartSelector } from "../../../features/Cart/cartSelectors";
-import { CartItemType } from "../../../types/cartItem";
 import { useNavigate } from "react-router";
-import { animated, useSpring } from 'react-spring'
+import { animated, useSpring } from 'react-spring';
 import { useEffect, useState } from "react";
+import { useAddToCartMutation, useGetCartQuery } from "../../../services/cartApi";
+import { CartItemType } from "../../../types/cartItem";
+import Button from "../Button";
 
 export default function AddToCartButton({ cartItem }: { cartItem: CartItemType }) {
-    const dispatch = useDispatch();
-    const navigate = useNavigate()
-    const { items } = useSelector(cartSelector)
-    const isAdded = items?.find((item) => item?.id === cartItem?.id) || false
+    const navigate = useNavigate();
+    const { data: items } = useGetCartQuery({});
+    const [addToCart, { data: newCart }] = useAddToCartMutation();
+    const [isAdded, setIsAdded] = useState(false);
     const [firstClick, setFirstClick] = useState(false);
 
+    useEffect(() => {
+        const checkItemInCart = (cartData: CartItemType[]): boolean => {
+            if (cartData) {
+                const allItems = [...cartData];
+                return allItems?.find((item) => item?.id === cartItem?.id) ? true : false
+            }
+            return false;
+        };
 
+        setIsAdded(checkItemInCart(newCart) || checkItemInCart(items));
+    }, [newCart, items, cartItem]);
 
-    function addToCartHandler(cartItem: CartItemType) {
+    const addToCartHandler = (cartItem: CartItemType) => {
         if (!isAdded) {
-            dispatch(addToCart(cartItem))
+            addToCart({ id: cartItem.id });
         } else {
-            navigate('/cart')
+            navigate('/cart');
         }
-    }
+    };
 
     const props = useSpring({
         from: firstClick ? { left: "0", opacity: 0 } : null,
@@ -35,7 +43,7 @@ export default function AddToCartButton({ cartItem }: { cartItem: CartItemType }
             duration: 250
         },
         onRest: () => {
-            setFirstClick(false)
+            setFirstClick(false);
         }
     });
 
@@ -47,7 +55,6 @@ export default function AddToCartButton({ cartItem }: { cartItem: CartItemType }
 
     return (
         <>
-
             <div className="w-full h-[80px] bg-[#161616] fixed bottom-0 left-0 flex justify-center items-start">
                 <div className='w-[345px] mt-[-5px] relative'>
                     <animated.div style={props} className='w-2 h-[50px] bg-white absolute z-50 top-5 -skew-x-12 opacity-0' />
@@ -56,5 +63,5 @@ export default function AddToCartButton({ cartItem }: { cartItem: CartItemType }
             </div>
             <div className='h-16'></div>
         </>
-    )
+    );
 }

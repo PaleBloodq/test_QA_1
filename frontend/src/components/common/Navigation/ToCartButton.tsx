@@ -6,6 +6,8 @@ export default function ToCartButton() {
 
     const { items } = useSelector(cartSelector)
 
+    console.log(items)
+
     return (
         <Link to="/cart">
             <button className="relative min-w-[50px] h-[50px] flex items-center justify-center custom-border">

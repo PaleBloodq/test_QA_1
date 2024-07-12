@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SubscriptionPeriodSelector from "../common/SubscriptionPeriodSelect";
 import { durationSelector, selectedSubscriptionSelector } from "../../features/Subscription/subscriptionSelectors";
 import { setSelectedSubscription } from "../../features/Subscription/subscriptionSlice";
-import { PublicationType } from "../../types/PublicationType";
+import { PublicationType } from "../../types/publicationType";
 import { useEffect } from "react";
 
 export default function SelectSubscription({ publications }: { publications: PublicationType[] }) {

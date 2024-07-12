@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { durationSelector } from "../../../../features/Subscription/subscriptionSelectors";
 import { ProductType } from "../../../../types/ProductType";
 import { replaceUrl } from "../../../../helpers/replaceUrl";
-import { PublicationType } from "../../../../types/PublicationType";
+import { PublicationType } from "../../../../types/publicationType";
 
 export default function PSPlus({ data = [] }: { data: ProductType[] }) {
     const isLoading = useIsLoading(data[0])

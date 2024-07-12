@@ -1,7 +1,6 @@
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import Container from '../../components/common/Container';
 import SelectPublication from '../../components/common/SelectPublictaion';
 import SelectPrice from '../../components/common/SelectPrice';
 import Tag from '../../components/common/Tag';
@@ -14,7 +13,6 @@ import { isDatePassed } from '../../hooks/isDatePassed';
 import ReleaseTimer from '../../components/common/ReleaseTimer';
 import Line from '../../components/common/Line';
 import { useGetAnyProductQuery } from '../../services/productsApi';
-import { CartItemType } from '../../types/cartItem';
 import AddToCartButton from '../../components/common/AddToCartButton';
 import { replaceUrl } from '../../helpers/replaceUrl';
 import calcCashback from '../../helpers/calcCashback';

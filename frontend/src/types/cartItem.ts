@@ -1,13 +1,20 @@
 export type CartItemType = {
   id: string;
-  type: string;
-  img: string;
-  title: string;
-  publication: string;
-  platform: string;
-  price: number;
+  product_type: "publication" | "add_on" | "subscription";
+  is_main: boolean;
+  platforms: string[];
   final_price: number;
   discount: number;
+  discount_deadline: null | string;
+  ps_plus_final_price: null | number;
+  ps_plus_discount: number;
+  ps_plus_discount_deadline: null | string;
+  languages: string[];
+  title: string;
+  includes: null | string;
+  product_page_image: string;
+  search_image: string;
+  offer_image: string;
   cashback: number;
-  product_type: "add_on" | "publication" | "subscription";
+  release_date: string;
 };

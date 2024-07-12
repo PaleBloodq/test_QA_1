@@ -28,7 +28,7 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
     }, [sameEmail])
 
     const orderObject = {
-        cart: items?.map((item) => { return { id: item.id, type: item.product_type } }),
+        // cart: items?.map((item) => { return { id: item.id, type: item.product_type } }),
         spendCashback: useCashback,
         hasAccount: hasAccount,
         accountEmail: hasAccount ? accountEmail : null,
@@ -39,8 +39,9 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
     }
 
     function handleOrder() {
-        if (orderObject.cart.length !== 0 && orderObject.billEmail) {
+        if (orderObject.billEmail) {
             makeOrder(orderObject)
+            dispatch(clearCart())
         }
     }
 

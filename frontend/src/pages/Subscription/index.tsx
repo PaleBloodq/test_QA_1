@@ -9,7 +9,7 @@ import { setDuration, setSelectedSubscription } from "../../features/Subscriptio
 import Line from "../../components/common/Line";
 import { CartItemType } from "../../types/cartItem";
 import AddToCartButton from "../../components/common/AddToCartButton";
-import { PublicationType } from "../../types/PublicationType";
+import { PublicationType } from "../../types/publicationType";
 import { replaceUrl } from "../../helpers/replaceUrl";
 import { ProductType } from "../../types/ProductType";
 import Tag from "../../components/common/Tag";

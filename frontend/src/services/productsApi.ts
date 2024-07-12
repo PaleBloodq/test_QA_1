@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ProductType } from "../types/ProductType";
-import { PublicationType } from "../types/PublicationType";
+import { PublicationType } from "../types/publicationType";
 import { AddonType } from "../types/AddonType";
 
 export const productsApi = createApi({

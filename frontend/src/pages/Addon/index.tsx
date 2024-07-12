@@ -6,8 +6,6 @@ import AddToWishlist from "../../components/common/AddToWishlist";
 import SelectPrice from "../../components/common/SelectPrice";
 import Tag from "../../components/common/Tag";
 import calcCashback from "../../helpers/calcCashback";
-import { isDatePassed } from "../../hooks/isDatePassed";
-import ReleaseTimer from "../../components/common/ReleaseTimer";
 import Line from "../../components/common/Line";
 import AddToCartButton from "../../components/common/AddToCartButton";
 
