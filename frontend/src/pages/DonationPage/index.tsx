@@ -8,7 +8,7 @@ import { CartItemType } from "../../types/cartItem";
 import AddToCartButton from "../../components/common/AddToCartButton";
 import { ProductType } from "../../types/ProductType";
 import { replaceUrl } from "../../helpers/replaceUrl";
-import { PublicationType } from "../../types/PublicationType";
+import { PublicationType } from "../../types/publicationType";
 import Tag from "../../components/common/Tag";
 
 export default function DonationPage() {

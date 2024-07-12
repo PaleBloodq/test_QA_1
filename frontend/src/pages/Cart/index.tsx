@@ -1,72 +1,56 @@
 import { useDispatch, useSelector } from "react-redux";
 import Container from "../../components/common/Container";
-import { cartSelector } from "../../features/Cart/cartSelectors";
-import { CartItemType } from "../../types/cartItem";
-import CartItem from "./CartItem";
-import { useEffect, useState } from "react";
-import Tag from "../../components/common/Tag";
-import CheckBox from "../../components/common/CheckBox";
 import { userSelector } from "../../features/User/userSelectors";
 import Order from "./Order";
-import axios from "axios";
-import { addToCart } from "../../features/Cart/cartSlice";
+import Tag from "../../components/common/Tag";
+import CheckBox from "../../components/common/CheckBox";
+import { useEffect, useState } from "react";
+import CartItem from "./CartItem";
+import { useGetCartQuery, useRemoveFromCartMutation } from "../../services/cartApi";
+import { cartSelector } from "../../features/Cart/cartSelectors";
+import { setCartItems } from "../../features/Cart/cartSlice";
 
 export default function Cart() {
+    const dispatch = useDispatch();
+    const { userData } = useSelector(userSelector);
+    const [useCashback, setUseCashback] = useState(false);
+    const { totalPrice, totalCashback, items } = useSelector(cartSelector);
 
-    // const { isLoggined } = useSelector(userSelector)
-    const dispatch = useDispatch()
-
-
-    const checkItem = async (item: CartItemType) => {
-        try {
-            const response = await axios.get(`https://chatlabs.site/aokibot/backend/api/publication/${item.id}`);
-            return response.status === 200;
-        } catch (error) {
-            console.error(error);
-            return false;
-        }
-    };
-
-    const { items, totalPrice, totalCashback }: { items: CartItemType[], totalPrice: number, totalCashback: number } = useSelector(cartSelector)
-
-    const [useCashback, setUseCashback] = useState(false)
-
-    const { userData } = useSelector(userSelector)
+    const { data: cartData, isLoading, isError, refetch } = useGetCartQuery({});
+    const [removeFromCart, { data: afterRemoveData }] = useRemoveFromCartMutation();
 
     useEffect(() => {
-        if (items.length === 0) {
-            const storageParsedItems: CartItemType[] | null = JSON.parse(localStorage.getItem('storageCartItems'));
-            storageParsedItems?.forEach((item) => dispatch(addToCart(item)));
+        if (cartData) {
+            dispatch(setCartItems(cartData))
         }
-    }, [items, dispatch]);
-
+    }, [cartData])
 
     useEffect(() => {
-        const fetchItems = async () => {
-            try {
-                const storageParsedItems: CartItemType[] = JSON.parse(localStorage.getItem('storageCartItems')) || [];
-                const promises = storageParsedItems.map(item => checkItem(item));
-                const results = await Promise.all(promises);
-                const validItems = storageParsedItems.filter((_item, index) => results[index]);
-                localStorage.setItem('storageCartItems', JSON.stringify(validItems));
-            } catch (error) {
-                console.error('Ошбика чтения элементов из localStorage:', error);
-            }
-        };
+        if (afterRemoveData) {
+            dispatch(setCartItems(afterRemoveData))
+        }
+    }, [afterRemoveData])
 
-        fetchItems();
-    }, []);
+    useEffect(() => {
+        refetch()
+    }, [])
 
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    if (isError) {
+        return <div>Error loading cart data</div>;
+    }
 
     return (
         <Container>
             <h1 className="text-header">Корзина</h1>
             <div className="mt-7 flex flex-col gap-2 w-full">
-                {items.map((item: CartItemType) => {
-                    return (
-                        <CartItem key={item.id} item={item} />
-                    )
-                })}
+                {items.map((item) => (
+                    <CartItem onRemove={(id) => removeFromCart({ id: id })} key={item.id} item={item} />
+                ))}
                 {items.length === 0 && <h1 className="text-title">Корзина пуста</h1>}
             </div>
             <div className="mt-8 custom-border w-full flex flex-col gap-2 px-[35px] py-[21px]">
@@ -85,5 +69,5 @@ export default function Cart() {
             </div>
             <Order useCashback={useCashback} />
         </Container>
-    )
+    );
 }

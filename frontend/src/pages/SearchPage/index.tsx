@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Container from "../../components/common/Container";
 import { searchSelector } from "../../features/Search/searchSelectors";

@@ -1,5 +1,5 @@
 import { AddonType } from "./AddonType";
-import { PublicationType } from "./PublicationType";
+import { PublicationType } from "./publicationType";
 
 export type ProductType = {
   id: string;

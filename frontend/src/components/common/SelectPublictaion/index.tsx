@@ -1,4 +1,4 @@
-import { PublicationType } from "../../../types/PublicationType"
+import { PublicationType } from "../../../types/publicationType"
 import SelectPlatform from "./SelectPlatform"
 import { useDispatch, useSelector } from "react-redux"
 import { selectedPlatformSelector, selectedPublicationSelector } from "../../../features/Game/publicationSelectors"
