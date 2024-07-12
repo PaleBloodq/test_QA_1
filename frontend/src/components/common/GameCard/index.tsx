@@ -3,10 +3,11 @@ import { ProductType } from "../../../types/ProductType";
 import Tag from "../Tag";
 import React from "react";
 import { replaceUrl } from "../../../helpers/replaceUrl";
+import { findCheapestPublication } from "../../../helpers/findCheapestPublication";
 
 const GameCard = React.memo(({ game }: { game: ProductType }) => {
 
-    const mainPublication = (game.publications.find((pub) => pub.is_main === true)) || game.publications[0];
+    const mainPublication = (game.publications.find((pub) => pub.is_main === true)) || findCheapestPublication(game.publications);
 
 
     return (
