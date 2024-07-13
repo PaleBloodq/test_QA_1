@@ -12,26 +12,26 @@ import { SectionType } from "../../types/SectionType";
 import { CartItemType } from "../../types/cartItem";
 import { cartSelector } from "../../features/Cart/cartSelectors";
 import { useEffect } from "react";
-import { addToCart } from "../../features/Cart/cartSlice";
+import { addToCart, setCartItems } from "../../features/Cart/cartSlice";
+import { useGetCartQuery } from "../../services/cartApi";
 
 export default function Home() {
 
     const { data = [] } = useGetCategoryProductsQuery({})
 
-    const dispatch = useDispatch()
-    const { items }: { items: CartItemType[] } = useSelector(cartSelector)
-    useEffect(() => {
-        if (items.length > 0) {
-            localStorage.setItem("storageCartItems", JSON.stringify(items))
-        } else if (items.length === 0) {
-            JSON.parse(localStorage.getItem('storageCartItems'))?.forEach((item: CartItemType) => {
-                dispatch(addToCart(item))
-            })
-        }
-    }, [items, dispatch])
-
-
     const basicTags = ["offers", "new", "psPlus", "eaPlay", "leaders", "donation"];
+    const dispatch = useDispatch();
+    const { data: cartData, refetch } = useGetCartQuery({});
+
+    useEffect(() => {
+        if (cartData) {
+            dispatch(setCartItems(cartData))
+        }
+    }, [cartData])
+
+    useEffect(() => {
+        refetch()
+    }, [])
 
     return (
         <Container>

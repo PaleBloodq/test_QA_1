@@ -54,7 +54,6 @@ export default function Order({ useCashback }: { useCashback: boolean }) {
     useEffect(() => {
         if (orderData?.PaymentUrl) {
             dispatch(clearCart())
-            localStorage.removeItem('storageCartItems')
             window.location.href = orderData?.PaymentUrl
         }
     }, [orderData])

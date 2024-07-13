@@ -6,7 +6,6 @@ export default function ToCartButton() {
 
     const { items } = useSelector(cartSelector)
 
-    console.log(items)
 
     return (
         <Link to="/cart">
