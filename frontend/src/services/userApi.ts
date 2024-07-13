@@ -58,6 +58,23 @@ export const userApi = createApi({
         body: token,
       }),
     }),
+    getWishlist: builder.query({
+      query: () => `api/profile/wishlist/`,
+    }),
+    addToWishlist: builder.mutation({
+      query: (id) => ({
+        url: `api/profile/wishlist/`,
+        method: "POST",
+        body: { id: id },
+      }),
+    }),
+    deleteFromWishlist: builder.mutation({
+      query: (id) => ({
+        url: `api/profile/wishlist/`,
+        method: "DELETE",
+        body: { id: id },
+      }),
+    }),
   }),
 });
 
@@ -68,4 +85,7 @@ export const {
   useMakeOrderMutation,
   useCheckPromocodeMutation,
   useRefreshTokenMutation,
+  useAddToWishlistMutation,
+  useDeleteFromWishlistMutation,
+  useGetWishlistQuery,
 } = userApi;

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useAddToCartMutation, useGetCartQuery } from "../../../services/cartApi";
 import { CartItemType } from "../../../types/cartItem";
 import Button from "../Button";
+import { useDispatch } from "react-redux";
+import { setCartItems } from "../../../features/Cart/cartSlice";
 
 export default function AddToCartButton({ cartItem }: { cartItem: CartItemType }) {
     const navigate = useNavigate();
@@ -11,6 +13,7 @@ export default function AddToCartButton({ cartItem }: { cartItem: CartItemType }
     const [addToCart, { data: newCart }] = useAddToCartMutation();
     const [isAdded, setIsAdded] = useState(false);
     const [firstClick, setFirstClick] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const checkItemInCart = (cartData: CartItemType[]): boolean => {
@@ -52,6 +55,12 @@ export default function AddToCartButton({ cartItem }: { cartItem: CartItemType }
             setFirstClick(true);
         }
     }, [isAdded]);
+
+    useEffect(() => {
+        if (newCart) {
+            dispatch(setCartItems(newCart))
+        }
+    }, [newCart])
 
     return (
         <>
