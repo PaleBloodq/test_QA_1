@@ -27,8 +27,6 @@ export default function HeaderSlider({ data }: { data: SectionType }) {
         }
     }, []);
 
-    console.log(data)
-
 
     return (
         <div className="h-[355px] w-full">

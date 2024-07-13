@@ -74,7 +74,6 @@ export default function Game() {
         product_type: currentPublication.product_type
     };
 
-    console.log(data)
 
     const includes = currentPublication.includes?.split("\r\n") || [];
 

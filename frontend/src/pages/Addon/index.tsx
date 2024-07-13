@@ -12,7 +12,6 @@ import AddToCartButton from "../../components/common/AddToCartButton";
 export default function Addon() {
     const id = useParams().id
     const { data = {} as AddonType, isLoading } = useGetAddonQuery(id);
-    console.log(data)
 
     const includes = data.includes?.split("\r\n") || [];
 

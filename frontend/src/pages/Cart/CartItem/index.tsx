@@ -5,12 +5,13 @@ import { replaceUrl } from "../../../helpers/replaceUrl";
 
 export default function CartItem({ item, onRemove }: { item: CartItemType, onRemove: (id: string) => void }) {
 
+
     return (
         <div className="custom-border p-2 flex w-full h-[90px]">
             <img className="w-[111px] object-cover rounded-xl" src={replaceUrl(item.product_page_image)} alt="img" />
             <div className="flex flex-col justify-between items-start ml-6">
                 <h1 className="text-subtitle-info font-medium">{item.title}</h1>
-                <p className="text-subtitle text-[12px]">{item.platforms.join(", ")}</p>
+                <p className="text-subtitle text-[12px]">{item.platforms?.join(", ")}</p>
                 <div className="flex gap-3">
                     <h2 className="price-small">{item.final_price} ₽</h2>
                     {item.discount ? <Tag type="discount">-{item.discount}%</Tag> : null}
