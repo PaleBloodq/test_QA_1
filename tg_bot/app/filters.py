@@ -21,5 +21,6 @@ def is_can_send_message(data: Dict, widget: Whenable, manager: DialogManager):
 
 
 def is_paid(data: Dict, widget: Whenable, manager: DialogManager):
+    """Проверка на наличие оплаты"""
     order = UserData(manager).data.selected_order
     return order.status == "PAID"
