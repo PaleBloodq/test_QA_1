@@ -22,7 +22,7 @@ OrderWin = [
         Format('💰Общая стоимость: *{order.amount}₽*'),
         Format('🛒Состав заказа: \n{order_products}'),
         Format('_{order_extra.text}_'),
-        Url(Const('💳Оплатить'), id='pay', url=Format('{order.payment_url}'), when=is_can_pay),
+        Url(Const('Оплатить'), id='pay', url=Format('{order.payment_url}'), when=is_can_pay),
         #Next(Const('💬Написать менеджеру'), id='next', when=is_can_send_message),
         Start(Const('🔒Как включить 2FA?'), state=TwoFaSG.show, id='2FA'),
         #Back(Const('Назад')),
