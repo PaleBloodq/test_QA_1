@@ -35,3 +35,5 @@ async def delete_timer(message: Message):
         await asyncio.sleep(1)
         await message.edit_text(text=message.text + f' {next(spinner)}')
     await message.delete()
+
+
