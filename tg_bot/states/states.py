@@ -9,6 +9,9 @@ class OrderSG(StatesGroup):
     order_list = State()
     order = State()
     input_answer = State()
+    choose_step = State()
+    success = State()
+    failed = State()
 
 
 class TwoFaSG(StatesGroup):

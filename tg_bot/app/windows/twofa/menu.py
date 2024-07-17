@@ -2,7 +2,6 @@ from aiogram_dialog import Window
 from aiogram_dialog.widgets.kbd import Cancel, Button, Back
 from aiogram_dialog.widgets.text import Const
 
-from app.windows.order.handlers import process_yes
 from app.windows.twofa.handlers import process_no_ps4, process_no_ps5
 from states.states import TwoFaSG
 from texts import TWOFA_TEXT, TWOFA_START, TWOFA_PS4, TWOFA_PS5
