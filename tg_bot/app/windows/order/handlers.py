@@ -55,5 +55,5 @@ async def send_code(message: types.Message, __, dialog_manager: DialogManager | 
 
 
 async def send_problem(message: types.Message, __, dialog_manager: DialogManager | None = None):
-    await answer_order(message=message, user_message='Код', dialog_manager=dialog_manager)
+    await answer_order(message=message, user_message='Пользователь просит помощи', dialog_manager=dialog_manager)
     await dialog_manager.done()
