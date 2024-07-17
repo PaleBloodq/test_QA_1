@@ -1,11 +1,9 @@
-import os
-
 from aiogram_dialog import Window
-from aiogram_dialog.widgets.kbd import WebApp, Button, Start, Url
-from aiogram_dialog.widgets.text import Const, Format
+from aiogram_dialog.widgets.kbd import Url
+from aiogram_dialog.widgets.text import Const
 
-from .methods import getter_token, open_orders
-from states.states import MainSG, TwoFaSG
+from states.states import MainSG
+from .methods import getter_token
 
 MainMenuWin = [
     Window(

@@ -3,7 +3,7 @@ from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Start, Url, Back, Next, Button
 from aiogram_dialog.widgets.text import Const, Format
 
-from .handlers import process_yes
+from .handlers import process_yes, answer_order, test_send
 from .methods import getter_order, resending
 from states.states import OrderSG, MainSG, TwoFaSG
 from ...custom_widgets import ScrollingOrdersGroup
@@ -27,14 +27,21 @@ OrderWin = [
         Next(Const('💬Написать менеджеру'), id='next', when=is_can_send_message),
         Button(Const('У меня подключен 2FA'), id='test_no', on_click=process_yes, when=is_paid),
         Start(Const('А че это?'), state=TwoFaSG.wtf_2fa, id='2FA', when=is_paid),
+
         # Back(Const('Назад')),
         parse_mode='MarkdownV2',
         getter=getter_order,
         state=OrderSG.order,
     ),
+    # Window(
+    #     Const('Отправьте сообщение'),
+    #     MessageInput(func=resending),
+    #     Back(Const('Назад')),
+    #     state=OrderSG.input_answer,
+    # ),
     Window(
-        Const('Отправьте сообщение'),
-        MessageInput(func=resending),
+        Const('Окей, тогда введите свой код!)'),
+        MessageInput(func=test_send),
         Back(Const('Назад')),
         state=OrderSG.input_answer,
     ),
