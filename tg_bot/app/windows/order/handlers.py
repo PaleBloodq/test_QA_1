@@ -41,17 +41,6 @@ async def answer_order(message: types.Message, user_message: str, dialog_manager
         await message.reply('Отлично! Ответ отправлен')
 
 
-# async def sender(message: types.Message,user_message: str, dialog_manager: DialogManager | None = None):
-#     order_id = UserData(dialog_manager).data.selected_order.order_id
-#     if twofa:
-#         await bootstrap.ApiWrapper.send_message(order_id=order_id.replace('\\', ''), text=f"Подключено: {message.text}")
-#     else:
-#         await bootstrap.ApiWrapper.send_message(order_id=order_id.replace('\\', ''),
-#                                                 text=f"Пользователь запрашивает помощь: {message.text}")
-#     await dialog_manager.done()
-#     await message.answer("Сообщение отправлено!")
-
-
 async def complite_2fa(call: types.CallbackQuery, __, dialog_manager: DialogManager | None = None):
     await dialog_manager.switch_to(OrderSG.success)
 
