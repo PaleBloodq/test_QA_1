@@ -1,11 +1,7 @@
 stages:
   - build
   - deploy
-  - test
-include:
-  - project: chat-labs/cicd/components
-    ref: dev
-    file: /templates/autotests/template.yml
+
 .deploy_template: &deploy_template
   before_script:
     - mkdir -p /home/gitlab-runner/deployments/$CI_PROJECT_NAME
