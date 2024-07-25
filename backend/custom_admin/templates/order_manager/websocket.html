@@ -52,6 +52,7 @@
             idParagraph.textContent = `ID: ${order.telegram_id}`;
 
             const lastMessageParagraph = document.createElement('p');
+            order.last_message = order.last_message.replace('system_message:', '')
             lastMessageParagraph.textContent = order.last_message.replace(/\n/g, ' ').replace(/\\n/g, ' ');
             lastMessageParagraph.classList = 'truncate';
             lastMessageParagraph.id = order.id + '-paragraph';
@@ -61,10 +62,14 @@
             return button;
   }
 
-          function showMessage(message) {
-        const { manager, text, images } = message;
+      function showMessage(message) {
+        let { manager, text, images } = message;
 
         const messageDiv = document.createElement('div');
+        if (text.startsWith('system_message:')){
+            text = text.replace('system_message:', '')
+            messageDiv.classList.add('system-message', 'mt-6');
+        }
         messageDiv.classList.add('flex', 'p-2', 'rounded-lg', 'flex-col', 'mb-2', 'w-fit', 'gap-2');
 
         if (manager) {

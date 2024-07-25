@@ -4,17 +4,22 @@ import re
 
 from aiogram import types
 from aiogram_dialog import DialogManager
+from aiogram_dialog.widgets.kbd import Button
 
 import bootstrap
-from states.states import MainSG
+from service.managers.user_data_manager import UserData
+from states.states import MainSG, OrderSG
 
 bot = bootstrap.MyBot().getInstance()
+
+
 async def start(message: types.Message, dialog_manager: DialogManager | None = None):
     await dialog_manager.start(state=MainSG.main_menu)
 
 
 async def show_id(callback: types.CallbackQuery, dialog_manager: DialogManager | None = None):
     await callback.answer(text=f"Идентификатор заказа: {callback.data.split('_')[-1]} ", show_alert=True)
+
 
 async def answer_order(message: types.Message, dialog_manager: DialogManager | None = None):
     callback = message.reply_to_message.text
@@ -33,5 +38,4 @@ async def answer_order(message: types.Message, dialog_manager: DialogManager | N
             await bot.download(image, destination=image_io)
             image_bs64 = base64.b64encode(image_io.getvalue()).decode('utf-8')
         await bootstrap.ApiWrapper.send_message(order_id=order_id, text=text, image=image_bs64)
-        print(order_id)
         await message.reply('Отлично! Ответ отправлен')

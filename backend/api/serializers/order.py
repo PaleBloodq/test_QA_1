@@ -35,6 +35,8 @@ class OrderSerializer(serializers.ModelSerializer):
             'amount',
             'order_products',
             'payment_url',
+            'email',
+            'password',
             'need_account',
             'status',
         )

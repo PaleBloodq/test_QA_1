@@ -37,6 +37,8 @@ class Order(BaseModel):
     amount: int
     order_products: Optional[List[OrderProduct]]
     payment_url: Optional[str]
+    email: Optional[str]
+    password: Optional[str]
     need_account: bool
     status: Literal['IN_PROGRESS', 'COMPLETED', 'ERROR', 'PAID', 'PAYMENT']
 
@@ -58,7 +60,7 @@ class Order(BaseModel):
                 if self.need_account:
                     text = texts.PAID_NEED_ACCOUNT_TEXT
                 else:
-                    text = texts.PAID_TEXT
+                    text = texts.PAID_TEXT.format(password=self.password, email=self.email)
                 return OrderExtra(status_text='Оплачен', emoji='💰', text=text)
             case 'PAYMENT':
                 return OrderExtra(status_text='Ожидает оплаты', emoji='💳', text=texts.PAYMENT_TEXT)

@@ -1,12 +1,12 @@
 from aiogram_dialog import Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Start, Url, Back, Next
+from aiogram_dialog.widgets.kbd import Start, Url, Back, Next, Button
 from aiogram_dialog.widgets.text import Const, Format
 
-from .methods import getter_order, resending
+from .methods import getter_order
 from states.states import OrderSG, MainSG, TwoFaSG
 from ...custom_widgets import ScrollingOrdersGroup
-from ...filters import is_can_pay, is_can_send_message
+from ... import filters
 
 OrderWin = [
     Window(
@@ -22,18 +22,10 @@ OrderWin = [
         Format('💰Общая стоимость: *{order.amount}₽*'),
         Format('🛒Состав заказа: \n{order_products}'),
         Format('_{order_extra.text}_'),
-        Url(Const('💳Оплатить'), id='pay', url=Format('{order.payment_url}'), when=is_can_pay),
-        #Next(Const('💬Написать менеджеру'), id='next', when=is_can_send_message),
-        Start(Const('🔒Как включить 2FA?'), state=TwoFaSG.show, id='2FA'),
-        #Back(Const('Назад')),
+        Url(Const('Оплатить'), id='pay', url=Format('{order.payment_url}'), when=filters.IsCanPay()),
+        Start(Const('Отправить 2FA'), state=TwoFaSG.show, id='2FA', when=filters.IsPaid() + ~filters.OrderNeedAccount()),
         parse_mode='MarkdownV2',
         getter=getter_order,
         state=OrderSG.order,
-    ),
-    Window(
-        Const('Отправьте сообщение'),
-        MessageInput(func=resending),
-        Back(Const('Назад')),
-        state=OrderSG.input_answer,
     ),
 ]

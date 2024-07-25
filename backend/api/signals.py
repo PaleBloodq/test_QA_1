@@ -9,6 +9,7 @@ from api.utils import send_order_to_bot
 from api.senders import send_chat_message
 from settings import settings
 
+
 def ready():
     print('api signals are ready')
 
@@ -82,6 +83,12 @@ def post_delete_subscription(instance: models.Subscription, **kwargs):
 def change_order_status(sender, instance: models.Order, created: bool, **kwargs):
     if not created:
         send_order_to_bot(instance)
+    if instance.status == instance.StatusChoices.PAID \
+            and instance.need_account:
+        models.ChatMessage.objects.create(
+            order=instance,
+            text="system_message: Клиенту требуется создание аккаунта",
+        )
 
 
 @receiver(signals.post_save, sender=models.Mailing)

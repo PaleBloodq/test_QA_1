@@ -10,5 +10,8 @@ class OrderSG(StatesGroup):
     order = State()
     input_answer = State()
 
+
 class TwoFaSG(StatesGroup):
     show = State()
+    tutorial = State()
+    send_code = State()
