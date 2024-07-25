@@ -31,5 +31,4 @@ async def error_handler(event):
 
 DLGS = (Dialog(*MainMenuWin, launch_mode=LaunchMode.ROOT),
         Dialog(*OrderWin, launch_mode=LaunchMode.ROOT),
-        # Dialog(*TwofaDialog, launch_mode=LaunchMode.SINGLE_TOP),
         Dialog(*TwoFaWin, launch_mode=LaunchMode.SINGLE_TOP),)

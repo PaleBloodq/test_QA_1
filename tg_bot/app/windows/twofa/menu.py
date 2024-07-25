@@ -1,29 +1,31 @@
 from aiogram_dialog import Window
-from aiogram_dialog.widgets.kbd import Cancel, Button, Back
+from aiogram_dialog.widgets.input import MessageInput
+from aiogram_dialog.widgets.kbd import Cancel, Button, Back, SwitchTo, Row
 from aiogram_dialog.widgets.text import Const
 
-from app.windows.twofa.handlers import process_no_ps4, process_no_ps5
+from . import methods
 from states.states import TwoFaSG
-from texts import TWOFA_TEXT, TWOFA_START, TWOFA_PS4, TWOFA_PS5
+import texts
 
 TwoFaWin = [
     Window(
-        Const(TWOFA_START),
-        Button(Const('ps 4'), id='ps4', on_click=process_no_ps4),
-        Button(Const('ps 5'), id='ps5', on_click=process_no_ps5),
+        Const(texts.TWOFA_START_TEXT),
+        Row(SwitchTo(Const('Да'), id='send_code', state=TwoFaSG.send_code),
+        SwitchTo(Const('Нет'), id='tutorial', state=TwoFaSG.tutorial)),
         Cancel(Const('Назад'), id='back'),
-        state=TwoFaSG.wtf_2fa,
+        state=TwoFaSG.show,
     ),
     Window(
-        Const(TWOFA_PS4),
-        Button(Const('Сорян, у меня ps 5'), id='ps5', on_click=process_no_ps5),
-        Cancel(Const('Назад'), id='back'),
-        state=TwoFaSG.ps4,
+        Const(texts.TWOFA_SEND_CODE_TEXT),
+        MessageInput(func=methods.send_code, content_types=['text']),
+        SwitchTo(Const('Назад'), id='back', state=TwoFaSG.show),
+        state=TwoFaSG.send_code,
     ),
     Window(
-        Const(TWOFA_PS5),
-        Button(Const('ФАААААААААК, у меня ps 4'), id='ps4', on_click=process_no_ps4),
-        Cancel(Const('Назад'), id='back'),
-        state=TwoFaSG.ps5,
+        Const(texts.TWOFA_TUTORIAL_TEXT),
+        Row(SwitchTo(Const('Включил'), id='send_code', state=TwoFaSG.send_code),
+        Button(Const('Не получается'), id='get_help', on_click=methods.get_help)),
+        SwitchTo(Const('Назад'), id='back', state=TwoFaSG.show),
+        state=TwoFaSG.tutorial,
     )
 ]

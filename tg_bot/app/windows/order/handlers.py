@@ -21,11 +21,11 @@ async def show_id(callback: types.CallbackQuery, dialog_manager: DialogManager |
     await callback.answer(text=f"Идентификатор заказа: {callback.data.split('_')[-1]} ", show_alert=True)
 
 
-async def answer_order(message: types.Message, user_message: str, dialog_manager: DialogManager | None = None):
-    order_id = UserData(dialog_manager).data.selected_order.order_id
-    print(order_id)
-    order_id = order_id.replace("\\", "")
-    print(order_id)
+async def answer_order(message: types.Message, dialog_manager: DialogManager | None = None):
+    callback = message.reply_to_message.text
+    regex = r"([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
+    match = re.search(regex, callback)
+    order_id = match.group(1)
     image_bs64 = None
     text = message.text or message.caption
     if not text:
@@ -37,23 +37,5 @@ async def answer_order(message: types.Message, user_message: str, dialog_manager
             image_io = io.BytesIO()
             await bot.download(image, destination=image_io)
             image_bs64 = base64.b64encode(image_io.getvalue()).decode('utf-8')
-        await bootstrap.ApiWrapper.send_message(order_id=order_id, text=f"{user_message}: {text}", image=image_bs64)
+        await bootstrap.ApiWrapper.send_message(order_id=order_id, text=text, image=image_bs64)
         await message.reply('Отлично! Ответ отправлен')
-
-
-async def complite_2fa(call: types.CallbackQuery, __, dialog_manager: DialogManager | None = None):
-    await dialog_manager.switch_to(OrderSG.success)
-
-
-async def uncomplite_2fa(call: types.CallbackQuery, __, dialog_manager: DialogManager | None = None):
-    await dialog_manager.switch_to(OrderSG.failed)
-
-
-async def send_code(message: types.Message, __, dialog_manager: DialogManager | None = None):
-    await answer_order(message=message, user_message='Код', dialog_manager=dialog_manager)
-    await dialog_manager.done()
-
-
-async def send_problem(message: types.Message, __, dialog_manager: DialogManager | None = None):
-    await answer_order(message=message, user_message='Пользователь просит помощи', dialog_manager=dialog_manager)
-    await dialog_manager.done()
