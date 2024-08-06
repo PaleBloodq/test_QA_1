@@ -115,6 +115,8 @@ before_script:
 #    - when: never
 
 Build and Publish:
+  tags:
+    - dev
   stage: build
   script:
     - werf build
