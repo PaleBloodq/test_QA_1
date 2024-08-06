@@ -19,7 +19,6 @@ context: ./backend
 ---
 image: frontend
 dockerfile: Dockerfile
-staged: true
 context: ./frontend
 ---
 image: tg_bot
