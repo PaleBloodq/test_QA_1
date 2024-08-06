@@ -3,7 +3,7 @@ stages:
   - deploy
 
 before_script:
-  - type trdl && . $(trdl use werf 2 stable)
+  - type trdl && / $(trdl use werf 2 stable)
   - type werf && source $(werf ci-env gitlab --as-file)
   
 .deploy_template: &deploy_template
