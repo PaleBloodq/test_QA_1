@@ -3,9 +3,9 @@ stages:
   - deploy
 
 before_script:
-  - type trdl && . $(trdl use werf 2 stable)
-  - type werf && source $(werf ci-env gitlab --as-file)
-
+  - source "$(~/bin/trdl use werf 2 stable)"
+  - source "$(werf ci-env gitlab --as-file)"
+  
 .deploy_template: &deploy_template
   before_script:
     - mkdir -p /home/gitlab-runner/deployments/$CI_PROJECT_NAME
