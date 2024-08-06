@@ -1,0 +1,34 @@
+---
+project: aoki-bot
+configVersion: 1
+build:
+  platform: [ 'linux/arm64' ]
+
+#deploy:
+#  helmChartDir: string
+#  helmRelease: string
+#  helmReleaseSlug: bool
+#  namespace: string
+#  namespaceSlug: bool
+
+---
+image: backend
+dockerfile: Dockerfile
+staged: true
+context: ./backend
+---
+image: frontend
+dockerfile: Dockerfile
+staged: true
+context: ./frontend
+---
+image: tg_bot
+dockerfile: Dockerfile
+staged: true
+context: ./tg_bot
+---
+image: payments
+dockerfile: Dockerfile
+staged: true
+context: ./payments
+---

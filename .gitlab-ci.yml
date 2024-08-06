@@ -2,6 +2,10 @@ stages:
   - build
   - deploy
 
+before_script:
+  - type trdl && . $(trdl use werf 2 stable)
+  - type werf && source $(werf ci-env gitlab --as-file)
+
 .deploy_template: &deploy_template
   before_script:
     - mkdir -p /home/gitlab-runner/deployments/$CI_PROJECT_NAME
@@ -23,102 +27,108 @@ stages:
     - docker compose up -d
     - docker image prune -a -f
 
-.build_template: &build_template
+#.build_template: &build_template
+#  stage: build
+#  image: docker:latest
+#  services:
+#    - docker:dind
+#  cache:
+#    key: "$CI_COMMIT_REF_NAME"
+#    paths:
+#      - /var/lib/docker
+#  before_script:
+#    - docker info
+#    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#  script:
+#    - docker pull $CI_REGISTRY_IMAGE/$SERVICE:latest || true
+#    - docker build -t $CI_REGISTRY_IMAGE/$SERVICE ./$SERVICE
+#    - docker push $CI_REGISTRY_IMAGE/$SERVICE
+#  rules:
+#    - if: '$CI_COMMIT_BRANCH == "dev"'
+#      changes:
+#        - $SERVICE/requirements.txt
+#    - when: never
+#
+#build_backend:
+#  variables:
+#    SERVICE: backend
+#  <<: *build_template
+#
+#build_payments:
+#  variables:
+#    SERVICE: payments
+#  <<: *build_template
+#
+#build_tg_bot:
+#  variables:
+#    SERVICE: tg_bot
+#  <<: *build_template
+#
+#build_frontend:
+#  stage: build
+#  image: docker:latest
+#  services:
+#    - docker:dind
+#  cache:
+#    key: "$CI_COMMIT_REF_NAME"
+#    paths:
+#      - /var/lib/docker
+#  before_script:
+#    - docker info
+#    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#  script:
+#    - docker pull $CI_REGISTRY_IMAGE/frontend:latest || true
+#    - echo "VITE_BASE_URL=/$CI_PROJECT_NAME/frontend/" > ./frontend/.env.production
+#    - echo "VITE_API_URL=$HOSTNAME/$CI_PROJECT_NAME/backend/" >> ./frontend/.env.production
+#    - docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
+#    - docker push $CI_REGISTRY_IMAGE/frontend
+#  rules:
+#    - if: '$CI_COMMIT_BRANCH == "dev"'
+#      changes:
+#        - frontend/**/*
+#    - when: never
+#
+#build_frontend_production:
+#  stage: build
+#  image: docker:latest
+#  services:
+#    - docker:dind
+#  cache:
+#    key: "$CI_COMMIT_REF_NAME"
+#    paths:
+#      - /var/lib/docker
+#  environment:
+#    name: production
+#  before_script:
+#    - docker info
+#    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#  script:
+#    - docker pull $CI_REGISTRY_IMAGE/frontend:production || true
+#    - echo "VITE_BASE_URL=/$CI_PROJECT_NAME/frontend/" > ./frontend/.env.production
+#    - echo "VITE_API_URL=$HOSTNAME/$CI_PROJECT_NAME/backend/" >> ./frontend/.env.production
+#    - docker build -t $CI_REGISTRY_IMAGE/frontend:production ./frontend
+#    - docker push $CI_REGISTRY_IMAGE/frontend:production
+#  rules:
+#    - if: '$CI_COMMIT_BRANCH == "prod"'
+#      changes:
+#        - frontend/**/*
+#    - when: never
+
+Build and Publish:
   stage: build
-  image: docker:latest
-  services:
-    - docker:dind
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - /var/lib/docker
-  before_script:
-    - docker info
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker pull $CI_REGISTRY_IMAGE/$SERVICE:latest || true
-    - docker build -t $CI_REGISTRY_IMAGE/$SERVICE ./$SERVICE
-    - docker push $CI_REGISTRY_IMAGE/$SERVICE
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-      changes:
-        - $SERVICE/requirements.txt
-    - when: never
+    - werf build
+  except: [schedules]
 
-build_backend:
-  variables:
-    SERVICE: backend
-  <<: *build_template
-
-build_payments:
-  variables:
-    SERVICE: payments
-  <<: *build_template
-
-build_tg_bot:
-  variables:
-    SERVICE: tg_bot
-  <<: *build_template
-
-build_frontend:
-  stage: build
-  image: docker:latest
-  services:
-    - docker:dind
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - /var/lib/docker
-  before_script:
-    - docker info
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $CI_REGISTRY_IMAGE/frontend:latest || true
-    - echo "VITE_BASE_URL=/$CI_PROJECT_NAME/frontend/" > ./frontend/.env.production
-    - echo "VITE_API_URL=$HOSTNAME/$CI_PROJECT_NAME/backend/" >> ./frontend/.env.production
-    - docker build -t $CI_REGISTRY_IMAGE/frontend ./frontend
-    - docker push $CI_REGISTRY_IMAGE/frontend
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
-      changes:
-        - frontend/**/*
-    - when: never
-
-build_frontend_production:
-  stage: build
-  image: docker:latest
-  services:
-    - docker:dind
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    paths:
-      - /var/lib/docker
-  environment:
-    name: production
-  before_script:
-    - docker info
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker pull $CI_REGISTRY_IMAGE/frontend:production || true
-    - echo "VITE_BASE_URL=/$CI_PROJECT_NAME/frontend/" > ./frontend/.env.production
-    - echo "VITE_API_URL=$HOSTNAME/$CI_PROJECT_NAME/backend/" >> ./frontend/.env.production
-    - docker build -t $CI_REGISTRY_IMAGE/frontend:production ./frontend
-    - docker push $CI_REGISTRY_IMAGE/frontend:production
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "prod"'
-      changes:
-        - frontend/**/*
-    - when: never
-
-deploy_dev:
-  tags:
-    - dev
-  stage: deploy
-  variables:
-    FRONTEND_TAG: latest
-  <<: *deploy_template
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
+#deploy_dev:
+#  tags:
+#    - dev
+#  stage: deploy
+#  variables:
+#    FRONTEND_TAG: latest
+#  <<: *deploy_template
+#  rules:
+#    - if: '$CI_COMMIT_BRANCH == "dev"'
 
 deploy_prod:
   tags:
