@@ -5,9 +5,12 @@ stages:
 variables:
   WERF_BUILDAH_MODE: auto
   
-before_script:
-  - type trdl && . $(trdl use werf 2 stable)
-  - type werf && source $(werf ci-env gitlab --as-file)
+default:
+  image:
+    name: "registry.werf.io/werf/werf:2-stable"
+    pull_policy: always
+  before_script:
+    - source "$(werf ci-env gitlab --as-file)"
   
 .deploy_template: &deploy_template
   before_script:
@@ -118,8 +121,6 @@ before_script:
 #    - when: never
 
 Build and Publish:
-  tags:
-    - dev
   stage: build
   script:
     - werf build
