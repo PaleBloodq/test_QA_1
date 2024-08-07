@@ -123,7 +123,7 @@ default:
 Build and Publish:
   stage: build
   script:
-    - werf build
+    - werf build --add-custom-tag latest
   except: [schedules]
 
 #deploy_dev:
