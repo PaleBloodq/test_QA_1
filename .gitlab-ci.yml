@@ -2,8 +2,8 @@ stages:
   - build
   - deploy
 
-variables:
-  WERF_BUILDAH_MODE: auto
+#variables:
+#  WERF_BUILDAH_MODE: auto
   
 default:
   image:
