@@ -121,6 +121,14 @@ default:
 Build and Publish:
   stage: build
   script:
+    - echo "Running in $(pwd)"
+    - ls -la
+    - which werf
+    - werf version
+    - werf ci-env gitlab --as-file
+    - FILE_PATH=$(werf ci-env gitlab --as-file)
+    - cat "$FILE_PATH"
+    - source "$FILE_PATH"
     - source "$(werf ci-env gitlab --as-file)"
     - werf build --add-custom-tag latest
   except: [schedules]
