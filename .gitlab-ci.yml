@@ -9,8 +9,6 @@ default:
   image:
     name: "registry.werf.io/werf/werf:2-stable"
     pull_policy: always
-  before_script:
-    - source "$(werf ci-env gitlab --as-file)"
   
 .deploy_template: &deploy_template
   before_script:
@@ -123,6 +121,7 @@ default:
 Build and Publish:
   stage: build
   script:
+    - source "$(werf ci-env gitlab --as-file)"
     - werf build --add-custom-tag latest
   except: [schedules]
 
