@@ -14,7 +14,7 @@ build:
 ---
 image: backend
 dockerfile: Dockerfile
-staged: true
+#staged: true
 context: ./backend
 ---
 image: frontend
