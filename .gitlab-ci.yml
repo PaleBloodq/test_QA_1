@@ -126,7 +126,7 @@ Build and Publish:
     - build
   stage: build
   script:
-    - werf build --add-custom-tag latest
+    - werf build --add-custom-tag %image%-latest
 
 #deploy_dev:
 #  tags:
