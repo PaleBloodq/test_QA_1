@@ -4,14 +4,17 @@ stages:
 
 #variables:
 #  WERF_BUILDAH_MODE: auto
-  
+variables:
+  GIT_DEPTH: 10
+  GIT_FETCH_EXTRA_FLAGS: --no-tags --force
+
 default:
   image:
     name: "registry.werf.io/werf/werf:2-stable"
-    pull_policy: always
-  before_script:
-    - id
-    - source "$(werf ci-env gitlab --as-file)"
+    pull_policy: if-not-present
+before_script:
+  - git reset --hard
+  - source "$(werf ci-env gitlab --as-file)"
   
 .deploy_template: &deploy_template
   before_script:
