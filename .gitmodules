@@ -1,0 +1,3 @@
+[submodule "other"]
+    path = other
+    url = https://gitlab.chatlabs.su/misc/ruff-config.git
