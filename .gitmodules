@@ -1,3 +1,4 @@
-[submodule "other"]
-    path = other
-    url = https://gitlab.chatlabs.su/misc/ruff-config.git
+[submodule "other/ruff"]
+	path = other/ruff
+	url = https://gitlab.chatlabs.su/misc/ruff-config.git
+    branch = relase/1.0.0
