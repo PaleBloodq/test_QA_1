@@ -1,0 +1,4 @@
+[submodule "other/ruff"]
+	path = other/ruff
+	url = https://gitlab.chatlabs.su/misc/ruff-config.git
+    branch = release/1.0.0
